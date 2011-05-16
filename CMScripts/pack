@@ -1,0 +1,25 @@
+#!/bin/bash
+# Only change these 2 paths if you want to compile a kernel on your own
+export ARM_EABI=/home/vork/Codesourcery/toolchain/bin/arm-eabi-
+export BUILD_DIR=/home/vork/Dropbox/Public
+export SCRIPT_DIR=/home/vork
+
+rm /home/vork/CMScripts/Tools/ramdisk-boot
+rm /home/vork/CMScripts/Tools/newBoot.img
+/home/vork/Codesourcery/toolchain/bin
+DIR=$PWD
+echo "Do you want to build a release or a test version?"
+echo "1 for Release, 2 for Test"
+read BUILD
+case $BUILD in
+	1) export release=release 
+	;;
+	2) export release=test 
+	;;
+esac 
+# . Scripts/sqlboost.sh
+clear
+. Scripts/kernelcompile.sh
+clear
+. Scripts/kernelpack.sh
+

@@ -1,0 +1,221 @@
+on init
+    export TMPDIR /data/local/tmp
+    export PHONE_STORAGE /mnt/emmc
+
+# Backward compatibility
+    symlink /system/bin /bin
+
+# create mountpoints for internal "SD"
+    mkdir /mnt/emmc 0000 system system
+
+#20100722, taein.kim@lge.com, Add external security folder [START]
+    mkdir /mnt/extsecure 0700 root root
+    mkdir /mnt/extsecure/staging 0700 root root
+    mkdir /mnt/extsecure/extasec  0700 root root
+#20100722, taein.kim@lge.com, Add external security folder [END]
+    # Secure container public mount points.
+    mkdir /mnt/asec  0700 root system
+    mount tmpfs tmpfs /mnt/asec mode=0755,gid=1000
+#20100722, taein.kim@lge.com, Add external security folder [START]
+    mkdir /mnt/extasec  0700 root system
+    mount tmpfs tmpfs /mnt/extasec mode=0755,gid=1000 noatime
+#20100722, taein.kim@lge.com, Add external security folder [END]
+
+## ANDY_PORTING LGDRM [lg-drm@lge.com 100401]
+    mkdir /lgdrm 0770 system audio
+## ANDY_END
+
+on fs
+# mount partitions
+    mount ext3 /dev/block/mmcblk0p1 /system wait
+    mount ext3 /dev/block/mmcblk0p1 /system ro noatime remount wait
+    # We chown/chmod /data again so because mount is run as root + defaults
+    mount ext3 /dev/block/mmcblk0p8 /data nosuid nodev noatime data=ordered wait
+    chown system system /data
+    chmod 0771 /data
+    mount ext3 /dev/block/mmcblk0p2 /cache nosuid nodev noatime wait
+    chown system cache /cache
+    chmod 0770 /cache
+
+    mount ext3 /dev/block/mmcblk0p6 /lgdrm nosuid nodev noatime
+
+on post-fs
+## LGE
+    mkdir /data/nv     
+    chown system system /data/nv       
+    chmod 0711 /data/nv
+## LGE 
+
+    chmod 0777 /data/misc/wifi/config_mac       # 20101202 mingi.sung@lge.com [WLAN] AT command - MAC address read/write function
+    mkdir /data/audioprop 0777 system system
+# 20100716 mingi.sung@lge.com <make wifi directory> [START]
+# WIFI
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    setprop wifi.supplicant_scan_interval 20
+    setprop wifi.interface wlan0
+# DHCP
+    mkdir /data/misc/dhcp 0777 system system
+# 20100716 mingi.sung@lge.com <make wifi directory> [END]
+
+    ## ANDY_PORTING LGDRM [lg-drm@lge.com 100401]
+    # create dirs if not exist
+    mkdir /data/lgdrm 0770 root root
+    mkdir /data/wmdrm 0770 root root
+
+on boot
+    setprop net.tcp.buffersize.default 4096,87380,196608,4096,16384,110208
+    setprop net.tcp.buffersize.wifi 4096,87380,393216,4096,16384,110208
+    setprop net.tcp.buffersize.umts 4096,87380,393216,4096,16384,110208
+    setprop net.tcp.buffersize.edge 4096,26280,393216,4096,16384,35040
+    setprop net.tcp.buffersize.gprs 4096,8760,393216,4096,8760,11680
+    setprop net.tcp.buffersize.hspa 4096,87380,393216,4096,16384,110208
+
+# Define sensor settings
+    chown system system /sys/devices/platform/tegra_gyro_accel/tilt_onoff
+    chown system system /sys/devices/platform/tegra_gyro_accel/tap_onoff
+    chown system system /sys/devices/platform/tegra_gyro_accel/shake_onoff
+    chown system system /sys/devices/platform/tegra_gyro_accel/snap_onoff
+    chown system system /sys/devices/platform/tegra_gyro_accel/flip_onoff
+    chown system system /sys/devices/platform/tegra_gyro_accel/tilt_delay
+    chown system system /sys/devices/platform/star_aat2870.0/lsensor_onoff
+    chown system system /sys/devices/platform/star_aat2870.0/alc
+
+# 20101107, sglee76@lge.com, FOTA [START]
+        mkdir /data/fota 0777 system system
+        chown system system /data/fota
+        chmod 0777 /data/fota
+
+        chmod 777 /dev/block/mmcblk0p3
+# kernel read permission
+        chmod 644 /dev/block/mmcblk0p5
+# 20101107, sglee76@lge.com, FOTA [END]
+
+## LGE's bluetooth stuff
+# bluetooth permissions
+    chmod 0660 /dev/ttyHS2
+    chown bluetooth bluetooth /dev/ttyHS2
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660 /sys/class/rfkill/rfkill0/type
+    chmod 0660 /sys/class/rfkill/rfkill1/state
+    chmod 0660 /sys/class/rfkill/rfkill1/type
+
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/type
+#       20101121 BT: dohyung10.lee@lge.com - For the BD Address Read / Write
+    chmod 0666 /sys/devices/platform/star_bd_address/bdaddr_if
+    write /sys/class/rfkill/rfkill0/state 0
+### End of LGE bluetooth
+
+### LGE GPS
+# gps permissions
+    chown system system /sys/devices/platform/tegra_gps_gpio/poweron
+    chown system system /sys/devices/platform/tegra_gps_gpio/reset
+    chown system system /dev/ttyHS3
+    mkdir /data/gps
+    chmod 777 /data/gps
+    mkdir /data/gps/var
+    chmod 777 /data/gps/var
+    mkdir /data/gps/var/run
+    chmod 777 /data/gps/var/run
+    mkdir /data/gps/log
+    chmod 777 /data/gps/log
+    mkdir /data/cache
+    chmod 777 /data/cache
+    chown system system /system/bin/glgps
+    chown system system /system/etc/gps_brcm_conf.xml
+    chown system system /system/etc/cert/
+    chown system system /system/etc/cert/537a0176.0
+    chown system system /system/etc/cert/c9dbfc2e.0
+    chown system system /system/etc/cert/ddc328ff.0
+    chown system system /system/etc/cert/7651b327.0
+    chown system system /system/etc/cert/583a21ed.0
+    chown system system /system/etc/cert/72fa7371.0
+    chown system system /system/etc/cert/c33a80d4.0
+
+### End of LGE GPS
+
+
+service lgdrm /system/bin/lgdrmserver
+    user root
+    group sdcard_rw radio
+
+service dhcpcd_wlan0 /system/bin/dhcpcd -BKA wlan0  # LGE_AUTO_IP - enable IPv4LL (DLNA, 2010.10.19)
+    disabled
+    oneshot
+
+on property:init.svc.wpa_supplicant=stopped
+    stop dhcpcd_wlan0
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf #-dd
+    socket wpa_wlan0 dgram 660 wifi wifi
+    group system wifi inet
+    disabled
+    oneshot
+
+service secureclockd /system/bin/secureclockd
+    oneshot
+    user system
+    group system
+
+service hdmid /system/bin/hdmid
+    user system
+    group system
+    disabled
+
+## disable immersion vibrator, we want the standard API
+#service immvibed /system/bin/immvibed
+#    user shell
+#    group shell
+#    oneshot
+
+service nvrm_daemon /system/bin/nvrm_daemon
+    user root
+    #onrestart restart servicemanager
+
+# Daemon for Gyro Sensor
+service motion /system/bin/motion
+    user system
+    group system
+    oneshot
+    disabled
+
+on property:dev.bootcomplete=1
+    start hdmid
+    start motion
+
+service rawip_vsnet1 /system/bin/init.vsnet 1
+   user root
+   group radio cache inet misc net_admin net_raw
+   disabled
+   oneshot
+
+service rawip_vsnet2 /system/bin/init.vsnet 2
+   user root
+   group radio cache inet misc net_admin net_raw
+   disabled
+   oneshot
+
+service rawip_vsnet3 /system/bin/init.vsnet 3
+   user root
+   group radio cache inet misc net_admin net_raw
+   disabled
+   oneshot
+
+service rawip_vsnet4 /system/bin/init.vsnet 4
+   user root
+   group radio cache inet misc net_admin net_raw
+   disabled
+   oneshot
+
+service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm \
+    --baudrate 3000000 --patchram /etc/firmware/BCM4329B1_002.002.023.0735.0745.hcd /dev/ttyHS2
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+
+service glgps /system/bin/glgps -c /system/etc/gps_brcm_conf.xml
+    user system
+    group net_raw sdcard_rw system
+
