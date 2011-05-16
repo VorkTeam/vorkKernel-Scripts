@@ -9,7 +9,7 @@ signed_file=vorkKernel-LGP990.zip
 
 NOW=$(date +"%d%m%y")
 
-sed -i 's/-vorkKernel-.*/-vorkKernel-'$NOW'"/g' /home/vork/CMKernelLG/lge-kernel-star/.config
+sed -i 's/-vorkKernel-.*/-vorkKernel-'$NOW'"/g' /home/$USER/CMKernelLG/lge-kernel-star/.config
 
 export localVersion=`cat .config | fgrep CONFIG_LOCALVERSION= | cut -f 2 -d = | sed s/\"//g`
 export linuxVersion=`cat .config | fgrep "Linux kernel version: "| cut -c25-34 | sed s/\"//g`

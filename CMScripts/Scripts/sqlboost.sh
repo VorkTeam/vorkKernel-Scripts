@@ -10,7 +10,7 @@ cd $SCRIPT_DIR/CM
 git fetch github
 git checkout remotes/github/gingerbread
 
-patch "/home/vork/CM/external/sqlite/dist/sqlite3.c" "/home/vork/CMScripts/Tools/nosync.txt"
+patch "/home/$USER/CM/external/sqlite/dist/sqlite3.c" "/home/$USER/CMScripts/Tools/nosync.txt"
 
 cp ./vendor/lge/p990/p990-vendor.mk ./buildspec.mk
 . build/envsetup.sh

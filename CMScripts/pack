@@ -1,11 +1,11 @@
 #!/bin/bash
 # Only change these 2 paths if you want to compile a kernel on your own
-export ARM_EABI=/home/vork/Codesourcery/toolchain/bin/arm-eabi-
-export BUILD_DIR=/home/vork/Dropbox/Public
-export SCRIPT_DIR=/home/vork
+export ARM_EABI=/home/$USER/Codesourcery/toolchain/bin/arm-eabi-
+export BUILD_DIR=/home/$USER/Dropbox/Public
+export SCRIPT_DIR=/home/$USER
 
-rm /home/vork/CMScripts/Tools/ramdisk-boot
-rm /home/vork/CMScripts/Tools/newBoot.img
+rm /home/$USER/CMScripts/Tools/ramdisk-boot
+rm /home/$USER/CMScripts/Tools/newBoot.img
 /home/vork/Codesourcery/toolchain/bin
 DIR=$PWD
 echo "Do you want to build a release or a test version?"
