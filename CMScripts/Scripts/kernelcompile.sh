@@ -24,10 +24,10 @@ make ARCH=arm CROSS_COMPILE=$ARM_EABI INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Upd
 
 cp arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Tools
 
-cp $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/*/*.ko $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
-cp $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/*/*/*.ko $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
-cp $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/*/*/*/*.ko $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
-cp $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/*/*/*/*/*.ko $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
+for module in `find $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/ -name *.ko`
+do
+    cp $module $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
+done
 rm -r $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION
 
 # rm $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/build
