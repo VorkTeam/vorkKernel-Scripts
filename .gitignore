@@ -1,1 +1,6 @@
 .dropbox
+*.ko
+*boot.img
+*newBoot.img
+*zImage
+*ramdisk-boot
