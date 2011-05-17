@@ -12,34 +12,58 @@ export vorkChain_revision=1-LinaroBase
 
 cd $buildprefix
 
-if [ ! -d source]; then mkdir source; fi
-if [ ! -d temp/binutils]; then mkdir -p temp/binutils; fi
-if [ ! -d temp/gcc]; then mkdir -p temp/gcc; fi
-if [ ! -d temp/newlib]; then mkdir -p temp/newlib; fi
+if [ ! -d source ]; then mkdir source; fi
+if [ ! -d temp/binutils ]; then mkdir -p temp/binutils; fi
+if [ ! -d temp/gcc ]; then mkdir -p temp/gcc; fi
+if [ ! -d temp/newlib ]; then mkdir -p temp/newlib; fi
 
-cd source
-wget http://launchpad.net/gcc-linaro/$gcc/$gcclv/+download/gcc-linaro-$gcclv.tar.bz2
-wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
-wget ftp://sources.redhat.com/pub/newlib/newlib-$newlibv.tar.gz
-wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv.tar.gz
+if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
+    echo Downloading gcc-linaro and mpc...
+    cd $buildprefix/source/
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclv/+download/gcc-linaro-$gcclv.tar.bz2
+    wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
 
-tar -xvjf gcc-linaro-$gcclv.tar.bz2
-tar -xvzf binutils-$binv.tar.gz
-tar -xvzf newlib-$newlibv.tar.gz
-tar -xvzf mpc-$mpcv.tar.gz
+    echo Extracting gcc-linaro and mpc...
+    tar -xvjf gcc-linaro-$gcclv.tar.bz2
+    tar -xvzf mpc-$mpcv.tar.gz
+    
+    echo Moving mpc to gcc folder
+    mv mpc-$mpcv mpc
+    cd gcc-linaro-$gcclv
+    mv ../mpc mpc
+fi
 
-mv mpc-$mpcv mpc
-cd gcc-linaro-$gcclv
-mv ../mpc mpc
+if [ ! -d $buildprefix/source/binutils-$binv ]; then
+    echo Downloading binutils...
+    cd $buildprefix/source/
+    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv.tar.gz
+    
+    echo Extracting binutils...
+    tar -xvzf binutils-$binv.tar.gz
+fi
+    
+if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
+    echo Downloading newlib...
+    wget ftp://sources.redhat.com/pub/newlib/newlib-$newlibv.tar.gz
+    
+    echo Extracting newlib...
+    tar -xvzf newlib-$newlibv.tar.gz
+fi
 
 cd $buildprefix/temp/binutils
+echo Configuring binutils...
 $buildprefix/source/binutils-$binv/configure --target=arm-eabi --prefix=$prefix --disable-nls --disable-shared --disable-threads --with-gcc --with-gnu-as --with-gnu-ld --enable-interwork --enable-multilib
+echo Building binutils...
 make -j8
+echo Installing binutils...
 make install -j8
 
 cd $buildprefix/temp/gcc
+echo Configuring gcc...
 $buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=vorkChain_r$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
+echo Building bootstrap gcc...
 make all-gcc -j8
+echo Installing bootstrap gcc...
 make install-gcc -j8
 
 # export PATH=$prefix/bin:$PATH test new style
@@ -47,12 +71,17 @@ PATH=$prefix/bin:$PATH
 export PATH
 
 cd $buildprefix/temp/newlib
+echo Configuring newlib...
 $buildprefix/source/newlib-$newlibv/configure --target=arm-eabi --prefix=$prefix --enable-interwork --enable-multilib
+echo Building newlib...
 make -j8
+echo Installing newlib...
 make install -j8
 
 cd $buildprefix/temp/gcc
+echo Building gcc...
 make -j8
+echo Installing gcc...
 make install -j8
 
 strip $prefix/bin/*
