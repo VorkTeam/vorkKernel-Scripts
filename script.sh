@@ -46,11 +46,13 @@ make install -j8
 
 cd $buildprefix/temp/gcc
 make distclean
-$buildprefix/source/gcc-*-$tdate/configure --target=arm-eabi --with-cpu=cortex-a9 --with-arch=armv7 --with-float=softfp --with-fpu=vfpv3-d16 --prefix=$prefix --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$tdate/newlib/libc/include
+$buildprefix/source/gcc-*-$tdate/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$tdate/newlib/libc/include
 make all-gcc -j8
 make install-gcc -j8
 
-export PATH=$prefix/bin:$PATH
+# export PATH=$prefix/bin:$PATH test new style
+PATH=$prefix/bin:$PATH
+export PATH
 
 cd $buildprefix/temp/newlib
 make distclean # not needed for a freshly created empty directory
