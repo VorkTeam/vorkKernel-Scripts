@@ -4,9 +4,8 @@ export ARM_EABI=/home/$USER/Codesourcery/toolchain/bin/arm-eabi-
 export BUILD_DIR=/home/$USER/Dropbox/Public
 export SCRIPT_DIR=/home/$USER
 
-rm /home/$USER/CMScripts/Tools/ramdisk-boot
-rm /home/$USER/CMScripts/Tools/newBoot.img
-/home/$USER/Codesourcery/toolchain/bin
+rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
+rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
 DIR=$PWD
 echo "Do you want to build a release or a test version?"
 echo "1 for Release, 2 for Test"
