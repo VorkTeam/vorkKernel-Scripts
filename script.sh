@@ -9,6 +9,10 @@ export mpcv=0.9
 export newlibv=1.19.0
 export vorkChain_revision=1-LinaroBase
 
+if [ -d $prefix/bin ]; then
+   read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
+   if [ ! $CHOICE == "y" ]; then exit 0; fi
+fi
 
 cd $buildprefix
 
