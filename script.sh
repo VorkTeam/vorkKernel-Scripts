@@ -7,14 +7,15 @@ export gcc=4.5
 export binv=2.21
 export mpcv=0.9
 export newlibv=1.19.0
+export vorkChain_revision=1-LinaroBase
 
 
 cd $buildprefix
 
-if [ ! -d source]; then mkdir source; done
-if [ ! -d temp/binutils]; then mkdir -p temp/binutils
-if [ ! -d temp/gcc]; then mkdir -p temp/gcc
-if [ ! -d temp/newlib]; then mkdir -p temp/newlib
+if [ ! -d source]; then mkdir source; fi
+if [ ! -d temp/binutils]; then mkdir -p temp/binutils; fi
+if [ ! -d temp/gcc]; then mkdir -p temp/gcc; fi
+if [ ! -d temp/newlib]; then mkdir -p temp/newlib; fi
 
 cd source
 wget http://launchpad.net/gcc-linaro/$gcc/$gcclv/+download/gcc-linaro-$gcclv.tar.bz2
@@ -37,7 +38,7 @@ make -j8
 make install -j8
 
 cd $buildprefix/temp/gcc
-$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=vorkChain_r1-LinaroBase --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
+$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=vorkChain_r$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
 make all-gcc -j8
 make install-gcc -j8
 
