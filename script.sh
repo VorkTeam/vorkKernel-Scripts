@@ -2,12 +2,12 @@
 
 export buildprefix=/home/$USER/Codesourcery
 export prefix=/home/$USER/Codesourcery/toolchain
-export gcclv=4.5-2011.04-0
+export gcclv=4.5-2011.05-0
 export gcc=4.5
 export binv=2.21
 export mpcv=0.9
 export newlibv=1.19.0
-export vorkChain_revision=1-LinaroBase
+export vorkChain_revision=unicornPowered_r2-LinaroBase
 
 if [ -d $prefix/bin ]; then
    read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
@@ -64,7 +64,7 @@ make install -j8
 
 cd $buildprefix/temp/gcc
 echo Configuring gcc...
-$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=vorkChain_r$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
+$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
 echo Building bootstrap gcc...
 make all-gcc -j8
 echo Installing bootstrap gcc...
