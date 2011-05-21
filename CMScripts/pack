@@ -16,7 +16,6 @@ case $BUILD in
 	2) export release=test 
 	;;
 esac 
-# . Scripts/sqlboost.sh
 clear
 . Scripts/kernelcompile.sh
 clear
