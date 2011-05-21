@@ -2,7 +2,8 @@
 # Only change these 2 paths if you want to compile a kernel on your own
 export ARM_EABI=/home/$USER/Codesourcery/toolchain/bin/arm-eabi-
 export BUILD_DIR=/home/$USER/Dropbox/Public
-export SCRIPT_DIR=/home/$USER
+export SCRIPT_DIR=/home/$USER/vorkKernel-Scripts
+export SOURCE_DIR=/home/$USER/CMKernelLG/lge-kernel-star
 
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img

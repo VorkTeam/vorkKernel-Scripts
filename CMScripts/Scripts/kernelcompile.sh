@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd $SCRIPT_DIR/CMKernelLG/lge-kernel-star
+cd $SOURCE_DIR
 
 echo "Building ..."
 make ARCH=arm CROSS_COMPILE=$ARM_EABI vorkKernel_defconfig
@@ -29,9 +29,5 @@ do
     cp $module $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
 done
 rm -r $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION
-
-# rm $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/build
-# rm $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/source
-# cp $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/drivers/net/wireless/bcm4329/wireless.ko $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/wireless.ko
 
 cd $SCRIPT_DIR/CMScripts/
