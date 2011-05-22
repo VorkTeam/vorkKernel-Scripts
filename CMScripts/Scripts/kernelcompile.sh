@@ -3,7 +3,7 @@
 cd $SOURCE_DIR
 
 echo "Building ..."
-make ARCH=arm CROSS_COMPILE=$ARM_EABI vorkKernel_defconfig
+make ARCH=arm CROSS_COMPILE="$ARM_EABI" vorkKernel_defconfig
 
 NOW=$(date +"%d%m%y")
 if [ "$release" == "release" ]; then
@@ -20,8 +20,8 @@ rm $SCRIPT_DIR/CMScripts/Update.zip/kernel/boot.img
 rm -rf $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/*
 
 echo Building the kernel
-ARCH=arm CROSS_COMPILE=$ARM_EABI make -j`grep 'processor' /proc/cpuinfo | wc -l`
-make ARCH=arm CROSS_COMPILE=$ARM_EABI INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Update.zip/system modules_install
+ARCH=arm CROSS_COMPILE="$ARM_EABI" make -j`grep 'processor' /proc/cpuinfo | wc -l`
+make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Update.zip/system modules_install
 
 cp arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Tools
 

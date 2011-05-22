@@ -1,6 +1,11 @@
 #!/bin/bash
-# Only change these 2 paths if you want to compile a kernel on your own
-export ARM_EABI=$HOME/vorkChain/toolchain/bin/arm-eabi-
+
+if [ -f $HOME/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
+	export ARM_EABI="ccache $HOME/vorkChain/toolchain/bin/arm-eabi-"
+	export USE_CCACHE=1
+else 
+	export ARM_EABI=/home/$USER/vorkChain/toolchain/bin/arm-eabi-
+fi
 export BUILD_DIR=$HOME/Dropbox/Public
 export SCRIPT_DIR=$HOME/vorkKernel-Scripts
 export SOURCE_DIR=$HOME/CMKernelLG/lge-kernel-star

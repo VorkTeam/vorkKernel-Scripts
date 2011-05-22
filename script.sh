@@ -2,12 +2,13 @@
 
 export buildprefix=$HOME/vorkChain
 export prefix=$HOME/vorkChain/toolchain
-export gcclv=4.5-2011.05-0
-export gcc=4.5
-export binv=2.21
-export mpcv=0.9
-export newlibv=1.19.0
-export vorkChain_revision=unicornPowered_r2-LinaroBase
+gcclv=4.5-2011.05-0
+gcc=4.5
+binv=2.21
+mpcv=0.9
+newlibv=1.19.0
+vorkChain_revision=unicornPowered_r2-LinaroBase
+ccachev=3.1.4
 
 if [ -d $prefix/bin ]; then
    read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
@@ -76,7 +77,6 @@ make all-gcc -j8
 echo Installing bootstrap gcc...
 make install-gcc -j8
 
-# export PATH=$prefix/bin:$PATH test new style
 PATH=$prefix/bin:$PATH
 export PATH
 
