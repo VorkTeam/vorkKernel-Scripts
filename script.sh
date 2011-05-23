@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export buildprefix=/home/$USER/Codesourcery
-export prefix=/home/$USER/Codesourcery/toolchain
+export buildprefix=$HOME/Codesourcery
+export prefix=$HOME/Codesourcery/toolchain
 export gcclv=4.5-2011.05-0
 export gcc=4.5
 export binv=2.21
