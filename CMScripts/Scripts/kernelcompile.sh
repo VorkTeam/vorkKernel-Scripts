@@ -5,11 +5,12 @@ cd $SOURCE_DIR
 echo "Building ..."
 make ARCH=arm CROSS_COMPILE=$ARM_EABI vorkKernel_defconfig
 
-signed_file=vorkKernel-LGP990.zip
-
 NOW=$(date +"%d%m%y")
-
-sed -i 's/-vorkKernel-.*/-vorkKernel-'$NOW'"/g' $SOURCE_DIR/.config
+if [ "$release" == "release" ]; then
+signed_file=vorkKernel-LGP990-'$NOW'.zip
+else
+signed_file=vorkKernel-LGP990.zip
+fi
 
 export localVersion=`cat .config | fgrep CONFIG_LOCALVERSION= | cut -f 2 -d = | sed s/\"//g`
 export linuxVersion=`cat .config | fgrep "Linux kernel version: "| cut -c25-34 | sed s/\"//g`
