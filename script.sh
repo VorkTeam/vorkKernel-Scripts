@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export buildprefix=$HOME/Codesourcery
-export prefix=$HOME/Codesourcery/toolchain
+export buildprefix=$HOME/vorkChain
+export prefix=$HOME/vorkChain/toolchain
 export gcclv=4.5-2011.05-0
 export gcc=4.5
 export binv=2.21
