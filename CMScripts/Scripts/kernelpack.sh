@@ -44,17 +44,18 @@ rm -f testkey.*
 rm -f signapk.jar
 rm -f update.zip
 
-if [ -d $BUILD_DIR/LG\ P990 ]; then
-	if [ "$release" == "release" ]; then
+if [ "$release" == "release" ]; then
+	if [ -d $BUILD_DIR/LG\ P990 ]; then
 	  mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
 	else
-	  mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+	  mkdir $BUILD_DIR/LG\ P990
+	  mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
 	fi
 else
-   	mkdir $BUILD_DIR/LG\ P990
-	if [ "$release" == "release" ]; then
-	  mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+   	if [ -d $BUILD_DIR/LGTEST ]; then
+	  mv $signed_file $BUILD_DIR/LGTEST/$signed_file
 	else
+	  mkdir $BUILD_DIR/LGTEST
 	  mv $signed_file $BUILD_DIR/LGTEST/$signed_file
 	fi
 fi
