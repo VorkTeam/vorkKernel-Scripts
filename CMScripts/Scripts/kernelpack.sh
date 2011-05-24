@@ -48,7 +48,7 @@ if [ -d $BUILD_DIR/LG\ P990 ]; then
 	if [ "$release" == "release" ]; then
 	  mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
 	else
-	  mv $signed_file $BUILD_DIR/LG\ P990/Test/$signed_file
+	  mv $signed_file $BUILD_DIR/LGTEST/$signed_file
 	fi
 else
    	mkdir $BUILD_DIR/LG\ P990
