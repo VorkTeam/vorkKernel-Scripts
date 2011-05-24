@@ -1,6 +1,6 @@
 #!/bin/bash
 # Only change these 2 paths if you want to compile a kernel on your own
-export ARM_EABI=$HOME/Codesourcery/toolchain/bin/arm-eabi-
+export ARM_EABI=$HOME/vorkChain/toolchain/bin/arm-eabi-
 export BUILD_DIR=$HOME/Dropbox/Public
 export SCRIPT_DIR=$HOME/vorkKernel-Scripts
 export SOURCE_DIR=$HOME/CMKernelLG/lge-kernel-star
