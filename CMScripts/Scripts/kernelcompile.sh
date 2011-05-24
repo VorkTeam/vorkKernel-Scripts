@@ -7,7 +7,7 @@ make ARCH=arm CROSS_COMPILE="$ARM_EABI" vorkKernel_defconfig
 
 NOW=$(date +"%d%m%y")
 if [ "$release" == "release" ]; then
-signed_file=vorkKernel-LGP990-'$NOW'.zip
+signed_file=vorkKernel-LGP990-"$NOW".zip
 else
 signed_file=vorkKernel-LGP990.zip
 fi
