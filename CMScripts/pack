@@ -24,9 +24,19 @@ case $BUILD in
 esac 
 clear
 . Scripts/kernelcompile.sh
+cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/zImage
+cd $SOURCE_DIR
+git revert -n 9e7ff480926d1c81ae10
+cd $SCRIPT_DIR/CMScripts
+. Scripts/kernelcompile.sh
+cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/1080p/zImage
 clear
 . Scripts/kernelpack.sh
 if [ "$release" == "release" ]; then
 python Scripts/pyndexer/pyndexer.py
+
+cd $SOURCE_DIR
+git cherry-pick -n 9e7ff480926d1c81ae10
+cd $SCRIPT_DIR/CMScripts
 fi
 

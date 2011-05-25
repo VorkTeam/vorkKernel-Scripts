@@ -1,0 +1,16 @@
+ui_print("Extracting files...");
+set_progress(1.000000);
+delete_recursive("/tmp/vorkKernel");
+package_extract_dir("tmp", "/tmp");
+run_program("/sbin/busybox", "mount", "/system");
+set_perm(0, 0, 0700, "/tmp/vorkKernel/mkbootimg");
+set_perm(0, 0, 0700, "/tmp/vorkKernel/busybox");
+set_perm(0, 0, 0777, "/tmp/vorkKernel/installkernel.sh");
+run_program("/tmp/vorkKernel/installkernel.sh");
+ui_print("Writing Boot Image...");
+run_program("/sbin/busybox", "dd", "if=/dev/zero", "of=/dev/block/mmcblk0p5");
+run_program("/sbin/busybox", "dd", "if=/tmp/boot.img", "of=/dev/block/mmcblk0p5");
+ui_print("Extracting modules...");
+package_extract_dir("system", "/system");
+ui_print("All done. Enjoy!");
+unmount("/system");
