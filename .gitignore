@@ -5,4 +5,4 @@
 *zImage
 *ramdisk-boot
 ccache.txt
-dbconfig.pyc
+*.pyc
