@@ -13,31 +13,87 @@ export SOURCE_DIR=/opt/CMKernelLG/lge-kernel-star
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
 DIR=$PWD
+NOW=$(date +"%d%m%y")
 echo "Do you want to build a release or a test version?"
 echo "1 for Release, 2 for Test"
 read BUILD
 case $BUILD in
-	1) export release=release 
+	1) signed_file=vorkKernel-"$NOW".zip
+	   export release=release 
 	;;
-	2) export release=test 
+	2) signed_file=vorkKernel-LGP990.zip
+	   export release=test
 	;;
 esac 
 clear
+echo "compiling kernel"
 . Scripts/kernelcompile.sh
-cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/zImage
+cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
+. Scripts/kernelpack.sh
+mv Tools/newBoot.img Awesome.zip/tmp/vorkKernel/boot.img
+
+echo "2nd compile - 1080p Kernel"
 cd $SOURCE_DIR
 git revert -n 9e7ff480926d1c81ae10
 cd $SCRIPT_DIR/CMScripts
 . Scripts/kernelcompile.sh
-cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/1080p/zImage
+cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
+. Scripts/kernelpack
+mv Tools/newBoot.img Awesome.zip/tmp/vorkKernel/1080p/boot.img
 clear
 
-. Scripts/kernelpack.sh
-if [ "$release" == "release" ]; then
-python Scripts/pyndexer/pyndexer.py
-
+# add 64Mb hack back (silent)
 cd $SOURCE_DIR
 git cherry-pick -n 9e7ff480926d1c81ae10
 cd $SCRIPT_DIR/CMScripts
+
+echo "Compiling modules"
+rm -rf $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/*
+cd $SOURCE_DIR
+make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Awesome.zip/system modules_install
+
+for module in `find $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/$VERSION/kernel/ -name *.ko`
+do
+    cp $module $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/
+done
+rm -r $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/$VERSION
+
+cd $SCRIPT_DIR/CMScripts/Awesome.zip
+
+echo Making update.zip ...
+zip -r -y -q update *
+echo
+echo update.zip created
+
+echo Signing update.zip as $signed_file ...
+
+cp ../Tools/signapk_files/testkey.* .
+cp ../Tools/signapk_files/signapk.jar .
+
+java -jar signapk.jar testkey.x509.pem testkey.pk8 update.zip $signed_file
+
+rm -f testkey.*
+rm -f signapk.jar
+rm -f update.zip
+
+if [ "$release" == "release" ]; then
+        if [ -d $BUILD_DIR/LG\ P990 ]; then
+          mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+        else
+          mkdir $BUILD_DIR/LG\ P990
+          mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+        fi
+else
+        if [ -d $BUILD_DIR/LGTEST ]; then
+          mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+        else
+          mkdir $BUILD_DIR/LGTEST
+          mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+        fi
 fi
 
+if [ "$release" == "release" ]; then
+python Scripts/pyndexer/pyndexer.py
+fi
+
+cd $SCRIPT_DIR/CMScripts
