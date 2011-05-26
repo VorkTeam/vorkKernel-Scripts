@@ -8,7 +8,7 @@ else
 fi
 export BUILD_DIR=/opt/Builds
 export SCRIPT_DIR=/opt/vorkKernel-Scripts
-export SOURCE_DIR=/opt/CMKernelLG/lge-kernel-star
+export SOURCE_DIR=/opt/vorkKernel-LG-o2x
 
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
@@ -38,7 +38,7 @@ git revert -n 9e7ff480926d1c81ae10
 cd $SCRIPT_DIR/CMScripts
 . Scripts/kernelcompile.sh
 cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-. Scripts/kernelpack
+. Scripts/kernelpack.sh
 mv Tools/newBoot.img Awesome.zip/tmp/vorkKernel/1080p/boot.img
 clear
 
@@ -65,16 +65,7 @@ zip -r -y -q update *
 echo
 echo update.zip created
 
-echo Signing update.zip as $signed_file ...
-
-cp ../Tools/signapk_files/testkey.* .
-cp ../Tools/signapk_files/signapk.jar .
-
-java -jar signapk.jar testkey.x509.pem testkey.pk8 update.zip $signed_file
-
-rm -f testkey.*
-rm -f signapk.jar
-rm -f update.zip
+mv update.zip $signed_file
 
 if [ "$release" == "release" ]; then
         if [ -d $BUILD_DIR/LG\ P990 ]; then
