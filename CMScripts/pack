@@ -1,14 +1,14 @@
 #!/bin/bash
 
-if [ -f $HOME/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
-	export ARM_EABI="ccache $HOME/vorkChain/toolchain/bin/arm-eabi-"
+if [ -f /opt/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
+	export ARM_EABI="ccache /opt/vorkChain/toolchain/bin/arm-eabi-"
 	export USE_CCACHE=1
 else 
-	export ARM_EABI=/home/$USER/vorkChain/toolchain/bin/arm-eabi-
+	export ARM_EABI=/opt/vorkChain/toolchain/bin/arm-eabi-
 fi
-export BUILD_DIR=$HOME/Dropbox/Public
-export SCRIPT_DIR=$HOME/vorkKernel-Scripts
-export SOURCE_DIR=$HOME/CMKernelLG/lge-kernel-star
+export BUILD_DIR=/opt/Builds
+export SCRIPT_DIR=/opt/vorkKernel-Scripts
+export SOURCE_DIR=/opt/CMKernelLG/lge-kernel-star
 
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
@@ -31,6 +31,7 @@ cd $SCRIPT_DIR/CMScripts
 . Scripts/kernelcompile.sh
 cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/1080p/zImage
 clear
+
 . Scripts/kernelpack.sh
 if [ "$release" == "release" ]; then
 python Scripts/pyndexer/pyndexer.py

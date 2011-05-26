@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export buildprefix=$HOME/vorkChain
+export buildprefix=/opt/vorkChain
 ccachev=3.1.4
 
 if [ ! -d $buildprefix/source/ccache-$ccachev ]; then
@@ -16,5 +16,5 @@ echo Configuring ccache...
 make -j8
 sudo make install -j8
 
-cd $HOME/vorkKernel-Scripts/CMScripts/Tools
+cd /opt/vorkKernel-Scripts/CMScripts/Tools
 touch ccache.txt
