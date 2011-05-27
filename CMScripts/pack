@@ -26,37 +26,64 @@ case $BUILD in
 	;;
 esac 
 clear
+. Scripts/move_ramdisk.sh
 echo "compiling kernel"
+sed -i 's/#define USE_FAKE_SHMOO_PSYCHO/\/\/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
-cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-. Scripts/kernelpack.sh
-mv Tools/newBoot.img Awesome.zip/tmp/vorkKernel/boot.img
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/zImage
 
-echo "2nd compile - 1080p Kernel"
+sed -i 's/\/\/#define USE_FAKE_SHMOO_PSYCHO/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
+. Scripts/kernelcompile.sh
+if [ "$release" == "release" ]; then
+cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/zImageBC
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Tools/zImage
+. Scripts/update.zip_creator.sh
+else
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/zImageBC
+fi
+
+# 1080p Version
+echo "Compiling 1080p version"
 cd $SOURCE_DIR
 git revert -n 9e7ff480926d1c81ae10
 cd $SCRIPT_DIR/CMScripts
+
+sed -i 's/#define USE_FAKE_SHMOO_PSYCHO/\/\/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
-cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-. Scripts/kernelpack.sh
-mv Tools/newBoot.img Awesome.zip/tmp/vorkKernel/1080p/boot.img
-clear
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/1080p/zImage
+
+sed -i 's/\/\/#define USE_FAKE_SHMOO_PSYCHO/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
+. Scripts/kernelcompile.sh
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/1080p/zImageBC
 
 # add 64Mb hack back (silent)
 cd $SOURCE_DIR
 git cherry-pick -n 9e7ff480926d1c81ae10
 cd $SCRIPT_DIR/CMScripts
+clear
 
 echo "Compiling modules"
 rm -rf $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/*
 cd $SOURCE_DIR
 make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Awesome.zip/system modules_install
 
+if [ "$release" == "release" ]; then
+make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Update.zip/system modules_install
+fi
+
 for module in `find $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/$VERSION/kernel/ -name *.ko`
 do
     cp $module $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/
 done
 rm -r $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/$VERSION
+
+if [ "$release" == "release" ]; then
+for module in `find $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/ -name *.ko`
+do
+    cp $module $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/
+done
+rm -r $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION
+fi
 
 cd $SCRIPT_DIR/CMScripts/Awesome.zip
 
@@ -85,6 +112,24 @@ fi
 
 if [ "$release" == "release" ]; then
 python $SCRIPT_DIR/CMScript/Scripts/pyndexer/pyndexer.py
+fi
+
+if [ "$release" == "release" ]; then
+cd $SCRIPT_DIR/CMScripts/Update.zip
+
+echo Making update.zip ...
+zip -r -y -q update *
+echo
+echo update.zip created
+
+mv update.zip $signed_file
+
+	if [ -d $BUILD_DIR/LG\ P990 ]; then
+		mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
+		else
+			mkdir $BUILD_DIR/LG\ P990
+			mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
+	fi
 fi
 
 cd $SCRIPT_DIR/CMScripts
