@@ -39,10 +39,13 @@ for pp in $args; do
   if [ "$pp" == "1080p" ]; then
       hdrec=1
       flags="$flags -1080p"
-      continue
+  elif [ "$pp" == "highres" ]; then
+      highres=1
+      flags="$flags -highres"
+  else
+      errors=$((errors + 1))
+      ui_print "ERROR: unknown argument -$pp"
   fi
-  errors=$((errors + 1))
-  ui_print "ERROR: unknown argument -$pp"
 done
 
 if [ -n "$flags" ]; then
@@ -58,6 +61,9 @@ cd $basedir
 if [ "$hdrec" == "1" ]; then
 mv 1080p/boot.img boot.img
 mv 1080p/media_profiles.xml media_profiles.xml
+fi
+if [ "$highres" == "1"]; then
+sed -n "s/lcd_density=240/lcd_density=190/" /system/build.prop
 fi
 
 cd /system/etc
