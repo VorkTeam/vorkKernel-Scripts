@@ -6,7 +6,7 @@ if [ -f /opt/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then
 else 
 	export ARM_EABI=/opt/vorkChain/toolchain/bin/arm-eabi-
 fi
-export BUILD_DIR=/opt/Builds
+export BUILD_DIR=/home/benee/Dropbox/Public
 export SCRIPT_DIR=/opt/vorkKernel-Scripts
 export SOURCE_DIR=/opt/vorkKernel-LG-o2x
 
@@ -84,7 +84,7 @@ else
 fi
 
 if [ "$release" == "release" ]; then
-python Scripts/pyndexer/pyndexer.py
+python $SCRIPT_DIR/CMScript/Scripts/pyndexer/pyndexer.py
 fi
 
 cd $SCRIPT_DIR/CMScripts
