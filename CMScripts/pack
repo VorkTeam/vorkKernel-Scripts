@@ -127,7 +127,7 @@ mv update.zip $signed_file
 	if [ -d $BUILD_DIR/LG\ P990 ]; then
 		mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
 		else
-			mkdir $BUILD_DIR/LG\ P990
+			mkdir $BUILD_DIR/LGP990zips
 			mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
 	fi
 fi
