@@ -30,16 +30,16 @@ clear
 echo "compiling kernel"
 sed -i 's/#define USE_FAKE_SHMOO_PSYCHO/\/\/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
-mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/zImage
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImage
 
 sed -i 's/\/\/#define USE_FAKE_SHMOO_PSYCHO/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
 if [ "$release" == "release" ]; then
-cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/zImageBC
+cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImageBC
 mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Tools/zImage
 . Scripts/update.zip_creator.sh
 else
-mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/zImageBC
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImageBC
 fi
 
 # 1080p Version
@@ -50,11 +50,11 @@ cd $SCRIPT_DIR/CMScripts
 
 sed -i 's/#define USE_FAKE_SHMOO_PSYCHO/\/\/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
-mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/1080p/zImage
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p/zImage
 
 sed -i 's/\/\/#define USE_FAKE_SHMOO_PSYCHO/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
-mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/Images/1080p/zImageBC
+mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p/zImageBC
 
 # add 64Mb hack back (silent)
 cd $SOURCE_DIR
