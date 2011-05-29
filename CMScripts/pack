@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Root password for permission fixing"
+su -c"chmod -R root:vorkTeam /opt; chmod -R 774 /opt"
+
 if [ -f /opt/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
 	export ARM_EABI="ccache /opt/vorkChain/toolchain/bin/arm-eabi-"
 	export USE_CCACHE=1
@@ -88,3 +91,6 @@ python $SCRIPT_DIR/CMScript/Scripts/pyndexer/pyndexer.py
 fi
 
 cd $SCRIPT_DIR/CMScripts
+
+echo "Root password for permission fixing"
+su -c"chmod -R root:vorkTeam /opt; chmod -R 774 /opt"
