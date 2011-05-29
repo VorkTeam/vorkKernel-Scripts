@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "Root password for permission fixing"
-su -c"chmod -R root:vorkTeam /opt; chmod -R 774 /opt"
-
 if [ -f /opt/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
 	export ARM_EABI="ccache /opt/vorkChain/toolchain/bin/arm-eabi-"
 	export USE_CCACHE=1
