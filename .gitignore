@@ -3,6 +3,7 @@
 *boot.img
 *newBoot.img
 *zImage
+*zImageBC
 *ramdisk-boot
 ccache.txt
 *.pyc
