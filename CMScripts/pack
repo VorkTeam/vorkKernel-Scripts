@@ -28,11 +28,10 @@ esac
 clear
 . Scripts/move_ramdisk.sh
 echo "compiling kernel"
-sed -i 's/#define USE_FAKE_SHMOO_PSYCHO/\/\/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
 mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImage
 
-sed -i 's/\/\/#define USE_FAKE_SHMOO_PSYCHO/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
+sed -i 's/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
 . Scripts/kernelcompile.sh
 if [ "$release" == "release" ]; then
 cp $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImageBC
@@ -41,20 +40,19 @@ mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Tools/zImage
 else
 mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImageBC
 fi
-
+sed -i 's/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
 # 1080p Version
 echo "Compiling 1080p version"
 cd $SOURCE_DIR
 git revert -n 9e7ff480926d1c81ae10
 cd $SCRIPT_DIR/CMScripts
-
-sed -i 's/#define USE_FAKE_SHMOO_PSYCHO/\/\/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
 . Scripts/kernelcompile.sh
 mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p/zImage
 
-sed -i 's/\/\/#define USE_FAKE_SHMOO_PSYCHO/#define USE_FAKE_SHMOO_PSYCHO/' $SOURCE_DIR/arch/arm/mach-tegra/nvrm/core/common/nvrm_clocks_limits.c
+sed -i 's/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
 . Scripts/kernelcompile.sh
 mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p/zImageBC
+sed -i 's/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
 
 # add 64Mb hack back (silent)
 cd $SOURCE_DIR
