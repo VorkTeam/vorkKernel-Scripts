@@ -73,7 +73,16 @@ if [ "$hdrec" == "1" ]; then
 		mv Images/1080p/zImage zImage
 	fi
 cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-mv Images/1080p/media_profiles.xml media_profiles.xml
+
+if [ "$leeCam" == "1" ]; then
+  ui_print "adding cam mod by LeJay..."
+  cp files/Camera.apk /system/app/Camera.apk
+  chmod 0644 /system/app/Camera.apk
+  cp $basedir/files/media_profiles.xml /system/etc/media_profiles.xml
+else
+  cp $basedir/Images/1080p/media_profiles.xml /system/etc/media_profiles.xml
+fi
+
 else
 	if [ "$baconcooker" == "1" ]; then 
 		mv Images/zImageBC zImage
@@ -81,17 +90,11 @@ else
 		mv Images/zImage zImage
 	fi
 cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-fi
-ui_print "building boot.img..."
-/tmp/vorkKernel/mkbootimg --kernel /tmp/vorkKernel/zImage --ramdisk /tmp/vorkKernel/ramdisk-boot --cmdline "$cline" -o /tmp/vorkKernel/boot.img --base 0x10000000
-
-
-if [ "$leeCam" == "1" ]; then
-ui_print "adding cam mod by LeJay..."
-cp files/Camera.apk /system/app/Camera.apk
-chmod 0644 /system/app/Camera.apk
-mv files/media_profiles.xml media_profiles.xml
-fi
-else
 
 cp $basedir/media_profiles.xml /system/etc/media_profiles.xml
+
+fi
+
+ui_print "building boot.img..."
+/tmp/vorkKernel/mkbootimg --kernel /tmp/vorkKernel/zImage --ramdisk /tmp/vorkKernel/ramdisk-boot --cmdline "$cline" -o /tmp/vorkKernel/boot.img --base 0x10000000
+else
