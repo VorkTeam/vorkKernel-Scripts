@@ -109,7 +109,7 @@ else
 fi
 
 if [ "$release" == "release" ]; then
-python $SCRIPT_DIR/CMScript/Scripts/pyndexer/pyndexer.py
+python $SCRIPT_DIR/CMScripts/Scripts/pyndexer/pyndexer.py
 fi
 
 if [ "$release" == "release" ]; then
