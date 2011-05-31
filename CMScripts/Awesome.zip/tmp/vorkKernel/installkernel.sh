@@ -87,10 +87,10 @@ ui_print "building boot.img..."
 
 
 if [ "$leeCam" == "1" ]; then
-cp $basedir/files/Camera.apk /system/app/Camera.apk
+ui_print "adding cam mod by LeJay..."
+cp files/Camera.apk /system/app/Camera.apk
 chmod 0644 /system/app/Camera.apk
-mv $basedir/files/media_profiles.xml $basedir/media_profiles.xml
-ui_print "leeCam added!"
+mv files/media_profiles.xml media_profiles.xml
 fi
 else
 
