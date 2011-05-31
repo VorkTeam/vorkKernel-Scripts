@@ -42,11 +42,19 @@ for pp in $args; do
   elif [ "$pp" == "BC" ]; then
       baconcooker=1
       flags="$flags -baconcooker"
+  elif [ "$pp" == "leeCam" ]; then
+      leeCam=1
+      flags="$flags -leeCam"
   else
       errors=$((errors + 1))
       ui_print "ERROR: unknown argument -$pp"
   fi
 done
+
+if [ "$leeCam" == "1" ] && [ "$hdrec" != "1" ]; then
+errors=$((errors + 1))
+ui_print "ERROR: leeCam needs 1080p recording. Add the -1080p flag"
+fi
 
 if [ -n "$flags" ]; then
     ui_print "flags:$flags"
@@ -77,5 +85,12 @@ fi
 
 /tmp/vorkKernel/mkbootimg --kernel /tmp/vorkKernel/zImage --ramdisk /tmp/vorkKernel/ramdisk-boot --cmdline "$cline" -o /tmp/vorkKernel/boot.img --base 0x10000000
 
-cd /system/etc
-cp $basedir/media_profiles.xml media_profiles.xml
+
+if [ "$leeCam" == "1" ]; then
+cp $basedir/files/Camera.apk /system/app/Camera.apk
+chmod 0644 /system/app/Camera.apk
+mv files/media_profiles.xml media_profiles.xml
+fi
+else
+
+cp $basedir/media_profiles.xml /system/etc/media_profiles.xml
