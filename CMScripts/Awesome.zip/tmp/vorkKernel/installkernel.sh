@@ -78,7 +78,7 @@ if [ "$hdrec" == "1" ]; then
 	  chmod 0644 /system/app/Camera.apk
 	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
 	else
-	  cp $basedir/Images/1080p/media_profiles.xml-1080 /system/etc/media_profiles.xml
+	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
 	fi
 
 else
@@ -94,7 +94,7 @@ else
 	  chmod 0644 /system/app/Camera.apk
 	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
 	else
-	  cp $basedir/media_profiles.xml-720 /system/etc/media_profiles.xml
+	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
 	fi
 fi
 
