@@ -43,7 +43,7 @@ for pp in $args; do
       baconcooker=1
       flags="$flags -baconcooker"
   elif [ "$pp" == "leCam" ]; then
-      leeCam=1
+      leCam=1
       flags="$flags -leCam"
   else
       errors=$((errors + 1))
@@ -100,4 +100,3 @@ fi
 
 ui_print "building boot.img..."
 /tmp/vorkKernel/mkbootimg --kernel /tmp/vorkKernel/zImage --ramdisk /tmp/vorkKernel/ramdisk-boot --cmdline "$cline" -o /tmp/vorkKernel/boot.img --base 0x10000000
-else
