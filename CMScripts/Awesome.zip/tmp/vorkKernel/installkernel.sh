@@ -26,7 +26,7 @@ errors=0
 warning=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
-#kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}`
+kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
 args=`echo $updatename | $awk 'BEGIN {RS="-"}; NR>2 {print}'`
 
 ui_print ""
@@ -68,6 +68,7 @@ if [ $errors -gt 0 ]; then
 fi
 
 ui_print "Packing kernel..."
+
 cd $basedir
 if [ "$hdrec" == "1" ]; then
 	if [ "$baconcooker" == "1" ]; then 
@@ -102,5 +103,5 @@ else
 	fi
 fi
 
-ui_print "building boot.img..."
+ui_print "Building boot.img..."
 /tmp/vorkKernel/mkbootimg --kernel /tmp/vorkKernel/zImage --ramdisk /tmp/vorkKernel/ramdisk-boot --cmdline "$cline" -o /tmp/vorkKernel/boot.img --base 0x10000000
