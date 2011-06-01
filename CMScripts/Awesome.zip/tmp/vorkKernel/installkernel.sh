@@ -42,18 +42,17 @@ for pp in $args; do
   elif [ "$pp" == "BC" ]; then
       baconcooker=1
       flags="$flags -baconcooker"
-  elif [ "$pp" == "leeCam" ]; then
+  elif [ "$pp" == "leCam" ]; then
       leeCam=1
-      flags="$flags -leeCam"
+      flags="$flags -leCam"
   else
       errors=$((errors + 1))
       ui_print "ERROR: unknown argument -$pp"
   fi
 done
 
-if [ "$leeCam" == "1" ] && [ "$hdrec" != "1" ]; then
-errors=$((errors + 1))
-ui_print "ERROR: leeCam needs 1080p recording. Add the -1080p flag"
+if [ "$leCam" == "1" ]: then
+ui_print "thanks to LeJay for his cam mod"
 fi
 
 if [ -n "$flags" ]; then
@@ -72,16 +71,15 @@ if [ "$hdrec" == "1" ]; then
 	else
 		mv Images/1080p/zImage zImage
 	fi
-cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
+	cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
-if [ "$leeCam" == "1" ]; then
-  ui_print "adding cam mod by LeJay..."
-  cp files/Camera.apk /system/app/Camera.apk
-  chmod 0644 /system/app/Camera.apk
-  cp $basedir/files/media_profiles.xml /system/etc/media_profiles.xml
-else
-  cp $basedir/Images/1080p/media_profiles.xml /system/etc/media_profiles.xml
-fi
+	if [ "$leeCam" == "1" ]; then
+	  cp files/Camera.apk /system/app/Camera.apk
+	  chmod 0644 /system/app/Camera.apk
+	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+	else
+	  cp $basedir/Images/1080p/media_profiles.xml-1080 /system/etc/media_profiles.xml
+	fi
 
 else
 	if [ "$baconcooker" == "1" ]; then 
@@ -89,10 +87,15 @@ else
 	else
 		mv Images/zImage zImage
 	fi
-cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
+	cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
-cp $basedir/media_profiles.xml /system/etc/media_profiles.xml
-
+	if [ "$leeCam" == "1" ]; then
+	  cp files/Camera.apk /system/app/Camera.apk
+	  chmod 0644 /system/app/Camera.apk
+	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
+	else
+	  cp $basedir/media_profiles.xml-720 /system/etc/media_profiles.xml
+	fi
 fi
 
 ui_print "building boot.img..."
