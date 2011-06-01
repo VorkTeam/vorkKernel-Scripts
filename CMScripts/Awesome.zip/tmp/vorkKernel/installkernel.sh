@@ -59,6 +59,10 @@ if [ -n "$flags" ]; then
     ui_print "flags:$flags"
 fi
 
+if [ ! -n "$flags" ]; then
+    ui_print "no flags selected"
+fi
+
 if [ $errors -gt 0 ]; then
     fatal "argument parsing failed, aborting."
 fi
