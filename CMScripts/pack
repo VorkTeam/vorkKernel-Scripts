@@ -110,6 +110,7 @@ fi
 
 if [ "$release" == "release" ]; then
 python $SCRIPT_DIR/CMScripts/Scripts/pyndexer/pyndexer.py
+python /opt/vorkBot/vorkbot.py
 fi
 
 if [ "$release" == "release" ]; then
@@ -131,6 +132,3 @@ mv update.zip $signed_file
 fi
 
 cd $SCRIPT_DIR/CMScripts
-
-echo "Root password for permission fixing"
-su -c"chmod -R root:vorkTeam /opt; chmod -R 774 /opt"
