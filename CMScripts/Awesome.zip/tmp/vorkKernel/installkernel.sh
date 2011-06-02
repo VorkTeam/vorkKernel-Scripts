@@ -39,16 +39,19 @@ for pp in $args; do
   if [ "$pp" == "1080p" ]; then
       hdrec=1
       flags="$flags -1080p"
-  elif [ "$pp" == "BC" ]; then
+  fi
+
+  if [ "$pp" == "BC" ]; then
       baconcooker=1
       flags="$flags -baconcooker"
-  elif [ "$pp" == "leCam" ]; then
+  fi
+
+  if [ "$pp" == "leCam" ]; then
       leCam=1
       flags="$flags -leCam"
-  else
+  fi
       errors=$((errors + 1))
       ui_print "ERROR: unknown argument -$pp"
-  fi
 done
 
 if [ "$leCam" == "1" ]: then
