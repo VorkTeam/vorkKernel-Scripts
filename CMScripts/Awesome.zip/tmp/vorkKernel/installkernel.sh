@@ -105,53 +105,53 @@ ui_print "Packing kernel..."
 cd $basedir
 if [ "$hdrec" == "1" ]; then
 	if [ "$baconcooker" == "1" ]; then 
-		mv Images/1080p/zImageBC zImage
+		$BB cp Images/1080p/zImageBC zImage
 	else
-		mv Images/1080p/zImage zImage
+		$BB cp Images/1080p/zImage zImage
 	fi
 	cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
 	if [ "$leCam" == "1" ]; then
-	  cp files/Camera.apk /system/app/Camera.apk
-	  chmod 0644 /system/app/Camera.apk
-	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+	  $BB cp files/Camera.apk /system/app/Camera.apk
+	  $chmod 0644 /system/app/Camera.apk
+	  $BB cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
 	else
-	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
+	  $BB cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
 	fi
 
 else
 	if [ "$baconcooker" == "1" ]; then 
-		mv Images/zImageBC zImage
+		$BB cp Images/zImageBC zImage
 	else
-		mv Images/zImage zImage
+		$BB cp Images/zImage zImage
 	fi
 	cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
 	if [ "$leCam" == "1" ]; then
-	  cp files/Camera.apk /system/app/Camera.apk
-	  chmod 644 /system/app/Camera.apk
-	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
+	  $BB cp files/Camera.apk /system/app/Camera.apk
+	  $chmod 644 /system/app/Camera.apk
+	  $BB cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
 	else
-	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
+	  $BB cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
 	fi
 fi
 
 if [ "405flash" == "1" ]; then
 	ui_print "Copying 405 RIL..."
-	cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
+	$BB cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
 fi
 
 if [ "502flash" == "1" ]; then
 	ui_print "Copying 502 RIL..."
-	cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
+	$BB cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
 fi
 
 if [ "internal" == "1" ]; then
 	ui_print "Internal is now the default storage."
-	cp files/vold.fstab /system/etc/vold.fstab
-	chmod 644 /system/etc/vold.fstab
-	cp files/90mountExt /system/etc/init.d/90mountExt
-	chmod 750 /system/etc/init.d/90mountExt
+	$BB cp files/vold.fstab /system/etc/vold.fstab
+	$chmod 644 /system/etc/vold.fstab
+	$BB cp files/90mountExt /system/etc/init.d/90mountExt
+	$chmod 750 /system/etc/init.d/90mountExt
 fi
 
 ui_print "Building boot.img..."
