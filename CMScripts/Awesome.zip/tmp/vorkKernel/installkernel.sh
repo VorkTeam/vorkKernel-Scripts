@@ -34,7 +34,7 @@ ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
 ui_print ""
 ui_print "Parsing parameters..."
-flags=
+flags=""
 for pp in $args; do
   if [ "$pp" == "1080p" ]; then
       hdrec=1
@@ -51,12 +51,36 @@ for pp in $args; do
       flags="$flags -leCam"
       continue
   fi
+  if [ "$pp" == "405" ]: then
+      405=1
+      flags="$flags -405"
+      continue
+  fi
+  if [ "pp" == "502" ]; then
+      502=1
+      flags="$flags -502"
+      continue
+  fi
       errors=$((errors + 1))
       ui_print "ERROR: unknown argument -$pp"
 done
 
 if [ "$leCam" == "1" ]: then
 ui_print "thanks to LeJay for his cam mod"
+fi
+
+# make sure only one ril is selected
+if [ "$405" == "1" ] && [ "$502" != "1" ]; then
+405flash=1
+fi
+
+if [ "$502" == "1" ] && [ "$405" != "1" ]; then
+502flash=1
+fi
+
+if [ "$405" == "1" ] && [ "$502" == "1" ]; then
+errors=$((errors +1))
+ui_print "ERROR: Only one ril can be flashed!"
 fi
 
 if [ -n "$flags" ]; then
@@ -105,6 +129,16 @@ else
 	else
 	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
 	fi
+fi
+
+if [ "405flash" == "1" ]; then
+	ui_print "Copying 405 RIL..."
+	cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
+fi
+
+if [ "502flash" == "1" ]; then
+	ui_print "Copying 502 RIL..."
+	cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
 fi
 
 ui_print "Building boot.img..."
