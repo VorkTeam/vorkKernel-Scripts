@@ -41,12 +41,12 @@ for pp in $args; do
       flags="$flags -1080p"
       continue
   fi
-  if [ "$pp" == "BC" ]; then
+  if [ "$pp" == "bc" ]; then
       baconcooker=1
       flags="$flags -baconcooker"
       continue
   fi
-  if [ "$pp" == "leCam" ]; then
+  if [ "$pp" == "lecam" ]; then
       leCam=1
       flags="$flags -leCam"
       continue
@@ -56,9 +56,14 @@ for pp in $args; do
       flags="$flags -405"
       continue
   fi
-  if [ "pp" == "502" ]; then
+  if [ "$pp" == "502" ]; then
       502=1
       flags="$flags -502"
+      continue
+  fi
+  if [ "$pp" == "internal" ]; then
+      internal=1
+      flags="$flags -internal"
       continue
   fi
       errors=$((errors + 1))
@@ -124,7 +129,7 @@ else
 
 	if [ "$leCam" == "1" ]; then
 	  cp files/Camera.apk /system/app/Camera.apk
-	  chmod 0644 /system/app/Camera.apk
+	  chmod 644 /system/app/Camera.apk
 	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
 	else
 	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
@@ -139,6 +144,14 @@ fi
 if [ "502flash" == "1" ]; then
 	ui_print "Copying 502 RIL..."
 	cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
+fi
+
+if [ "internal" == "1" ]; then
+	ui_print "Internal is now the default storage."
+	cp files/vold.fstab /system/etc/vold.fstab
+	chmod 644 /system/etc/vold.fstab
+	cp files/90mountExt /system/etc/init.d/90mountExt
+	chmod 750 /system/etc/init.d/90mountExt
 fi
 
 ui_print "Building boot.img..."
