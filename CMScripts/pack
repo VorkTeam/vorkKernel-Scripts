@@ -59,17 +59,17 @@ clear
 echo "Compiling modules"
 rm -rf $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/*
 cd $SOURCE_DIR
-make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Awesome.zip/system modules_install
+make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/files modules_install
 
 if [ "$release" == "release" ]; then
 make ARCH=arm CROSS_COMPILE="$ARM_EABI" INSTALL_MOD_PATH=$SCRIPT_DIR/CMScripts/Update.zip/system modules_install
 fi
 
-for module in `find $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/$VERSION/kernel/ -name *.ko`
+for module in `find $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/files/lib/modules/$VERSION/kernel/ -name *.ko`
 do
-    cp $module $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/
+    cp $module $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/files/lib/modules/
 done
-rm -r $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/$VERSION
+rm -r $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/files/lib/modules/$VERSION
 
 if [ "$release" == "release" ]; then
 for module in `find $SCRIPT_DIR/CMScripts/Update.zip/system/lib/modules/$VERSION/kernel/ -name *.ko`
