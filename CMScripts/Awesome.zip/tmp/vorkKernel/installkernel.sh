@@ -1,14 +1,12 @@
 #!/sbin/sh
+
 ui_print() {
     echo ui_print "$@" 1>&$UPDATE_CMD_PIPE;
     if [ -n "$@" ]; then
         echo ui_print 1>&$UPDATE_CMD_PIPE;
     fi
 }
-log() { echo "$@"; }
 fatal() { ui_print "$@"; exit 1; }
-
-log ""
 
 basedir=`dirname $0`
 BB=$basedir/busybox
@@ -26,8 +24,8 @@ errors=0
 warning=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
-args=`echo $updatename | $awk 'BEGIN {RS="-"}; NR>2 {print}'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
+args=`echo $updatename | $awk 'BEGIN {RS="-"}; NR>2 {print}'`
 
 ui_print ""
 ui_print "Installing $kernelver"
@@ -37,38 +35,40 @@ ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
   if [ "$pp" == "1080p" ]; then
-      hdrec=1
-      flags="$flags -1080p"
-      continue
+	hdrec=1
+	flags="$flags -1080p"
+	continue
   fi
   if [ "$pp" == "bc" ]; then
-      baconcooker=1
-      flags="$flags -baconcooker"
-      continue
+	baconcooker=1
+	flags="$flags -baconcooker"
+	continue
   fi
   if [ "$pp" == "lecam" ]; then
-      leCam=1
-      flags="$flags -leCam"
-      continue
+	leCam=1
+	flags="$flags -leCam"
+	continue
   fi
   if [ "$pp" == "405" ]: then
-      ril405=1
-      flags="$flags -405"
-      continue
+	ril405=1
+	flags="$flags -405"
+	continue
   fi
   if [ "$pp" == "502" ]; then
-      ril502=1
-      flags="$flags -502"
-      continue
+	ril502=1
+	flags="$flags -502"
+	continue
   fi
   if [ "$pp" == "internal" ]; then
-      internal=1
-      flags="$flags -internal"
-      continue
+	internal=1
+	flags="$flags -internal"
+	continue
   fi
   errors=$((errors + 1))
   ui_print "ERROR: unknown argument -$pp"
 done
+
+ui_print "Done with Parsing"
 
 if [ "$leCam" == "1" ]: then
 ui_print "thanks to LeJay for his cam mod"
@@ -112,11 +112,22 @@ if [ "$hdrec" == "1" ]; then
 	cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
 	if [ "$leCam" == "1" ]; then
+	  $BB rm /system/app/Camera.apk
 	  $BB cp files/Camera.apk /system/app/Camera.apk
 	  $chmod 0644 /system/app/Camera.apk
+	  $BB rm /system/etc/media_profiles.xml
 	  $BB cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+	  if [ "$?" -ne 0 -o ! -f /system/app/Camera.apk ! -f /system/etc/media_profiles.xml ]; then
+    	    ui_print "WARNING: Adding LeCam failed!"
+	    warning=$((warning + 1))
+	  fi
 	else
+	  $BB rm /system/etc/media_profiles.xml
 	  $BB cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
+	  if [ "$?" -ne 0 -o ! -f /system/etc/media_profiles.xml ]; then
+            ui_print "WARNING: Copying media_profiles.xml failed!"
+            warning=$((warning + 1))
+          fi
 	fi
 
 else
@@ -128,30 +139,53 @@ else
 	cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
 	if [ "$leCam" == "1" ]; then
+	  $BB rm /system/app/Camera.apk
 	  $BB cp files/Camera.apk /system/app/Camera.apk
 	  $chmod 644 /system/app/Camera.apk
+	  $BB rm /system/etc/media_profiles.xml
 	  $BB cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
+          if [ "$?" -ne 0 -o ! -f /system/app/Camera.apk ! -f /system/etc/media_profiles.xml ]; then
+            ui_print "WARNING: Adding LeCam failed!"
+            warning=$((warning + 1))
+          fi
 	else
+	  $BB rm /system/etc/media_profiles.xml
 	  $BB cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
+          if [ "$?" -ne 0 -o ! -f /system/etc/media_profiles.xml ]; then
+            ui_print "WARNING: Copying media_profiles.xml failed!"
+            warning=$((warning + 1))
+          fi
 	fi
 fi
 
 if [ "ril405flash" == "1" ]; then
-	ui_print "Copying 405 RIL..."
+	$BB rm /system/lib/lge-ril.so
 	$BB cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
+        if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
+          ui_print "WARNING: Copying 405 RIL failed!"
+          warning=$((warning + 1))
+        fi
 fi
 
 if [ "ril502flash" == "1" ]; then
-	ui_print "Copying 502 RIL..."
+	$BB rm /system/lib/lge-ril.so
 	$BB cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
+        if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
+          ui_print "WARNING: Copying 502 RIL failed!"
+          warning=$((warning + 1))
+        fi
 fi
 
 if [ "internal" == "1" ]; then
-	ui_print "Internal is now the default storage."
+	$BB rm /system/etc/vold.fstab
 	$BB cp files/vold.fstab /system/etc/vold.fstab
 	$chmod 644 /system/etc/vold.fstab
 	$BB cp files/90mountExt /system/etc/init.d/90mountExt
 	$chmod 750 /system/etc/init.d/90mountExt
+        if [ "$?" -ne 0 -o ! -f /system/etc/vold.fstab ! -f /system/etc/init.d/90mountExt ]; then
+          ui_print "WARNING: Changing default storage failed!"
+          warning=$((warning + 1))
+        fi
 fi
 
 ui_print "Building boot.img..."
@@ -176,5 +210,5 @@ ui_print ""
 if [ $warning -gt 0 ]; then
     ui_print "$kernelver installed with $warning warnings."
 else
-    ui_print "$kernelver installed successfully, enjoy :)"
+    ui_print "$kernelver installed successfully. Enjoy"
 fi
