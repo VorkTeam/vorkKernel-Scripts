@@ -160,3 +160,21 @@ if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
 fi
 
+ui_print "Flashing the kernel..."
+$BB dd if=/dev/zero of=/dev/mmcblk0p5
+$BB dd if=/sdcard/boot-new.img of=/dev/mmcblk0p5
+
+ui_print "Installing kernel modules..."
+$BB rm -rf /system/lib/modules
+$BB cp files/lib/modules/* /system/lib/modules/*
+if [ "$?" -ne 0 -o ! -d /system/lib/modules ]; then
+        ui_print "WARNING: kernel modules not installed!"
+        warning=$((warning + 1))
+fi
+
+ui_print ""
+if [ $warning -gt 0 ]; then
+    ui_print "$kernelver installed with $warning warnings."
+else
+    ui_print "$kernelver installed successfully, enjoy :)"
+fi
