@@ -7,5 +7,4 @@ set_perm(0, 0, 0700, "/tmp/vorkKernel/mkbootimg");
 set_perm(0, 0, 0700, "/tmp/vorkKernel/busybox");
 set_perm(0, 0, 0700, "/tmp/vorkKernel/installkernel.sh");
 run_program("/tmp/vorkKernel/installkernel.sh");
-ui_print("Writing Boot Image...");
 unmount("/system");
