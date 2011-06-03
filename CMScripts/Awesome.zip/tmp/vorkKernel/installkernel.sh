@@ -20,7 +20,6 @@ find="$BB find"
 gzip="$BB gzip"
 gunzip="$BB gunzip"
 tar="$BB tar"
-errors=0
 warning=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
@@ -34,70 +33,50 @@ ui_print ""
 ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
-  if [ "$pp" == "1080p" ]; then
-	hdrec=1
-	flags="$flags -1080p"
-	continue
-  fi
-  if [ "$pp" == "bc" ]; then
-	baconcooker=1
-	flags="$flags -baconcooker"
-	continue
-  fi
-  if [ "$pp" == "lecam" ]; then
-	leCam=1
-	flags="$flags -leCam"
-	continue
-  fi
-  if [ "$pp" == "405" ]: then
-	ril405=1
-	flags="$flags -405"
-	continue
-  fi
-  if [ "$pp" == "502" ]; then
-	ril502=1
-	flags="$flags -502"
-	continue
-  fi
-  if [ "$pp" == "internal" ]; then
-	internal=1
-	flags="$flags -internal"
-	continue
-  fi
-  errors=$((errors + 1))
-  ui_print "ERROR: unknown argument -$pp"
+  case $pp in
+  "1080p")
+        hdrec=1
+        flags="$flags -1080p"
+  ;;
+  "bc")
+        baconcooker=1
+        flags="$flags -baconcooker"
+  ;;
+  "lecam")
+        lecam=1
+        flags="$flags -leCam"
+        ui_print "Thanks to LeJay for his cam mod"
+  ;;
+  "405")
+        if [ "$ril502" == "1" ]; then
+            fatal "ERROR: Only one RIL can be flashed!"
+        fi
+        ril405=1
+        flags="$flags -405"
+  ;;
+  "502")
+        if [ "$ril405" == "1" ]; then
+            fatal "ERROR: Only one RIL can be flashed!"
+        fi
+        ril502=1
+        flags="$flags -502"
+  ;;
+  "internal")
+        internal=1
+        flags="$flags -internal"
+  ;;
+  *)
+        fatal "ERROR: Unknown argument -$pp"
+  ;;
+  esac
 done
 
-ui_print "Done with Parsing"
-
-if [ "$leCam" == "1" ]: then
-ui_print "thanks to LeJay for his cam mod"
-fi
-
-# make sure only one ril is selected
-if [ "$ril405" == "1" ] && [ "$ril502" != "1" ]; then
-ril405flash=1
-fi
-
-if [ "$ril502" == "1" ] && [ "$ril405" != "1" ]; then
-ril502flash=1
-fi
-
-if [ "$ril405" == "1" ] && [ "$ril502" == "1" ]; then
-errors=$((errors +1))
-ui_print "ERROR: Only one RIL can be flashed!"
-fi
+ui_print "Parsing complete"
 
 if [ -n "$flags" ]; then
-    ui_print "flags:$flags"
-fi
-
-if [ ! -n "$flags" ]; then
-    ui_print "no flags selected"
-fi
-
-if [ $errors -gt 0 ]; then
-    fatal "argument parsing failed, aborting."
+    ui_print "Flags: $flags"
+else
+    ui_print "No flags selected"
 fi
 
 ui_print "Packing kernel..."
@@ -158,7 +137,7 @@ else
 	fi
 fi
 
-if [ "ril405flash" == "1" ]; then
+if [ "ril405" == "1" ]; then
 	$BB rm /system/lib/lge-ril.so
 	$BB cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
         if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
@@ -167,7 +146,7 @@ if [ "ril405flash" == "1" ]; then
         fi
 fi
 
-if [ "ril502flash" == "1" ]; then
+if [ "ril502" == "1" ]; then
 	$BB rm /system/lib/lge-ril.so
 	$BB cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
         if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
@@ -196,7 +175,7 @@ fi
 
 ui_print "Flashing the kernel..."
 $BB dd if=/dev/zero of=/dev/mmcblk0p5
-$BB dd if=/sdcard/boot-new.img of=/dev/mmcblk0p5
+$BB dd if=/tmp/vorkKernel/boot.img of=/dev/mmcblk0p5
 
 ui_print "Installing kernel modules..."
 $BB rm -rf /system/lib/modules
