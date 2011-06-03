@@ -176,6 +176,9 @@ fi
 ui_print "Flashing the kernel..."
 $BB dd if=/dev/zero of=/dev/mmcblk0p5
 $BB dd if=/tmp/vorkKernel/boot.img of=/dev/mmcblk0p5
+if [ "$?" -ne 0 ]; then
+    fatal "ERROR: Flashing kernel failed!"
+fi
 
 ui_print "Installing kernel modules..."
 $BB rm -rf /system/lib/modules/*
