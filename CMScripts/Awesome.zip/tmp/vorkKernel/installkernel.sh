@@ -20,7 +20,6 @@ find="$BB find"
 gzip="$BB gzip"
 gunzip="$BB gunzip"
 tar="$BB tar"
-errors=0
 warning=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
@@ -176,7 +175,7 @@ fi
 
 ui_print "Flashing the kernel..."
 $BB dd if=/dev/zero of=/dev/mmcblk0p5
-$BB dd if=/sdcard/boot-new.img of=/dev/mmcblk0p5
+$BB dd if=/tmp/vorkKernel/boot.img of=/dev/mmcblk0p5
 
 ui_print "Installing kernel modules..."
 $BB rm -rf /system/lib/modules
