@@ -17,9 +17,6 @@ chown="$BB chown"
 chgrp="$BB chgrp"
 cpio="$BB cpio"
 find="$BB find"
-gzip="$BB gzip"
-gunzip="$BB gunzip"
-tar="$BB tar"
 warning=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
@@ -174,8 +171,10 @@ if [ "$?" -ne 0 -o ! -f boot.img ]; then
 fi
 
 ui_print "Flashing the kernel..."
-$BB dd if=/dev/zero of=/dev/mmcblk0p5
-$BB dd if=$basedir/boot.img of=/dev/mmcblk0p5
+# Test new flashing method
+# $BB dd if=/dev/zero of=/dev/mmcblk0p5
+# $BB dd if=$basedir/boot.img of=/dev/mmcblk0p5
+flash_image boot $basedir/boot.img
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
