@@ -170,17 +170,16 @@ if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
 fi
 
-# ui_print "Flashing the kernel..."
-# Test new flashing method
-# $BB dd if=/dev/zero of=/dev/mmcblk0p5
-# $BB dd if=$basedir/boot.img of=/dev/mmcblk0p5
-# if [ "$?" -ne 0 ]; then
-#     fatal "ERROR: Flashing kernel failed!"
-# fi
+ui_print "Flashing the kernel..."
+$BB dd if=/dev/zero of=/dev/block/mmcblk0p5
+$BB dd if=$basedir/boot.img of=/dev/block/mmcblk0p5
+if [ "$?" -ne 0 ]; then
+    fatal "ERROR: Flashing kernel failed!"
+fi
 
 ui_print "Installing kernel modules..."
-$BB rm -rf /system/lib/modules/*
-$BB cp files/lib/modules/* /system/lib/modules/
+$BB rm -rf /system/lib/modules
+$BB cp -r files/lib/modules /system/lib/
 if [ "$?" -ne 0 -o ! -d /system/lib/modules ]; then
         ui_print "WARNING: kernel modules not installed!"
         warning=$((warning + 1))
