@@ -178,7 +178,7 @@ $BB dd if=/dev/zero of=/dev/mmcblk0p5
 $BB dd if=/tmp/vorkKernel/boot.img of=/dev/mmcblk0p5
 
 ui_print "Installing kernel modules..."
-$BB rm -rf /system/lib/modules
+$BB rm -rf /system/lib/modules/*
 $BB cp files/lib/modules/* /system/lib/modules/*
 if [ "$?" -ne 0 -o ! -d /system/lib/modules ]; then
         ui_print "WARNING: kernel modules not installed!"
