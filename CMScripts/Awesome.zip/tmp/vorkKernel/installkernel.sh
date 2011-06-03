@@ -67,24 +67,17 @@ for pp in $args; do
         flags="$flags -internal"
   ;;
   *)
-        errors=$((errors + 1))
-        ui_print "ERROR: unknown argument -$pp"
+        fatal "ERROR: Unknown argument -$pp"
   ;;
   esac
 done
 
-ui_print "Done with Parsing"
+ui_print "Parsing complete"
 
 if [ -n "$flags" ]; then
-    ui_print "flags:$flags"
-fi
-
-if [ ! -n "$flags" ]; then
-    ui_print "no flags selected"
-fi
-
-if [ $errors -gt 0 ]; then
-    fatal "argument parsing failed, aborting."
+    ui_print "Flags: $flags"
+else
+    ui_print "No flags selected"
 fi
 
 ui_print "Packing kernel..."
