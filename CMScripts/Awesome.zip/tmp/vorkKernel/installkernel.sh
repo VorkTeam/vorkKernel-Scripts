@@ -168,14 +168,14 @@ if [ "internal" == "1" ]; then
 fi
 
 ui_print "Building boot.img..."
-/tmp/vorkKernel/mkbootimg --kernel /tmp/vorkKernel/zImage --ramdisk /tmp/vorkKernel/ramdisk-boot --cmdline "$cline" -o /tmp/vorkKernel/boot.img --base 0x10000000
+$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/ramdisk-boot --cmdline "$cline" -o $basedir/boot.img --base 0x10000000
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
 fi
 
 ui_print "Flashing the kernel..."
 $BB dd if=/dev/zero of=/dev/mmcblk0p5
-$BB dd if=/tmp/vorkKernel/boot.img of=/dev/mmcblk0p5
+$BB dd if=$basedir/boot.img of=/dev/mmcblk0p5
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
