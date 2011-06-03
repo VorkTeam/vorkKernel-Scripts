@@ -34,38 +34,35 @@ ui_print ""
 ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
-  if [ "$pp" == "1080p" ]; then
-	hdrec=1
-	flags="$flags -1080p"
-	continue
-  fi
-  if [ "$pp" == "bc" ]; then
-	baconcooker=1
-	flags="$flags -baconcooker"
-	continue
-  fi
-  if [ "$pp" == "lecam" ]; then
-	leCam=1
-	flags="$flags -leCam"
-	continue
-  fi
-  if [ "$pp" == "405" ]: then
-	ril405=1
-	flags="$flags -405"
-	continue
-  fi
-  if [ "$pp" == "502" ]; then
-	ril502=1
-	flags="$flags -502"
-	continue
-  fi
-  if [ "$pp" == "internal" ]; then
-	internal=1
-	flags="$flags -internal"
-	continue
-  fi
-  errors=$((errors + 1))
-  ui_print "ERROR: unknown argument -$pp"
+  case $pp in
+  "1080p")
+        hdrec=1
+        flags="$flags -1080p"
+  ;;
+  "bc")
+        baconcooker=1
+        flags="$flags -baconcooker"
+  ;;
+  "lecam")
+        lecam=1
+        flags="$flags -leCam"
+  ;;
+  "405")
+        ril405=1
+        flags="$flags -405"
+  ;;
+  "502")
+        ril502=1
+        flags="$flags -502"
+  ;;
+  "internal")
+        internal=1
+        flags="$flags -internal"
+  ;;
+  *)
+        errors=$((errors + 1))
+        ui_print "ERROR: unknown argument -$pp"
+  ;;
 done
 
 ui_print "Done with Parsing"
