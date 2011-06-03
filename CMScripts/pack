@@ -14,9 +14,13 @@ rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
 DIR=$PWD
 NOW=$(date +"%d%m%y")
-echo "Do you want to build a release or a test version?"
-echo "1 for Release, 2 for Test"
-read BUILD
+if [ ! -n "$1" ]; then
+	echo "Do you want to build a release or a test version?"
+	echo "1 for Release, 2 for Test"
+	read BUILD
+else
+	BUILD=$1
+fi
 case $BUILD in
 	1) signed_file=vorkKernel-"$NOW".zip
 	   export release=release 
