@@ -46,12 +46,19 @@ for pp in $args; do
   "lecam")
         lecam=1
         flags="$flags -leCam"
+        ui_print "Thanks to LeJay for his cam mod"
   ;;
   "405")
+        if [ "$ril502" == "1" ]; then
+            fatal "ERROR: Only one RIL can be flashed!"
+        fi
         ril405=1
         flags="$flags -405"
   ;;
   "502")
+        if [ "$ril405" == "1" ]; then
+            fatal "ERROR: Only one RIL can be flashed!"
+        fi
         ril502=1
         flags="$flags -502"
   ;;
@@ -63,27 +70,10 @@ for pp in $args; do
         errors=$((errors + 1))
         ui_print "ERROR: unknown argument -$pp"
   ;;
+  esac
 done
 
 ui_print "Done with Parsing"
-
-if [ "$leCam" == "1" ]: then
-ui_print "thanks to LeJay for his cam mod"
-fi
-
-# make sure only one ril is selected
-if [ "$ril405" == "1" ] && [ "$ril502" != "1" ]; then
-ril405flash=1
-fi
-
-if [ "$ril502" == "1" ] && [ "$ril405" != "1" ]; then
-ril502flash=1
-fi
-
-if [ "$ril405" == "1" ] && [ "$ril502" == "1" ]; then
-errors=$((errors +1))
-ui_print "ERROR: Only one RIL can be flashed!"
-fi
 
 if [ -n "$flags" ]; then
     ui_print "flags:$flags"
@@ -155,7 +145,7 @@ else
 	fi
 fi
 
-if [ "ril405flash" == "1" ]; then
+if [ "ril405" == "1" ]; then
 	$BB rm /system/lib/lge-ril.so
 	$BB cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
         if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
@@ -164,7 +154,7 @@ if [ "ril405flash" == "1" ]; then
         fi
 fi
 
-if [ "ril502flash" == "1" ]; then
+if [ "ril502" == "1" ]; then
 	$BB rm /system/lib/lge-ril.so
 	$BB cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
         if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
