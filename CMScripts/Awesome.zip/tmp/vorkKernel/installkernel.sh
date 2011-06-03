@@ -174,7 +174,7 @@ ui_print "Flashing the kernel..."
 # Test new flashing method
 # $BB dd if=/dev/zero of=/dev/mmcblk0p5
 # $BB dd if=$basedir/boot.img of=/dev/mmcblk0p5
-flash_image /dev/mmcblk0p5 $basedir/boot.img
+$basedir/flash_image /dev/mmcblk0p5 $basedir/boot.img
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
