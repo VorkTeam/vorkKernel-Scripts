@@ -97,7 +97,35 @@ else
 	cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 fi
 ui_print "Selected correct Kernel version..."
-
+ui_print ""
+ui_print ""
+ui_print "Building boot.img..."
+$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/ramdisk-boot --cmdline "$cline" -o $basedir/boot.img --base 0x10000000
+if [ "$?" -ne 0 -o ! -f boot.img ]; then
+    fatal "ERROR: Packing kernel failed!"
+fi
+ui_print ""
+ui_print ""
+ui_print "Flashing the kernel..."
+$BB dd if=/dev/zero of=/dev/block/mmcblk0p5
+$BB dd if=$basedir/boot.img of=/dev/block/mmcblk0p5
+if [ "$?" -ne 0 ]; then
+    fatal "ERROR: Flashing kernel failed!"
+fi
+ui_print ""
+ui_print ""
+ui_print "Installing kernel modules..."
+rm -rf /system/lib/modules
+cp -r files/lib/modules /system/lib/
+if [ "$?" -ne 0 -o ! -d /system/lib/modules ]; then
+        ui_print "WARNING: kernel modules not installed!"
+        warning=$((warning + 1))
+fi
+ui_print ""
+ui_print ""
+if [ -n "$flags" ]; then
+ui_print "Installing additional mods..."
+fi
 # LeCam
 if [ "$hdrec" == "1" ]; then
 	rm /system/app/Camera.apk
@@ -117,6 +145,13 @@ if [ "$hdrec" == "1" ]; then
 	  fi
 	fi
 else
+	rm /system/app/Camera.apk
+	if [ ! -f /system/app/Camera.apk ]; then
+	          ui_print "Old Camera.apk deleted. Adding modified one..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
 	if [ "$lecam" == "1" ]; then
 	  cp $basedir/files/Camera.apk /system/app/Camera.apk
 	  chmod 644 /system/app/Camera.apk
@@ -227,27 +262,6 @@ if [ "internal" == "1" ]; then
           ui_print "WARNING: Adding init script failed!"
           warning=$((warning + 1))
         fi        
-fi
-
-ui_print "Building boot.img..."
-$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/ramdisk-boot --cmdline "$cline" -o $basedir/boot.img --base 0x10000000
-if [ "$?" -ne 0 -o ! -f boot.img ]; then
-    fatal "ERROR: Packing kernel failed!"
-fi
-
-ui_print "Flashing the kernel..."
-$BB dd if=/dev/zero of=/dev/block/mmcblk0p5
-$BB dd if=$basedir/boot.img of=/dev/block/mmcblk0p5
-if [ "$?" -ne 0 ]; then
-    fatal "ERROR: Flashing kernel failed!"
-fi
-
-ui_print "Installing kernel modules..."
-rm -rf /system/lib/modules
-cp -r files/lib/modules /system/lib/
-if [ "$?" -ne 0 -o ! -d /system/lib/modules ]; then
-        ui_print "WARNING: kernel modules not installed!"
-        warning=$((warning + 1))
 fi
 
 ui_print ""
