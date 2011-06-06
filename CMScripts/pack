@@ -12,6 +12,14 @@ export SOURCE_DIR=/opt/vorkKernel-LG-o2x
 
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
+rm $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImage*
+rm $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p/zImage*
+if [ ! -d $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images ];then
+mkdir $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images
+fi
+if [ ! -d $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p ];then
+mkdir $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p
+fi
 DIR=$PWD
 NOW=$(date +"%d%m%y")
 if [ ! -n "$1" ]; then
