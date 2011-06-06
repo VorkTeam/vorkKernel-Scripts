@@ -58,6 +58,11 @@ for pp in $args; do
         ril502=1
         flags="$flags -502"
   ;;
+  "EXT4")
+        EXT4=1
+        flags="$flags -EXT4"
+        ui_print "WARNING: This is a Experimental Feature! No support is given!"
+  ;;
   "internal")
         internal=1
         flags="$flags -internal"
@@ -79,6 +84,19 @@ fi
 ui_print "Packing kernel..."
 
 cd $basedir
+
+if [ "$EXT4" == "1" ]; then
+	ui_print "Converting to EXT4..."
+	/sbin/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
+	/sbin/e2fsck -p /dev/block/mmcblk0p8
+	/sbin/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
+	/sbin/e2fsck -p /dev/block/mmcblk0p1
+	cp $basedir/files/ramdisk-boot-EXT4 $basedir/ramdisk-boot
+	cp $basedir/files/10mount /system/etc/init.d/10mount
+	cp $basedir/files/99complete /system/etc/init.d/99complete
+        $chmod 750 /system/etc/init.d/99complete
+        $chmod 750 /system/etc/init.d/10mount
+fi
 
 #Choose Kernel
 if [ "$hdrec" == "1" ]; then
@@ -125,7 +143,7 @@ fi
 # LeCam
 if [ "$lecam" == "1" ]; then
   cp $basedir/files/Camera.apk /system/app/Camera.apk
-  chmod 644 /system/app/Camera.apk
+  $chmod 644 /system/app/Camera.apk
 fi
 
 # Media Profiles
@@ -161,9 +179,9 @@ fi
 if [ "internal" == "1" ]; then
 	rm /system/etc/vold.fstab
 	cp $basedir/files/vold.fstab /system/etc/vold.fstab
-	chmod 644 /system/etc/vold.fstab
+	$chmod 644 /system/etc/vold.fstab
 	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
-	chmod 750 /system/etc/init.d/90mountExt      
+	$chmod 750 /system/etc/init.d/90mountExt      
 fi
 
 ui_print ""
