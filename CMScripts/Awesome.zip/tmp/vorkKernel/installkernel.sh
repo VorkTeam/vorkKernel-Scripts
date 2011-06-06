@@ -107,7 +107,7 @@ if [ "$hdrec" == "1" ]; then
 	          warning=$((warning + 1))
         fi
         
-	if [ "$leCam" == "1" ]; then
+	if [ "$lecam" == "1" ]; then
 	  cp $basedir/files/Camera.apk /system/app/Camera.apk
 	  chmod 644 /system/app/Camera.apk
 	  if [ ! -f /system/app/Camera.apk ]; then
@@ -116,7 +116,7 @@ if [ "$hdrec" == "1" ]; then
 	  fi
 	fi
 else
-	if [ "$leCam" == "1" ]; then
+	if [ "$lecam" == "1" ]; then
 	  cp $basedir/files/Camera.apk /system/app/Camera.apk
 	  chmod 644 /system/app/Camera.apk
 	  if [ ! -f /system/app/Camera.apk ]; then
@@ -136,18 +136,18 @@ if [ "$hdrec" == "1" ]; then
 	          warning=$((warning + 1))
         fi
         
-	if [ "$leCam" == "1" ]; then
-	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+        cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
+	if [ ! -f /system/etc/media_profiles.xml ]; then
+          ui_print "WARNING: Copying media_profiles.xml failed!"
+          warning=$((warning + 1))
+        fi
+
+	if [ "$lecam" == "1" ]; then
+	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
 	  if [ ! -f /system/etc/media_profiles.xml ]: then
-	  	ui_print "WARNING: Adding updated media_profiles failed!"
-	  	warning=$((warning + 1))
+    	    ui_print "WARNING: Copying media_profiles.xml failed!"
+	    warning=$((warning + 1))
 	  fi
-	else
-	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]; then
-            ui_print "WARNING: Copying media_profiles.xml failed!"
-            warning=$((warning + 1))
-          fi
 	fi
 else
 	rm /system/etc/media_profiles.xml
@@ -157,19 +157,19 @@ else
 		  ui_print "WARNING: Deleting failed!"
 	          warning=$((warning + 1))
         fi
-        
-	if [ "$leCam" == "1" ]; then
+
+        cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
+	if [ ! -f /system/etc/media_profiles.xml ]; then
+          ui_print "WARNING: Copying media_profiles.xml failed!"
+          warning=$((warning + 1))
+        fi
+
+	if [ "$lecam" == "1" ]; then
 	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
 	  if [ ! -f /system/etc/media_profiles.xml ]: then
-    	    ui_print "WARNING: Adding updated media_profiles failed!"
+    	    ui_print "WARNING: Copying media_profiles.xml failed!"
 	    warning=$((warning + 1))
 	  fi
-	else
-	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]; then
-            ui_print "WARNING: Copying media_profiles.xml failed!"
-            warning=$((warning + 1))
-          fi
 	fi
 fi
 
