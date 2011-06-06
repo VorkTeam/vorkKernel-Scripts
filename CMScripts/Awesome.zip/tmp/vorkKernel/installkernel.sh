@@ -79,6 +79,8 @@ fi
 ui_print "Packing kernel..."
 
 cd $basedir
+
+#Choose Kernel
 if [ "$hdrec" == "1" ]; then
 	if [ "$baconcooker" == "1" ]; then 
 		cp $basedir/Images/1080p/zImageBC $basedir/zImage
@@ -86,48 +88,6 @@ if [ "$hdrec" == "1" ]; then
 		cp $basedir/Images/1080p/zImage $basedir/zImage
 	fi
 	cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-
-	if [ "$leCam" == "1" ]; then
-	  rm /system/app/Camera.apk
-	  if [ ! -f /system/app/Camera.apk ]; then
-	            ui_print "Old Camera.apk deleted. Adding modified one..."
-	  else
-		    ui_print "WARNING: Deleting failed!"
-	            warning=$((warning + 1))
-          fi
-	  cp $basedir/files/Camera.apk /system/app/Camera.apk
-	  chmod 644 /system/app/Camera.apk
-	  if [ ! -f /system/app/Camera.apk ]; then
-    	    ui_print "WARNING: Adding LeCam failed!"
-	    warning=$((warning + 1))
-	  fi
-	  rm /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]; then
-	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
-	  else
-		    ui_print "WARNING: Deleting failed!"
-	            warning=$((warning + 1))
-          fi
-	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]: then
-    	    ui_print "WARNING: Adding updated media_profiles failed!"
-	    warning=$((warning + 1))
-	  fi
-	else
-	  rm /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]; then
-	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
-	  else
-		    ui_print "WARNING: Deleting failed!"
-	            warning=$((warning + 1))
-          fi
-	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]; then
-            ui_print "WARNING: Copying media_profiles.xml failed!"
-            warning=$((warning + 1))
-          fi
-	fi
-
 else
 	if [ "$baconcooker" == "1" ]; then 
 		cp $basedir/Images/zImageBC $basedir/zImage
@@ -135,41 +95,76 @@ else
 		cp $basedir/Images/zImage $basedir/zImage
 	fi
 	cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
+fi
 
+# LeCam
+if [ "$hdrec" == "1" ]; then
+	rm /system/app/Camera.apk
+	if [ ! -f /system/app/Camera.apk ]; then
+	          ui_print "Old Camera.apk deleted. Adding modified one..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
+        
 	if [ "$leCam" == "1" ]; then
-	  rm /system/app/Camera.apk
-	  if [ ! -f /system/app/Camera.apk ]; then
-	            ui_print "Old Camera.apk deleted. Adding modified one..."
-	  else
-		    ui_print "WARNING: Deleting failed!"
-	            warning=$((warning + 1))
-          fi
 	  cp $basedir/files/Camera.apk /system/app/Camera.apk
 	  chmod 644 /system/app/Camera.apk
 	  if [ ! -f /system/app/Camera.apk ]; then
     	    ui_print "WARNING: Adding LeCam failed!"
 	    warning=$((warning + 1))
 	  fi
-	  rm /system/etc/media_profiles.xml
+	fi
+else
+	if [ "$leCam" == "1" ]; then
+	  cp $basedir/files/Camera.apk /system/app/Camera.apk
+	  chmod 644 /system/app/Camera.apk
+	  if [ ! -f /system/app/Camera.apk ]; then
+    	    ui_print "WARNING: Adding LeCam failed!"
+	    warning=$((warning + 1))
+	  fi
+	fi
+fi
+
+# Media Profiles
+if [ "$hdrec" == "1" ]; then
+	rm /system/etc/media_profiles.xml
+	if [ ! -f /system/etc/media_profiles.xml ]; then
+	          ui_print "Old media_profiles.xml deleted. Adding modified one..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
+        
+	if [ "$leCam" == "1" ]; then
+	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+	  if [ ! -f /system/etc/media_profiles.xml ]: then
+	  	ui_print "WARNING: Adding updated media_profiles failed!"
+	  	warning=$((warning + 1))
+	  fi
+	else
+	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
 	  if [ ! -f /system/etc/media_profiles.xml ]; then
-	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
-	  else
-		    ui_print "WARNING: Deleting failed!"
-	            warning=$((warning + 1))
+            ui_print "WARNING: Copying media_profiles.xml failed!"
+            warning=$((warning + 1))
           fi
+	fi
+else
+	rm /system/etc/media_profiles.xml
+	if [ ! -f /system/etc/media_profiles.xml ]; then
+	          ui_print "Old media_profiles.xml deleted. Adding modified one..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
+        
+	if [ "$leCam" == "1" ]; then
 	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
 	  if [ ! -f /system/etc/media_profiles.xml ]: then
     	    ui_print "WARNING: Adding updated media_profiles failed!"
 	    warning=$((warning + 1))
 	  fi
 	else
-	  rm /system/etc/media_profiles.xml
-	  if [ ! -f /system/etc/media_profiles.xml ]; then
-	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
-	  else
-		    ui_print "WARNING: Deleting failed!"
-	            warning=$((warning + 1))
-          fi
 	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
 	  if [ ! -f /system/etc/media_profiles.xml ]; then
             ui_print "WARNING: Copying media_profiles.xml failed!"
@@ -178,6 +173,7 @@ else
 	fi
 fi
 
+# Ril 405
 if [ "ril405" == "1" ]; then
 	rm /system/lib/lge-ril.so
 	if [ ! -f /system/lib/lge-ril.so ]; then
@@ -193,6 +189,7 @@ if [ "ril405" == "1" ]; then
         fi
 fi
 
+# Ril 502
 if [ "ril502" == "1" ]; then
 	rm /system/lib/lge-ril.so
 	if [ ! -f /system/lib/lge-ril.so ]; then
@@ -208,6 +205,7 @@ if [ "ril502" == "1" ]; then
         fi
 fi
 
+# internal
 if [ "internal" == "1" ]; then
 	rm /system/etc/vold.fstab
 	if [ ! -f /system/etc/vold.fstab ]; then
