@@ -89,18 +89,40 @@ if [ "$hdrec" == "1" ]; then
 
 	if [ "$leCam" == "1" ]; then
 	  rm /system/app/Camera.apk
+	  if [ ! -f /system/app/Camera.apk ]; then
+	            ui_print "Old Camera.apk deleted. Adding modified one..."
+	  else
+		    ui_print "WARNING: Deleting failed!"
+	            warning=$((warning + 1))
+          fi
 	  cp $basedir/files/Camera.apk /system/app/Camera.apk
 	  chmod 644 /system/app/Camera.apk
-	  rm /system/etc/media_profiles.xml
-	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
-	  if [ "$?" -ne 0 -o ! -f /system/app/Camera.apk ! -f /system/etc/media_profiles.xml ]; then
+	  if [ ! -f /system/app/Camera.apk ]; then
     	    ui_print "WARNING: Adding LeCam failed!"
+	    warning=$((warning + 1))
+	  fi
+	  rm /system/etc/media_profiles.xml
+	  if [ ! -f /system/etc/media_profiles.xml ]; then
+	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
+	  else
+		    ui_print "WARNING: Deleting failed!"
+	            warning=$((warning + 1))
+          fi
+	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+	  if [ ! -f /system/etc/media_profiles.xml ]: then
+    	    ui_print "WARNING: Adding updated media_profiles failed!"
 	    warning=$((warning + 1))
 	  fi
 	else
 	  rm /system/etc/media_profiles.xml
+	  if [ ! -f /system/etc/media_profiles.xml ]; then
+	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
+	  else
+		    ui_print "WARNING: Deleting failed!"
+	            warning=$((warning + 1))
+          fi
 	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
-	  if [ "$?" -ne 0 -o ! -f /system/etc/media_profiles.xml ]; then
+	  if [ ! -f /system/etc/media_profiles.xml ]; then
             ui_print "WARNING: Copying media_profiles.xml failed!"
             warning=$((warning + 1))
           fi
@@ -116,18 +138,40 @@ else
 
 	if [ "$leCam" == "1" ]; then
 	  rm /system/app/Camera.apk
+	  if [ ! -f /system/app/Camera.apk ]; then
+	            ui_print "Old Camera.apk deleted. Adding modified one..."
+	  else
+		    ui_print "WARNING: Deleting failed!"
+	            warning=$((warning + 1))
+          fi
 	  cp $basedir/files/Camera.apk /system/app/Camera.apk
 	  chmod 644 /system/app/Camera.apk
+	  if [ ! -f /system/app/Camera.apk ]; then
+    	    ui_print "WARNING: Adding LeCam failed!"
+	    warning=$((warning + 1))
+	  fi
 	  rm /system/etc/media_profiles.xml
-	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
-          if [ "$?" -ne 0 -o ! -f /system/app/Camera.apk ! -f /system/etc/media_profiles.xml ]; then
-            ui_print "WARNING: Adding LeCam failed!"
-            warning=$((warning + 1))
+	  if [ ! -f /system/etc/media_profiles.xml ]; then
+	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
+	  else
+		    ui_print "WARNING: Deleting failed!"
+	            warning=$((warning + 1))
           fi
+	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
+	  if [ ! -f /system/etc/media_profiles.xml ]: then
+    	    ui_print "WARNING: Adding updated media_profiles failed!"
+	    warning=$((warning + 1))
+	  fi
 	else
 	  rm /system/etc/media_profiles.xml
+	  if [ ! -f /system/etc/media_profiles.xml ]; then
+	            ui_print "Old media_profiles.xml deleted. Adding modified one..."
+	  else
+		    ui_print "WARNING: Deleting failed!"
+	            warning=$((warning + 1))
+          fi
 	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
-          if [ "$?" -ne 0 -o ! -f /system/etc/media_profiles.xml ]; then
+	  if [ ! -f /system/etc/media_profiles.xml ]; then
             ui_print "WARNING: Copying media_profiles.xml failed!"
             warning=$((warning + 1))
           fi
@@ -136,8 +180,14 @@ fi
 
 if [ "ril405" == "1" ]; then
 	rm /system/lib/lge-ril.so
+	if [ ! -f /system/lib/lge-ril.so ]; then
+	          ui_print "Old RIL deleted. Adding 405 RIL..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
 	cp $basedir/files/ril/405/lge-ril.so /system/lib/lge-ril.so
-        if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
+        if [ ! -f /system/lib/lge-ril.so ]; then
           ui_print "WARNING: Copying 405 RIL failed!"
           warning=$((warning + 1))
         fi
@@ -145,8 +195,14 @@ fi
 
 if [ "ril502" == "1" ]; then
 	rm /system/lib/lge-ril.so
+	if [ ! -f /system/lib/lge-ril.so ]; then
+	          ui_print "Old RIL deleted. Adding 502 RIL..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
 	cp $basedir/files/ril/502/lge-ril.so /system/lib/lge-ril.so
-        if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
+        if [ ! -f /system/lib/lge-ril.so ]; then
           ui_print "WARNING: Copying 502 RIL failed!"
           warning=$((warning + 1))
         fi
@@ -154,14 +210,24 @@ fi
 
 if [ "internal" == "1" ]; then
 	rm /system/etc/vold.fstab
+	if [ ! -f /system/etc/vold.fstab ]; then
+	          ui_print "Old fstab deleted. Adding modified one..."
+	else
+		  ui_print "WARNING: Deleting failed!"
+	          warning=$((warning + 1))
+        fi
 	cp $basedir/files/vold.fstab /system/etc/vold.fstab
 	chmod 644 /system/etc/vold.fstab
-	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
-	chmod 750 /system/etc/init.d/90mountExt
-        if [ "$?" -ne 0 -o ! -f /system/etc/vold.fstab ! -f /system/etc/init.d/90mountExt ]; then
+        if [ ! -f /system/etc/vold.fstab  ]; then
           ui_print "WARNING: Changing default storage failed!"
           warning=$((warning + 1))
         fi
+	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
+	chmod 750 /system/etc/init.d/90mountExt
+        if [ ! -f /system/etc/init.d/90mountExt ]; then
+          ui_print "WARNING: Adding init script failed!"
+          warning=$((warning + 1))
+        fi        
 fi
 
 ui_print "Building boot.img..."
