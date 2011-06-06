@@ -81,25 +81,25 @@ ui_print "Packing kernel..."
 cd $basedir
 if [ "$hdrec" == "1" ]; then
 	if [ "$baconcooker" == "1" ]; then 
-		$BB cp Images/1080p/zImageBC zImage
+		cp Images/1080p/zImageBC zImage
 	else
-		$BB cp Images/1080p/zImage zImage
+		cp Images/1080p/zImage zImage
 	fi
 	cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
 	if [ "$leCam" == "1" ]; then
-	  $BB rm /system/app/Camera.apk
-	  $BB cp files/Camera.apk /system/app/Camera.apk
-	  $chmod 0644 /system/app/Camera.apk
-	  $BB rm /system/etc/media_profiles.xml
-	  $BB cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
+	  rm /system/app/Camera.apk
+	  cp files/Camera.apk /system/app/Camera.apk
+	  chmod 644 /system/app/Camera.apk
+	  rm /system/etc/media_profiles.xml
+	  cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
 	  if [ "$?" -ne 0 -o ! -f /system/app/Camera.apk ! -f /system/etc/media_profiles.xml ]; then
     	    ui_print "WARNING: Adding LeCam failed!"
 	    warning=$((warning + 1))
 	  fi
 	else
-	  $BB rm /system/etc/media_profiles.xml
-	  $BB cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
+	  rm /system/etc/media_profiles.xml
+	  cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
 	  if [ "$?" -ne 0 -o ! -f /system/etc/media_profiles.xml ]; then
             ui_print "WARNING: Copying media_profiles.xml failed!"
             warning=$((warning + 1))
@@ -108,25 +108,25 @@ if [ "$hdrec" == "1" ]; then
 
 else
 	if [ "$baconcooker" == "1" ]; then 
-		$BB cp Images/zImageBC zImage
+		cp Images/zImageBC zImage
 	else
-		$BB cp Images/zImage zImage
+		cp Images/zImage zImage
 	fi
 	cline="mem=447M@0M nvmem=64M@447M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 
 	if [ "$leCam" == "1" ]; then
-	  $BB rm /system/app/Camera.apk
-	  $BB cp files/Camera.apk /system/app/Camera.apk
-	  $chmod 644 /system/app/Camera.apk
-	  $BB rm /system/etc/media_profiles.xml
-	  $BB cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
+	  rm /system/app/Camera.apk
+	  cp files/Camera.apk /system/app/Camera.apk
+	  chmod 644 /system/app/Camera.apk
+	  rm /system/etc/media_profiles.xml
+	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
           if [ "$?" -ne 0 -o ! -f /system/app/Camera.apk ! -f /system/etc/media_profiles.xml ]; then
             ui_print "WARNING: Adding LeCam failed!"
             warning=$((warning + 1))
           fi
 	else
-	  $BB rm /system/etc/media_profiles.xml
-	  $BB cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
+	  rm /system/etc/media_profiles.xml
+	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
           if [ "$?" -ne 0 -o ! -f /system/etc/media_profiles.xml ]; then
             ui_print "WARNING: Copying media_profiles.xml failed!"
             warning=$((warning + 1))
@@ -135,8 +135,8 @@ else
 fi
 
 if [ "ril405" == "1" ]; then
-	$BB rm /system/lib/lge-ril.so
-	$BB cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
+	rm /system/lib/lge-ril.so
+	cp files/ril/405/lge-ril.so /system/lib/lge-ril.so
         if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
           ui_print "WARNING: Copying 405 RIL failed!"
           warning=$((warning + 1))
@@ -144,8 +144,8 @@ if [ "ril405" == "1" ]; then
 fi
 
 if [ "ril502" == "1" ]; then
-	$BB rm /system/lib/lge-ril.so
-	$BB cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
+	rm /system/lib/lge-ril.so
+	cp files/ril/502/lge-ril.so /system/lib/lge-ril.so
         if [ "$?" -ne 0 -o ! -f /system/lib/lge-ril.so ]; then
           ui_print "WARNING: Copying 502 RIL failed!"
           warning=$((warning + 1))
@@ -153,11 +153,11 @@ if [ "ril502" == "1" ]; then
 fi
 
 if [ "internal" == "1" ]; then
-	$BB rm /system/etc/vold.fstab
-	$BB cp files/vold.fstab /system/etc/vold.fstab
-	$chmod 644 /system/etc/vold.fstab
-	$BB cp files/90mountExt /system/etc/init.d/90mountExt
-	$chmod 750 /system/etc/init.d/90mountExt
+	rm /system/etc/vold.fstab
+	cp files/vold.fstab /system/etc/vold.fstab
+	chmod 644 /system/etc/vold.fstab
+	cp files/90mountExt /system/etc/init.d/90mountExt
+	chmod 750 /system/etc/init.d/90mountExt
         if [ "$?" -ne 0 -o ! -f /system/etc/vold.fstab ! -f /system/etc/init.d/90mountExt ]; then
           ui_print "WARNING: Changing default storage failed!"
           warning=$((warning + 1))
@@ -178,8 +178,8 @@ if [ "$?" -ne 0 ]; then
 fi
 
 ui_print "Installing kernel modules..."
-$BB rm -rf /system/lib/modules
-$BB cp -r files/lib/modules /system/lib/
+rm -rf /system/lib/modules
+cp -r files/lib/modules /system/lib/
 if [ "$?" -ne 0 -o ! -d /system/lib/modules ]; then
         ui_print "WARNING: kernel modules not installed!"
         warning=$((warning + 1))
