@@ -40,9 +40,13 @@ for pp in $args; do
         flags="$flags -baconcooker"
   ;;
   "lecam")
-        lecam=1
-        flags="$flags -leCam"
-        ui_print "Thanks to LeJay for his cam mod"
+        if [ "$hdrec" == "1" ]; then
+          lecam=1
+          flags="$flags -leCam"
+          ui_print "Thanks to LeJay for his cam mod"
+        else
+          fatal "ERROR: 1080p needs to be enabled for this!"
+        fi
   ;;
   "405")
         if [ "$ril502" == "1" ]; then
@@ -138,11 +142,7 @@ if [ "$hdrec" == "1" ]; then
         fi
 else
 	rm /system/etc/media_profiles.xml
-	if [ "$lecam" == "1" ]; then
-	  cp $basedir/files/media_profiles.xml-le720 /system/etc/media_profiles.xml
-	else
-    	  cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
-	fi
+    	cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
 fi
 
 # Ril 405
