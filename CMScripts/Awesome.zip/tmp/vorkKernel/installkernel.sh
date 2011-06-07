@@ -69,6 +69,7 @@ for pp in $args; do
   "silent")
         silent=1
         flags="$flags -silent"
+  ;;
   *)
         fatal "ERROR: Unknown argument -$pp"
   ;;
