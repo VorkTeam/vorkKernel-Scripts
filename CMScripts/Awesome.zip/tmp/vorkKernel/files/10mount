@@ -1,5 +1,0 @@
-#!/system/bin/sh
-mount -o remount,noauto_da_alloc,noatime,nodiratime /system /system
-mount -o remount,noauto_da_alloc,nosuid,nodev,noatime,nodiratime /data /data
-
-busybox mount -o remount,rw -t rootfs /
