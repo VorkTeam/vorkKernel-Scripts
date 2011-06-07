@@ -125,7 +125,7 @@ fi
 # LeCam
 if [ "$lecam" == "1" ]; then
   cp $basedir/files/Camera.apk /system/app/Camera.apk
-  chmod 644 /system/app/Camera.apk
+  $chmod 644 /system/app/Camera.apk
 fi
 
 # Media Profiles
@@ -161,9 +161,9 @@ fi
 if [ "internal" == "1" ]; then
 	rm /system/etc/vold.fstab
 	cp $basedir/files/vold.fstab /system/etc/vold.fstab
-	chmod 644 /system/etc/vold.fstab
+	$chmod 644 /system/etc/vold.fstab
 	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
-	chmod 750 /system/etc/init.d/90mountExt      
+	$chmod 750 /system/etc/init.d/90mountExt      
 fi
 
 ui_print ""
