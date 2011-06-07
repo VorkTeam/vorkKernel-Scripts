@@ -55,8 +55,12 @@ fi
 sed -i 's/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
 # 1080p Version
 echo "Compiling 1080p version"
+
+# Revert 64MB ram hack - silently
 sed -i 's/return 0x04000000/return 0x08000000/' $SOURCE_DIR/arch/arm/mach-tegra/odm_kit/star/query/nvodm_query.c
 . Scripts/kernelcompile.sh
+sed -i 's/#define CARVEOUT_SIZE 64/#define CARVEOUT_SIZE 128/' $SOURCE_DIR/arch/arm/mach-tegra/board-nvodm.c
+
 mv $SOURCE_DIR/arch/arm/boot/zImage $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p/zImage
 
 sed -i 's/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
@@ -67,6 +71,7 @@ sed -i 's/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/CONFIG_USE_FAKE_SHMOO_PSYCHO
 # add 64Mb hack back (silent)
 sed -i 's/return 0x08000000/return 0x04000000/' $SOURCE_DIR/arch/arm/mach-tegra/odm_kit/star/query/nvodm_query.c
 clear
+sed -i 's/#define CARVEOUT_SIZE 128/#define CARVEOUT_SIZE 64/' $SOURCE_DIR/arch/arm/mach-tegra/board-nvodm.c
 
 echo "Compiling modules"
 rm -rf $SCRIPT_DIR/CMScripts/Awesome.zip/system/lib/modules/*
