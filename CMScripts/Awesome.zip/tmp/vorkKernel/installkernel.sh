@@ -66,6 +66,9 @@ for pp in $args; do
         internal=1
         flags="$flags -internal"
   ;;
+  "silent")
+        silent=1
+        flags="$flags -silent"
   *)
         fatal "ERROR: Unknown argument -$pp"
   ;;
@@ -131,7 +134,11 @@ if [ "$lecam" == "1" ]; then
   cp $basedir/files/Camera.apk /system/app/Camera.apk
   $chmod 644 /system/app/Camera.apk
 fi
-
+# silent cam
+if [ "$silent" == "1" ]; then
+  mv /system/media/audio/ui/camera_click.ogg /system/media/audio/ui/camera_click.ogg.bak
+  mv /system/media/audio/ui/VideoRecord.ogg /system/media/audio/ui/VideoRecord.ogg.bak
+fi
 # Media Profiles
 if [ "$hdrec" == "1" ]; then
 	rm /system/etc/media_profiles.xml
