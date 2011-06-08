@@ -1,0 +1,4 @@
+#!/system/bin/sh
+
+echo "1c 7f" > /sys/devices/platform/star_wm8994/data
+echo "1d 17f" > /sys/devices/platform/star_wm8994/data

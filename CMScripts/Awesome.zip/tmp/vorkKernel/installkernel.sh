@@ -66,6 +66,10 @@ for pp in $args; do
         silent=1
         flags="$flags -silent"
   ;;
+  "boost")
+	boost=1
+	flags="$flags -boost"
+  ;;
   *)
         fatal "ERROR: Unknown argument -$pp"
   ;;
@@ -150,24 +154,29 @@ else
 fi
 
 # Ril 405
-if [ "ril405" == "1" ]; then
+if [ "$ril405" == "1" ]; then
 	rm /system/lib/lge-ril.so
 	cp $basedir/files/ril/405/lge-ril.so /system/lib/lge-ril.so
 fi
 
 # Ril 502
-if [ "ril502" == "1" ]; then
+if [ "$ril502" == "1" ]; then
 	rm /system/lib/lge-ril.so
 	cp $basedir/files/ril/502/lge-ril.so /system/lib/lge-ril.so
 fi
 
 # internal
-if [ "internal" == "1" ]; then
+if [ "$internal" == "1" ]; then
 	rm /system/etc/vold.fstab
 	cp $basedir/files/vold.fstab /system/etc/vold.fstab
 	$chmod 644 /system/etc/vold.fstab
 	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
 	$chmod 750 /system/etc/init.d/90mountExt      
+fi
+#boost
+if [ "$boost" == "1" ]; then
+	cp $basedir/files/80boost /system/etc/init.d/80boost
+	$chmod 750 /system/etc/init.d/80boost
 fi
 
 ui_print ""
