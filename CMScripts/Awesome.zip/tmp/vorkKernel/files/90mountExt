@@ -1,1 +1,3 @@
+#!/system/bin/sh
+
 mount /mnt/emmc /mnt/sdcard/_ExternalSD
