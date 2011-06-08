@@ -21,7 +21,7 @@ if [ ! -d $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p ];then
 mkdir $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/1080p
 fi
 DIR=$PWD
-NOW=$(date +"%d%m%y")
+NOW=$(date +"%Y%m%d")
 if [ ! -n "$1" ]; then
 	echo "Do you want to build a release or a test version?"
 	echo "1 for Release, 2 for Test"
