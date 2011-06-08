@@ -66,6 +66,10 @@ for pp in $args; do
         silent=1
         flags="$flags -silent"
   ;;
+  "internal")
+        internal=1
+        flags="$flags -internal"
+  ;;
   "boost")
 	boost=1
 	flags="$flags -boost"
