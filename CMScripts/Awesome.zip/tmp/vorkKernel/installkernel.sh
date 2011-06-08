@@ -62,10 +62,6 @@ for pp in $args; do
         ril502=1
         flags="$flags -502"
   ;;
-  "internal")
-        internal=1
-        flags="$flags -internal"
-  ;;
   "silent")
         silent=1
         flags="$flags -silent"
