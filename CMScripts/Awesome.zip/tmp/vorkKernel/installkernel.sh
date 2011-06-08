@@ -74,6 +74,10 @@ for pp in $args; do
 	boost=1
 	flags="$flags -boost"
   ;;
+  "density")
+	density=1
+	flags="$flags -density"
+  ;;
   *)
         fatal "ERROR: Unknown argument -$pp"
   ;;
@@ -177,10 +181,16 @@ if [ "$internal" == "1" ]; then
 	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
 	$chmod 750 /system/etc/init.d/90mountExt      
 fi
+
 #boost
 if [ "$boost" == "1" ]; then
 	cp $basedir/files/80boost /system/etc/init.d/80boost
 	$chmod 750 /system/etc/init.d/80boost
+fi
+
+#density
+if [ "$density" == "1" ]; then
+	sed -n "s/lcd_density=240/lcd_density=220/" /system/build.prop
 fi
 
 ui_print ""
