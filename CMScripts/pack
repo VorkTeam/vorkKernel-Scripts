@@ -1,5 +1,6 @@
 #!/bin/bash
 
+OLDDIR=$PWD
 if [ -f /opt/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
 	export ARM_EABI="ccache /opt/vorkChain/toolchain/bin/arm-eabi-"
 	export USE_CCACHE=1
@@ -9,7 +10,7 @@ fi
 export BUILD_DIR=/home/benee/Dropbox/Public
 export SCRIPT_DIR=/opt/vorkKernel-Scripts
 export SOURCE_DIR=/opt/vorkKernel-LG-o2x
-
+cd $SCRIPT_DIR/CMScripts/
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
 rm $SCRIPT_DIR/CMScripts/Awesome.zip/tmp/vorkKernel/Images/zImage*
@@ -144,4 +145,4 @@ mv update.zip $signed_file
 	fi
 fi
 
-cd $SCRIPT_DIR/CMScripts
+cd $OLDDIR
