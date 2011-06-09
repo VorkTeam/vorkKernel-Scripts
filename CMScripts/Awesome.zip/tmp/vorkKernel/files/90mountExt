@@ -2,4 +2,8 @@
 
 sleep 240
 
+if [ ! -d /mnt/sdcard/_ExternalSD ]; then
+mkdir /mnt/sdcard/_ExternalSD
+fi
+
 mount /mnt/emmc /mnt/sdcard/_ExternalSD
