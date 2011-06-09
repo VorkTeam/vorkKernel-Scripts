@@ -1,3 +1,5 @@
 #!/system/bin/sh
 
+sleep 240
+
 mount /mnt/emmc /mnt/sdcard/_ExternalSD
