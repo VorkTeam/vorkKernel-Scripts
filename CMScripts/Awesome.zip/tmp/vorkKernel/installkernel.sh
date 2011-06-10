@@ -66,10 +66,6 @@ for pp in $args; do
         silent=1
         flags="$flags -silent"
   ;;
-  "internal")
-        internal=1
-        flags="$flags -internal"
-  ;;
   "boost")
 	boost=1
 	flags="$flags -boost"
@@ -171,15 +167,6 @@ fi
 if [ "$ril502" == "1" ]; then
 	rm /system/lib/lge-ril.so
 	cp $basedir/files/ril/502/lge-ril.so /system/lib/lge-ril.so
-fi
-
-# internal
-if [ "$internal" == "1" ]; then
-	rm /system/etc/vold.fstab
-	cp $basedir/files/vold.fstab /system/etc/vold.fstab
-	$chmod 644 /system/etc/vold.fstab
-	cp $basedir/files/90mountExt /system/etc/init.d/90mountExt
-	$chmod 750 /system/etc/init.d/90mountExt      
 fi
 
 #boost
