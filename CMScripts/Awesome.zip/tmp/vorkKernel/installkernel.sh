@@ -22,6 +22,12 @@ ui_print ""
 ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
 ui_print ""
+ui_print "Checking ROM..."
+if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
+    fatal "Current ROM is not CyanogenMod! Aborting..."
+fi
+
+ui_print ""
 ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
