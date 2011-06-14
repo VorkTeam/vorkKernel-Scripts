@@ -68,7 +68,9 @@ for pp in $args; do
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
             ril606=1
+            ril=1
             flags="$flags -606"
+            ;;
         "silent")
             silent=1
             flags="$flags -silent"
