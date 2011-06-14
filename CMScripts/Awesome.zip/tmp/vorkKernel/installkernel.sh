@@ -13,6 +13,7 @@ BB=$basedir/busybox
 awk="$BB awk"
 chmod="$BB chmod"
 warning=0
+ril=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -47,19 +48,27 @@ for pp in $args; do
             ui_print "Thanks to LeJay for his cam mod"
         ;;
         "405")
-            if [ "$ril502" == "1" ]; then
+            if [ "$ril" == "1"]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
             ril405=1
+            ril=1
             flags="$flags -405"
         ;;
         "502")
-            if [ "$ril405" == "1" ]; then
+            if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
             ril502=1
+            ril=1
             flags="$flags -502"
         ;;
+        "606")
+            if [ "$ril" == "1"]; then
+                fatal "ERROR: Only one RIL can be flashed!"
+            fi
+            ril606=1
+            flags="$flags -606"
         "silent")
             silent=1
             flags="$flags -silent"
@@ -172,6 +181,12 @@ fi
 if [ "$ril502" == "1" ]; then
     rm /system/lib/lge-ril.so
     cp $basedir/files/ril/502/lge-ril.so /system/lib/lge-ril.so
+fi
+
+# Ril 606
+if [ "$ril606" == "1"]; then
+    rm /system/lib/lge-ril.so
+    cp $basedir/files/ril/606/lge-ril.so /system/lib/lib-ril.so
 fi
 
 #boost
