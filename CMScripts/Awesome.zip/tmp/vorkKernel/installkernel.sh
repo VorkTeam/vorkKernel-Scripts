@@ -41,13 +41,10 @@ for pp in $args; do
             flags="$flags -baconcooker"
         ;;
         "lecam")
-            if [ "$hdrec" == "1" ]; then
-                lecam=1
-                flags="$flags -leCam"
-                ui_print "Thanks to LeJay for his cam mod"
-            else
-                fatal "ERROR: 1080p needs to be enabled for this!"
-            fi
+            hdrec=1
+            lecam=1
+            flags="$flags -leCam"
+            ui_print "Thanks to LeJay for his cam mod"
         ;;
         "405")
             if [ "$ril502" == "1" ]; then
