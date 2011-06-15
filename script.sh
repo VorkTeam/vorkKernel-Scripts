@@ -14,6 +14,7 @@ if [ -d $prefix/bin ]; then
    if [ ! $CHOICE == "y" ]; then exit 0; fi
 fi
 
+if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
 cd $buildprefix
 
 if [ ! -d source ]; then mkdir source; fi
