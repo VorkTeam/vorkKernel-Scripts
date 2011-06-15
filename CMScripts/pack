@@ -2,14 +2,14 @@
 
 OLDDIR=$PWD
 if [ -f /opt/vorkKernel-Scripts/CMScripts/Tools/ccache.txt ]; then	
-	export ARM_EABI="ccache /opt/vorkChain/toolchain/bin/arm-eabi-"
+	export ARM_EABI="ccache $HOME/vorkChain/toolchain/bin/arm-eabi-"
 	export USE_CCACHE=1
 else 
-	export ARM_EABI=/opt/vorkChain/toolchain/bin/arm-eabi-
+	export ARM_EABI=$HOME/vorkChain/toolchain/bin/arm-eabi-
 fi
-export BUILD_DIR=/home/benee/Dropbox/Public
-export SCRIPT_DIR=/opt/vorkKernel-Scripts
-export SOURCE_DIR=/opt/vorkKernel-LG-o2x
+export BUILD_DIR=$HOME/Dropbox/Public
+export SCRIPT_DIR=$HOME/vorkKernel-Scripts
+export SOURCE_DIR=$HOME/vorkKernel-LGP990
 cd $SCRIPT_DIR/CMScripts/
 rm $SCRIPT_DIR/CMScripts/Tools/ramdisk-boot
 rm $SCRIPT_DIR/CMScripts/Tools/newBoot.img
