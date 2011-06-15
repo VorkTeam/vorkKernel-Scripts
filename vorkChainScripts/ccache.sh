@@ -10,11 +10,11 @@ if [ ! -d $buildprefix/source/ccache-$ccachev ]; then
 	tar -xvjf ccache-$ccachev.tar.bz2
 fi
 
-cd $buildprefix/source/ccache-$ccachev/
+cd $buildprefix/source/ccache-$ccachev
 echo Configuring ccache...
 ./configure
 make -j8
 sudo make install -j8
 
-cd $HOME/vorkKernel-Scripts/vorkKernelScripts/Tools
-touch ccache.txt
+echo > $HOME/vorkKernel-Scripts/vorkKernelScripts/Tools/ccache.txt
+cd $HOME/vorkKernel-Scripts/ 
