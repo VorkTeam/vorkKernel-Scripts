@@ -1,0 +1,98 @@
+#!/bin/bash
+
+OLDDIR=$PWD
+
+# only adjust these dirs
+export BUILD_DIR=$HOME/Dropbox/Public
+export SCRIPT_DIR=$HOME/vorkKernel-Scripts
+export VORKSCRIPT_DIR=$HOME/vorkKernel-Scripts/vorkKernelScripts
+export SOURCE_DIR=$HOME/vorkKernel-LGP990
+export TOOLCHAIN_DIR=$HOME/vorkChain
+
+# check if we want to use ccache
+if [ -f $VORKSCRIPT_DIR/Tools/ccache.txt ]; then	
+	export ARM_EABI="ccache $TOOLCHAIN_DIR/toolchain/bin/arm-eabi-"
+	export USE_CCACHE=1
+else 
+	export ARM_EABI=$TOOLCHAIN_DIR/toolchain/bin/arm-eabi-
+fi
+
+cd $VORKSCRIPT_DIR
+
+. $VORKSCRIPT_DIR/Scripts/cleanup.sh
+
+NOW=$(date +"%Y%m%d")
+
+# If there is no parameter than the question is asked
+if [ ! -n "$1" ]; then
+	echo "Do you want to build a release or a test version?"
+	echo "1 for Release, 2 for Test"
+	read BUILD
+else
+	BUILD=$1
+fi
+
+case $BUILD in
+	1) signed_file=vorkKernel-"$NOW".zip
+	   export release=release 
+	;;
+	2) signed_file=vorkKernel-LGP990.zip
+	   export release=test
+	;;
+esac
+
+clear
+
+. $VORKSCRIPT_DIR/Scripts/move_ramdisk.sh
+
+. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 1
+
+. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 2
+
+. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 3
+
+. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 4
+
+. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 5
+
+echo "Compiling modules"
+
+. $VORKSCRIPT_DIR/Scripts/modules.sh
+
+. $VORKSCRIPT_DIR//Scripts/update.zip_creator.sh
+
+. $VORKSCRIPT_DIR//Scripts/zipper.sh Awesome
+
+if [ "$release" == "release" ]; then
+        if [ -d $BUILD_DIR/LG\ P990 ]; then
+          mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+        else
+          mkdir $BUILD_DIR/LG\ P990
+          mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+        fi
+else
+        if [ -d $BUILD_DIR/LGTEST ]; then
+          mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+        else
+          mkdir $BUILD_DIR/LGTEST
+          mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+        fi
+fi
+
+# still build a old update.zip (kernel manager)
+if [ "$release" == "release" ]; then
+	. $VORKSCRIPT_DIR//Scripts/zipper.sh Update
+	if [ -d $BUILD_DIR/LGP990zips ]; then
+		mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
+		else
+			mkdir $BUILD_DIR/LGP990zips
+			mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
+	fi
+fi
+
+if [ "$release" == "release" ]; then
+python $SCRIPT_DIR/CMScripts/Scripts/pyndexer/pyndexer.py
+python /opt/vorkBot/vorkbot.py
+fi
+
+cd $OLDDIR
