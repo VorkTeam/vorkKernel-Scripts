@@ -93,7 +93,7 @@ if [ "$release" == "release" ]; then
 fi
 
 if [ "$release" == "release" ]; then
-python $SCRIPT_DIR/CMScripts/Scripts/pyndexer/pyndexer.py
+python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
 python /opt/vorkBot/vorkbot.py
 fi
 
