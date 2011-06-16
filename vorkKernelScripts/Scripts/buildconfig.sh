@@ -11,7 +11,7 @@ case $1 in
 	2)
 	  # ram hack with OC
 	  sed -i 's/# CONFIG_USE_FAKE_SHMOO_PSYCHO is not set/CONFIG_USE_FAKE_SHMOO_PSYCHO=y/' $SOURCE_DIR/arch/arm/configs/vorkKernel_defconfig
-	  ed -i 's/return 0x08000000/return 0x04000000/' $SOURCE_DIR/arch/arm/mach-tegra/odm_kit/star/query/nvodm_query.c
+	  sed -i 's/return 0x08000000/return 0x04000000/' $SOURCE_DIR/arch/arm/mach-tegra/odm_kit/star/query/nvodm_query.c
 	  sed -i 's/#define CARVEOUT_SIZE 128/#define CARVEOUT_SIZE 64/' $SOURCE_DIR/arch/arm/mach-tegra/board-nvodm.c
 	  zImageDIR=$VORKSCRIPT_DIR/Awesome.zip/tmp/vorkKernel/Images/zImageBC
 	;;

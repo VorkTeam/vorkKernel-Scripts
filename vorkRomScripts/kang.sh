@@ -28,6 +28,7 @@ case  $option in
   3)
 	cd $CM_DIR
 	. build/envsetup.sh && brunch p990
+	cp $CM_DIR/out/target/product/p990/update-cm-* $HOME/Dropbox/Public/
 	;;
   *)
 	echo "Error: not defined!"
