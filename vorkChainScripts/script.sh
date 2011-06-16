@@ -2,12 +2,12 @@
 
 export buildprefix=$HOME/vorkChain
 export prefix=$HOME/vorkChain/toolchain
-gcclv=4.5-2011.05-0
+gcclv=4.5-2011.06-0
 gcc=4.5
 binv=2.21
 mpcv=0.9
 newlibv=1.19.0
-vorkChain_revision=unicornPowered_r2-LinaroBase
+vorkChain_revision=vorkChain_r3-LinaroBase
 
 if [ -d $prefix/bin ]; then
    read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
