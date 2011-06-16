@@ -37,14 +37,14 @@ case $1 in
 	;;
 esac
 
-if [ "$1" != "5" ]: then
-. $VORKSCRIPT_DIR/Scripts/kernelcompile.sh
+if [ "$1" != "5" ]; then
+	. $VORKSCRIPT_DIR/Scripts/kernelcompile.sh
 
-mv $SOURCE_DIR/arch/arm/boot/zImage $zImageDIR
+	mv $SOURCE_DIR/arch/arm/boot/zImage $zImageDIR
 fi
 
 # still build a old update.zip (kernel manager)
-if [ "$1" == "2" ]: then
+if [ "$1" == "2" ]; then
 	if [ "$release" == "release" ]; then
 	cp $zImageDIR $VORKSCRIPT_DIR/Tools/zImage
 	fi
