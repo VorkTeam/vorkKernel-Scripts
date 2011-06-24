@@ -43,8 +43,6 @@ esac
 
 clear
 
-. $VORKSCRIPT_DIR/Scripts/move_ramdisk.sh
-
 . $VORKSCRIPT_DIR/Scripts/buildconfig.sh 1
 
 . $VORKSCRIPT_DIR/Scripts/buildconfig.sh 2

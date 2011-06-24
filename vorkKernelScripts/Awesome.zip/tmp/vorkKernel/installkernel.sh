@@ -14,6 +14,7 @@ awk="$BB awk"
 chmod="$BB chmod"
 warning=0
 ril=0
+ext4=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -118,10 +119,49 @@ else
     cline="mem=447M@0M nvmem=64M@448M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 fi
 
+# Build ramdisk
+ui_print "Dumping boot image..."
+dump_image /dev/block/mmcblk0p5 $basedir/boot.old
+if [ ! -f $basedir/boot.old ]; then
+    fatal "ERROR: Dumping old boot image failed"
+fi
+
+ui_print "Unpacking boot image..."
+ramdisk="$basedir/boot.old-ramdisk.gz"
+$basedir/unpackbootimg -i $basedir/boot.old -o $basedir/ -p 0x800
+if [ "$?" -ne 0 -o ! -f $ramdisk ]; then
+    fatal "ERROR: Unpacking old boot image failed (ramdisk)"
+fi
+
+mkdir $basedir/ramdisk
+cd $basedir/ramdisk
+$gunzip -c $basedir/boot.old-ramdisk.gz | $cpio -i
+
+if [ ! -f init.rc ]; then
+    fatal "ERROR: Unpacking ramdisk failed!"
+elif [ ! -f init.p990.rc ]; then
+    fatal "ERROR: Invalid ramdisk!"
+fi
+
+ui_print "Applying init.rc tweaks..."
+mv init.rc ../init.rc.org
+mv init.p990.rc ../init.p990.rc.org
+$awk -f $basedir/initrc.awk ../init.rc.org > init.rc
+$awk -f $basedir/initp990rc.awk -v ext4=$ext4 ../init.p900.rc.org > init.p990.rc
+
+ui_print "Build new ramdisk..."
+$find . | $cpio -o -H newc | $gzip > ../boot.img-ramdisk.gz
+if [ "$?" -ne 0 -o ! -f $basedir/boot.img-ramdisk.gz ]; then
+	fatal "WARNING: Ramdisk repacking failed!"
+fi
+
+cd ../
+
+# Build boot image
 ui_print "Selected correct Kernel version..."
 ui_print ""
 ui_print "Building boot.img..."
-$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/ramdisk-boot --cmdline "$cline" -o $basedir/boot.img --base 0x10000000
+$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline "$cline" -o $basedir/boot.img --base 0x10000000
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
 fi
@@ -200,6 +240,22 @@ fi
 #density
 if [ "$density" == "1" ]; then
     sed -n "s/lcd_density=240/lcd_density=220/" /system/build.prop
+fi
+
+#ext4
+if [ "$ext4" == "1" ]; then
+    umount /system
+    umount /data
+    
+    ui_print "Converting file-systems to EXT4..."
+    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
+    $basedir/e2fsck -p /dev/block/mmcblk0p8
+    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
+    $basedir/e2fsck -p /dev/block/mmcblk0p8
+    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
+    $basedir/e2fsck -p /dev/block/mmcblk0p1
+    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
+    $basedir/e2fsck -p /dev/block/mmcblk0p1
 fi
 
 ui_print ""
