@@ -88,6 +88,7 @@ for pp in $args; do
             ui_print "EXT4 is not officially supported!"
             ext4=1
             flags="$flags -EXT4"
+        ;;
         *)
             fatal "ERROR: Unknown argument -$pp"
         ;;
