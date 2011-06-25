@@ -84,6 +84,10 @@ for pp in $args; do
             density=1
             flags="$flags -density"
         ;;
+        "ext4")
+            ui_print "EXT4 is not officially supported!"
+            ext4=1
+            flags="$flags -EXT4"
         *)
             fatal "ERROR: Unknown argument -$pp"
         ;;
