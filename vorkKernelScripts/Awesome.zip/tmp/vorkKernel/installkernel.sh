@@ -14,6 +14,8 @@ awk="$BB awk"
 chmod="$BB chmod"
 gunzip="$BB gunzip"
 cpio="$BB cpio"
+find="$BB find"
+gzip="$BB gzip"
 warning=0
 ril=0
 ext4=0
@@ -157,7 +159,7 @@ $awk -f $basedir/initrc.awk ../init.rc.org > init.rc
 $awk -f $basedir/initp990rc.awk -v ext4=$ext4 ../init.p900.rc.org > init.p990.rc
 
 ui_print "Build new ramdisk..."
-$find . | $cpio -o -H newc | $gzip > ../boot.img-ramdisk.gz
+$find . | $cpio -o -H newc | $gzip > $basedir/boot.img-ramdisk.gz
 if [ "$?" -ne 0 -o ! -f $basedir/boot.img-ramdisk.gz ]; then
 	fatal "WARNING: Ramdisk repacking failed!"
 fi
