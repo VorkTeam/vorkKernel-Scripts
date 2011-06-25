@@ -257,14 +257,14 @@ if [ "$ext4" == "1" ]; then
     umount /data
     
     ui_print "Converting file-systems to EXT4..."
-    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
-    $basedir/e2fsck -p /dev/block/mmcblk0p8
-    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
-    $basedir/e2fsck -p /dev/block/mmcblk0p8
-    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
-    $basedir/e2fsck -p /dev/block/mmcblk0p1
-    $basedir/tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
-    $basedir/e2fsck -p /dev/block/mmcblk0p1
+    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
+    e2fsck -p /dev/block/mmcblk0p8
+    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
+    e2fsck -p /dev/block/mmcblk0p8
+    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
+    e2fsck -p /dev/block/mmcblk0p1
+    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
+    e2fsck -p /dev/block/mmcblk0p1
 fi
 
 ui_print ""
