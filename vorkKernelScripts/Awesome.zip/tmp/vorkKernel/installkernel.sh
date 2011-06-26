@@ -156,10 +156,10 @@ ui_print "Applying init.rc tweaks..."
 mv init.rc ../init.rc.org
 mv init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/initrc.awk ../init.rc.org > init.rc
-$awk -v ext4=$ext4 -f $basedir/initp990rc.awk ../init.p900.rc.org > init.p990.rc
+$awk -v ext4=$ext4 -f $basedir/initp990rc.awk ../init.p990.rc.org > init.p990.rc
 
 ui_print "Build new ramdisk..."
-$find . | $cpio -o -H newc | $gzip > $basedir/boot.img-ramdisk.gz
+$BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
 if [ "$?" -ne 0 -o ! -f $basedir/boot.img-ramdisk.gz ]; then
 	fatal "WARNING: Ramdisk repacking failed!"
 fi
