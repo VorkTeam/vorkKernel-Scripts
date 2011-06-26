@@ -248,7 +248,7 @@ fi
 
 #density
 if [ "$density" == "1" ]; then
-    sed -n "s/lcd_density=240/lcd_density=220/" /system/build.prop
+    $BB sed -i "s/lcd_density=240/lcd_density=220/" /system/build.prop
 fi
 
 #ext4
