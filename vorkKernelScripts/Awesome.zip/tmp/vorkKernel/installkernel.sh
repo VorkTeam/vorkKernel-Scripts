@@ -89,14 +89,14 @@ for pp in $args; do
             boost=1
             flags="$flags -boost"
         ;;
-        density[1-9][0-9][0-9])
-            density=1
-	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { print substr($0,2) }'`
-	    if [ -n "$dvalue" ];
-	      dvalue=220
-	    fi
-            flags="$flags -density value:$dvalue"
-        ;;
+#        density[1-9][0-9][0-9])
+#            density=1
+#	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { print substr($0,2) }'`
+#	    if [ -n "$dvalue" ];
+#	      dvalue=220
+#	    fi
+#            flags="$flags -density value:$dvalue"
+#        ;;
         "ext4")
             ui_print "EXT4 is not officially supported!"
             ext4=1
@@ -259,9 +259,9 @@ if [ "$boost" == "1" ]; then
 fi
 
 #density
-if [ "$density" == "1" ]; then
-    $BB sed -i 's/lcd_density=[1-9][0-9[0-9]/lcd_density=$dvalue/' /system/build.prop
-fi
+#if [ "$density" == "1" ]; then
+#    $BB sed -i 's/lcd_density=[0-9]*/lcd_density=$dvalue/' /system/build.prop
+#fi
 
 # boot animation
 if [ "$noboot" != "1" ]; then
