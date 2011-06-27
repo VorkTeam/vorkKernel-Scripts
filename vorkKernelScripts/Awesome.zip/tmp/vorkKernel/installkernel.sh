@@ -53,7 +53,7 @@ for pp in $args; do
             ui_print "Thanks to LeJay for his cam mod"
         ;;
         "405")
-            if [ "$ril" == "1"]; then
+            if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
             ril405=1
@@ -69,13 +69,21 @@ for pp in $args; do
             flags="$flags -502"
         ;;
         "606")
-            if [ "$ril" == "1"]; then
+            if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
             ril606=1
             ril=1
             flags="$flags -606"
             ;;
+	"622")
+	  if [ "$ril" == "1" ]; then
+		fatal "ERROR: Only one RIL can be flashed!"
+	  fi
+	  ril622=1
+	  ril=1
+	  flags="$flags -622"
+	  ;;
         "silent")
             silent=1
             flags="$flags -silent"
@@ -237,7 +245,13 @@ fi
 # Ril 606
 if [ "$ril606" == "1"]; then
     rm /system/lib/lge-ril.so
-    cp $basedir/files/ril/606/lge-ril.so /system/lib/lib-ril.so
+    cp $basedir/files/ril/606/lge-ril.so /system/lib/lge-ril.so
+fi
+
+# Ril 622
+if [ "$ril622" == "1" ]; then
+   rm /system/lib/lge-ril.so
+   cp $basedir/files/ril/622/lge-ril.so /system/lib/lge-ril.so
 fi
 
 #boost
