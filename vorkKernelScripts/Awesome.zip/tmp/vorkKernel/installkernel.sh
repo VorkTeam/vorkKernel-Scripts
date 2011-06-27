@@ -89,8 +89,9 @@ for pp in $args; do
             boost=1
             flags="$flags -boost"
         ;;
-        "density")
+        "density*")
             density=1
+	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { print substr($0,2) }'`
             flags="$flags -density"
         ;;
         "ext4")
@@ -256,7 +257,7 @@ fi
 
 #density
 if [ "$density" == "1" ]; then
-    $BB sed -i "s/lcd_density=240/lcd_density=220/" /system/build.prop
+    $BB sed -i "s/lcd_density=*/lcd_density=$dvalue/" /system/build.prop
 fi
 
 # boot animation
