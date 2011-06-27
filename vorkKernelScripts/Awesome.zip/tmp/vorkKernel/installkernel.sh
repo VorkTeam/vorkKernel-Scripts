@@ -89,7 +89,7 @@ for pp in $args; do
             boost=1
             flags="$flags -boost"
         ;;
-        density[1-9][0-9[0-9])
+        density[1-9][0-9][0-9])
             density=1
 	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { print substr($0,2) }'`
 	    if [ -n "$dvalue" ];
