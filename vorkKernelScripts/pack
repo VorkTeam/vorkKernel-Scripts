@@ -54,10 +54,10 @@ echo "Compiling modules"
 . $VORKSCRIPT_DIR/Scripts/modules.sh
 
 #if [ "$release" == "release" ]; then 
-#. $VORKSCRIPT_DIR//Scripts/update.zip_creator.sh
+#. $VORKSCRIPT_DIR/Scripts/update.zip_creator.sh
 #fi
 
-. $VORKSCRIPT_DIR//Scripts/zipper.sh Awesome
+. $VORKSCRIPT_DIR/Scripts/zipper.sh Awesome
 
 if [ "$release" == "release" ]; then
         if [ -d $BUILD_DIR/LG\ P990 ]; then
