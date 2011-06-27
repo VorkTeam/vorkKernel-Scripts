@@ -97,6 +97,11 @@ for pp in $args; do
             ext4=1
             flags="$flags -EXT4"
         ;;
+	"noboot")
+	   ui_print "sad panda"
+	   noboot=1
+	   flags="$flags -noboot"
+	;;
         *)
             fatal "ERROR: Unknown argument -$pp"
         ;;
@@ -251,6 +256,11 @@ fi
 #density
 if [ "$density" == "1" ]; then
     $BB sed -i "s/lcd_density=240/lcd_density=220/" /system/build.prop
+fi
+
+# boot animation
+if [ "$noboot" != "1" ]; then
+    cp $basedir/files/bootanimation.zip /system/media/bootanimation.zip
 fi
 
 #ext4
