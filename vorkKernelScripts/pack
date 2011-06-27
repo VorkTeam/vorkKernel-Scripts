@@ -45,11 +45,7 @@ clear
 
 . $VORKSCRIPT_DIR/Scripts/buildconfig.sh 1
 
-. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 2
-
 . $VORKSCRIPT_DIR/Scripts/buildconfig.sh 3
-
-. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 4
 
 . $VORKSCRIPT_DIR/Scripts/buildconfig.sh 5
 
@@ -57,9 +53,9 @@ echo "Compiling modules"
 
 . $VORKSCRIPT_DIR/Scripts/modules.sh
 
-if [ "$release" == "release" ]; then 
-. $VORKSCRIPT_DIR//Scripts/update.zip_creator.sh
-fi
+#if [ "$release" == "release" ]; then 
+#. $VORKSCRIPT_DIR//Scripts/update.zip_creator.sh
+#fi
 
 . $VORKSCRIPT_DIR//Scripts/zipper.sh Awesome
 
@@ -80,7 +76,7 @@ else
 fi
 
 # still build a old update.zip (kernel manager)
-if [ "$release" == "release" ]; then
+if [ "$release" == "lazer" ]; then
 	. $VORKSCRIPT_DIR//Scripts/zipper.sh Update
 	if [ -d $BUILD_DIR/LGP990zips ]; then
 		mv $signed_file $BUILD_DIR/LGP990zips/$signed_file

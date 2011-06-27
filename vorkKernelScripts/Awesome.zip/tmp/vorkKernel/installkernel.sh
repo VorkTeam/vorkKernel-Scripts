@@ -42,10 +42,6 @@ for pp in $args; do
             hdrec=1
             flags="$flags -1080p"
         ;;
-        "bc")
-            baconcooker=1
-            flags="$flags -baconcooker"
-        ;;
         "lecam")
             hdrec=1
             lecam=1
@@ -121,18 +117,10 @@ cd $basedir
 
 #Choose Kernel
 if [ "$hdrec" == "1" ]; then
-    if [ "$baconcooker" == "1" ]; then 
-        cp $basedir/Images/1080p/zImageBC $basedir/zImage
-    else
-        cp $basedir/Images/1080p/zImage $basedir/zImage
-    fi
+    cp $basedir/Images/1080p/zImage $basedir/zImage
     cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 else
-    if [ "$baconcooker" == "1" ]; then 
-        cp $basedir/Images/zImageBC $basedir/zImage
-    else
-        cp $basedir/Images/zImage $basedir/zImage
-    fi
+    cp $basedir/Images/zImage $basedir/zImage
     cline="mem=447M@0M nvmem=64M@448M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
 fi
 
