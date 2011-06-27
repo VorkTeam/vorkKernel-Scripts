@@ -19,6 +19,7 @@ gzip="$BB gzip"
 warning=0
 ril=0
 ext4=0
+noboot=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
