@@ -39,16 +39,10 @@ ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
     case $pp in
-        "1080p")
-            hdrec=1
-            flags="$flags -1080p"
-        ;;
-        "lecam")
-            hdrec=1
-            lecam=1
-            flags="$flags -leCam"
-            ui_print "Thanks to LeJay for his cam mod"
-        ;;
+	"bitrate")
+	    bitrate=1
+	    flags="$flags -bitrate"
+	;;
         "405")
             if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
@@ -125,15 +119,6 @@ ui_print "Packing kernel..."
 
 cd $basedir
 
-#Choose Kernel
-if [ "$hdrec" == "1" ]; then
-    cp $basedir/Images/1080p/zImage $basedir/zImage
-    cline="mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-else
-    cp $basedir/Images/zImage $basedir/zImage
-    cline="mem=447M@0M nvmem=64M@448M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
-fi
-
 # Build ramdisk
 ui_print "Dumping boot image..."
 dump_image /dev/block/mmcblk0p5 $basedir/boot.old
@@ -173,8 +158,6 @@ fi
 cd ../
 
 # Build boot image
-ui_print "Selected correct Kernel version..."
-ui_print ""
 ui_print "Building boot.img..."
 $basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline "$cline" -o $basedir/boot.img --base 0x10000000
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
@@ -203,12 +186,6 @@ if [ -n "$flags" ]; then
     ui_print "Installing additional mods..."
 fi
 
-# LeCam
-if [ "$lecam" == "1" ]; then
-    cp $basedir/files/Camera.apk /system/app/Camera.apk
-    $chmod 644 /system/app/Camera.apk
-fi
-
 # silent cam
 if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/camera_click.ogg /system/media/audio/ui/camera_click.ogg.bak
@@ -216,16 +193,9 @@ if [ "$silent" == "1" ]; then
 fi
 
 # Media Profiles
-if [ "$hdrec" == "1" ]; then
+if [ "$bitrate" == "1" ]; then
     rm /system/etc/media_profiles.xml
-    if [ "$lecam" == "1" ]; then
-        cp $basedir/files/media_profiles.xml-le1080 /system/etc/media_profiles.xml
-    else
-        cp $basedir/files/media_profiles.xml-1080 /system/etc/media_profiles.xml
-    fi
-else
-    rm /system/etc/media_profiles.xml
-    cp $basedir/files/media_profiles.xml-720 /system/etc/media_profiles.xml
+    cp $basedir/files/media_profiles.xml /system/etc/media_profiles.xml
 fi
 
 # Ril 405

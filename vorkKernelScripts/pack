@@ -43,11 +43,7 @@ esac
 
 clear
 
-. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 1
-
-. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 3
-
-. $VORKSCRIPT_DIR/Scripts/buildconfig.sh 5
+. $VORKSCRIPT_DIR/Scripts/buildconfig.sh
 
 echo "Compiling modules"
 
@@ -76,15 +72,15 @@ else
 fi
 
 # still build a old update.zip (kernel manager)
-if [ "$release" == "lazer" ]; then
-	. $VORKSCRIPT_DIR//Scripts/zipper.sh Update
-	if [ -d $BUILD_DIR/LGP990zips ]; then
-		mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
-		else
-			mkdir $BUILD_DIR/LGP990zips
-			mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
-	fi
-fi
+#if [ "$release" == "lazer" ]; then
+#	. $VORKSCRIPT_DIR//Scripts/zipper.sh Update
+#	if [ -d $BUILD_DIR/LGP990zips ]; then
+#		mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
+#		else
+#			mkdir $BUILD_DIR/LGP990zips
+#			mv $signed_file $BUILD_DIR/LGP990zips/$signed_file
+#	fi
+#fi
 
 if [ "$release" == "release" ]; then
 python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
