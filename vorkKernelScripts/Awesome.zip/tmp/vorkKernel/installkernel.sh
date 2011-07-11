@@ -146,8 +146,8 @@ fi
 ui_print "Applying init.rc tweaks..."
 mv init.rc ../init.rc.org
 mv init.p990.rc ../init.p990.rc.org
-$awk -f $basedir/initrc.awk ../init.rc.org > init.rc
-$awk -v ext4=$ext4 -f $basedir/initp990rc.awk ../init.p990.rc.org > init.p990.rc
+$awk -f $basedir/awk/initrc.awk ../init.rc.org > init.rc
+$awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > init.p990.rc
 
 ui_print "Build new ramdisk..."
 $BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
@@ -192,11 +192,15 @@ if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/VideoRecord.ogg /system/media/audio/ui/VideoRecord.ogg.bak
 fi
 
-# Media Profiles
-if [ "$bitrate" == "1" ]; then
-    rm /system/etc/media_profiles.xml
-    cp $basedir/files/media_profiles.xml /system/etc/media_profiles.xml
-fi
+# Awk
+cp /system/etc/media_profiles.xml .
+awk -v bitrate=$bitrate -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
+
+cp /system/build.prop .
+awk -v internal=$interal -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
+
+cp /system/etc/vold.fstab .
+awk -v internal=$interal -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
 
 # Ril 405
 if [ "$ril405" == "1" ]; then
