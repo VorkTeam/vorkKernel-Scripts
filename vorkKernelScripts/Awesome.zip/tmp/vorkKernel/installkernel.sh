@@ -228,8 +228,8 @@ fi
 
 #boost
 if [ "$boost" == "1" ]; then
-    cp $basedir/files/80boost /system/etc/init.d/80boost
-    $chmod 750 /system/etc/init.d/80boost
+    cp $basedir/files/HeadsetBooster.apk /system/app/HeadsetBooster.apk
+    $chmod 644 /system/app/HeadsetBooster.apk
 fi
 
 #density
