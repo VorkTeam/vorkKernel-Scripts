@@ -234,8 +234,9 @@ fi
 if [ "$boost" == "1" ]; then
     cp $basedir/files/HeadsetBooster.apk /system/app/HeadsetBooster.apk
     $chmod 644 /system/app/HeadsetBooster.apk
+    $BB mount /data
     cp $basedir/files/userinit.sh /data/local/userinit.sh
-    $chmod 750 /data/local/userinit.sh
+    $chmod 755 /data/local/userinit.sh
 fi
 
 #density
