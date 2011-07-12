@@ -70,7 +70,7 @@ for pp in $args; do
             ril606=1
             ril=1
             flags="$flags -606"
-            ;;
+        ;;
 	"622")
 	  if [ "$ril" == "1" ]; then
 		fatal "ERROR: Only one RIL can be flashed!"
@@ -78,7 +78,7 @@ for pp in $args; do
 	  ril622=1
 	  ril=1
 	  flags="$flags -622"
-	  ;;
+	;;
         "silent")
             silent=1
             flags="$flags -silent"
@@ -90,7 +90,7 @@ for pp in $args; do
         density[1-9][0-9][0-9])
             density=1
 	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
-	    if [ ! -n "$dvalue" ];
+	    if [ ! -n "$dvalue" ]; then
 	      dvalue=220
 	    fi
             flags="$flags -density value:$dvalue"
