@@ -39,10 +39,10 @@ ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
     case $pp in
-	"bitrate")
-	    bit=1
-	    flags="$flags -bitrate"
-	;;
+#	"bitrate")
+#	    bit=1
+#	    flags="$flags -bitrate"
+#	;;
 	"internal")
 	    inter=1
 	    flags="$flags -internal"
