@@ -240,7 +240,7 @@ fi
 
 #density
 if [ "$density" == "1" ]; then
-    $BB sed -i 's/lcd_density=[0-9]*/lcd_density=$dvalue/' /system/build.prop
+    $BB sed -i "s/lcd_density=[0-9]*/lcd_density=$dvalue/" /system/build.prop
 fi
 
 # boot animation
