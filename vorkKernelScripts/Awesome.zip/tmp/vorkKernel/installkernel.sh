@@ -40,8 +40,12 @@ flags=
 for pp in $args; do
     case $pp in
 	"bitrate")
-	    bitrate=1
+	    bit=1
 	    flags="$flags -bitrate"
+	;;
+	"internal")
+	    inter=1
+	    flags="$flags -internal"
 	;;
         "405")
             if [ "$ril" == "1" ]; then
@@ -194,13 +198,13 @@ fi
 
 # Awk
 cp /system/etc/media_profiles.xml .
-awk -v bitrate=$bitrate -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
+awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
 
 cp /system/build.prop .
-awk -v internal=$interal -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
+awk -v internal=$inter -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
 
 cp /system/etc/vold.fstab .
-awk -v internal=$interal -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
+awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
 
 # Ril 405
 if [ "$ril405" == "1" ]; then
