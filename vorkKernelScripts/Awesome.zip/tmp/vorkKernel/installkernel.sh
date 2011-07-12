@@ -72,12 +72,12 @@ for pp in $args; do
             flags="$flags -606"
         ;;
 	"622")
-	  if [ "$ril" == "1" ]; then
+	    if [ "$ril" == "1" ]; then
 		fatal "ERROR: Only one RIL can be flashed!"
-	  fi
-	  ril622=1
-	  ril=1
-	  flags="$flags -622"
+	    fi
+	    ril622=1
+	    ril=1
+	    flags="$flags -622"
 	;;
         "silent")
             silent=1
@@ -91,7 +91,7 @@ for pp in $args; do
             density=1
 	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
 	    if [ ! -n "$dvalue" ]; then
-	      dvalue=220
+		dvalue=220
 	    fi
             flags="$flags -density value:$dvalue"
         ;;
@@ -101,9 +101,9 @@ for pp in $args; do
             flags="$flags -EXT4"
         ;;
 	"noboot")
-	   ui_print "sad panda"
-	   noboot=1
-	   flags="$flags -noboot"
+	    ui_print "sad panda"
+	    noboot=1
+	    flags="$flags -noboot"
 	;;
         *)
             fatal "ERROR: Unknown argument -$pp"
