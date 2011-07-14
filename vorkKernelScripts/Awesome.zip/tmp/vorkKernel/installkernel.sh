@@ -39,46 +39,22 @@ ui_print "Parsing parameters..."
 flags=
 for pp in $args; do
     case $pp in
-#	"bitrate")
-#	    bit=1
-#	    flags="$flags -bitrate"
-#	;;
-	"internal")
-	    inter=1
-	    flags="$flags -internal"
-	;;
-        "405")
+#		"bitrate")
+#			bit=1
+#			flags="$flags -bitrate"
+#		;;
+		"internal")
+			inter=1
+			flags="$flags -internal"
+		;;
+        "405"|"502"|"606"|"622")
             if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
-            ril405=1
+            rildate="$pp"
             ril=1
-            flags="$flags -405"
+            flags="$flags -$pp"
         ;;
-        "502")
-            if [ "$ril" == "1" ]; then
-                fatal "ERROR: Only one RIL can be flashed!"
-            fi
-            ril502=1
-            ril=1
-            flags="$flags -502"
-        ;;
-        "606")
-            if [ "$ril" == "1" ]; then
-                fatal "ERROR: Only one RIL can be flashed!"
-            fi
-            ril606=1
-            ril=1
-            flags="$flags -606"
-        ;;
-	"622")
-	    if [ "$ril" == "1" ]; then
-		fatal "ERROR: Only one RIL can be flashed!"
-	    fi
-	    ril622=1
-	    ril=1
-	    flags="$flags -622"
-	;;
         "silent")
             silent=1
             flags="$flags -silent"
@@ -89,10 +65,10 @@ for pp in $args; do
         ;;
         density[1-9][0-9][0-9])
             density=1
-	    dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
-	    if [ ! -n "$dvalue" ]; then
-		dvalue=220
-	    fi
+			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
+			if [ ! -n "$dvalue" ]; then
+				dvalue=220
+			fi
             flags="$flags -density value:$dvalue"
         ;;
         "ext4")
@@ -100,11 +76,11 @@ for pp in $args; do
             ext4=1
             flags="$flags -EXT4"
         ;;
-	"noboot")
-	    ui_print "sad panda"
-	    noboot=1
-	    flags="$flags -noboot"
-	;;
+		"noboot")
+			ui_print "sad panda"
+			noboot=1
+			flags="$flags -noboot"
+		;;
         *)
             fatal "ERROR: Unknown argument -$pp"
         ;;
@@ -209,28 +185,10 @@ awk -v internal=$inter -f $basedir/awk/buildprop.awk build.prop > /system/build.
 cp /system/etc/vold.fstab .
 awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
 
-# Ril 405
-if [ "$ril405" == "1" ]; then
+# Ril installer
+if [ "$ril" == "1" ]; then
     rm /system/lib/lge-ril.so
-    cp $basedir/files/ril/405/lge-ril.so /system/lib/lge-ril.so
-fi
-
-# Ril 502
-if [ "$ril502" == "1" ]; then
-    rm /system/lib/lge-ril.so
-    cp $basedir/files/ril/502/lge-ril.so /system/lib/lge-ril.so
-fi
-
-# Ril 606
-if [ "$ril606" == "1"]; then
-    rm /system/lib/lge-ril.so
-    cp $basedir/files/ril/606/lge-ril.so /system/lib/lge-ril.so
-fi
-
-# Ril 622
-if [ "$ril622" == "1" ]; then
-   rm /system/lib/lge-ril.so
-   cp $basedir/files/ril/622/lge-ril.so /system/lib/lge-ril.so
+    cp $basedir/files/ril/$rildate/lge-ril.so /system/lib/lge-ril.so
 fi
 
 #boost
