@@ -20,7 +20,7 @@ warning=0
 ril=0
 ext4=0
 noboot=0
-bitrate=0
+bit=0
 inter=0
 dvalue=220
 
@@ -213,7 +213,6 @@ if [ "$ext4" == "1" ]; then
     
     ui_print ""
     ui_print "Converting file-systems to EXT4..."
-    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
     e2fsck -p /dev/block/mmcblk0p8
     tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
     e2fsck -p /dev/block/mmcblk0p8
