@@ -127,7 +127,10 @@ cd $basedir
 ui_print "Dumping boot image..."
 dump_image /dev/block/mmcblk0p5 $basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
-    fatal "ERROR: Dumping old boot image failed"
+	$BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
+	if [ ! -f $basedir/boot.old ]; then
+		fatal "ERROR: Dumping old boot image failed"
+	fi
 fi
 
 ui_print "Unpacking boot image..."
