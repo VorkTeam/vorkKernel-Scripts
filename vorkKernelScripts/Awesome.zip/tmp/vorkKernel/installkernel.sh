@@ -20,6 +20,9 @@ warning=0
 ril=0
 ext4=0
 noboot=0
+bitrate=0
+inter=0
+dvalue=220
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -64,7 +67,6 @@ for pp in $args; do
             flags="$flags -boost"
         ;;
         density[1-9][0-9][0-9])
-            density=1
 			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
 			if [ ! -n "$dvalue" ]; then
 				dvalue=220
@@ -180,7 +182,7 @@ cp /system/etc/media_profiles.xml .
 awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
 
 cp /system/build.prop .
-awk -v internal=$inter -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
+awk -v internal=$inter -v density=$dvalue -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
 
 cp /system/etc/vold.fstab .
 awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
@@ -197,11 +199,6 @@ if [ "$boost" == "1" ]; then
     $chmod 644 /system/app/HeadsetBooster.apk
     cp $basedir/files/80boost /system/etc/init.d/80boost
     $chmod 755 /system/etc/init.d/80boost
-fi
-
-#density
-if [ "$density" == "1" ]; then
-    $BB sed -i "s/lcd_density=[0-9]*/lcd_density=$dvalue/" /system/build.prop
 fi
 
 # boot animation
