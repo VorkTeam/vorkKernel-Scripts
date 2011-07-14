@@ -213,6 +213,7 @@ if [ "$ext4" == "1" ]; then
     
     ui_print ""
     ui_print "Converting file-systems to EXT4..."
+    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
     e2fsck -p /dev/block/mmcblk0p8
     tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
     e2fsck -p /dev/block/mmcblk0p8
