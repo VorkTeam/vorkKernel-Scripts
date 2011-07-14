@@ -7,8 +7,6 @@ set_perm(0, 0, 0700, "/tmp/vorkKernel/mkbootimg");
 set_perm(0, 0, 0700, "/tmp/vorkKernel/busybox");
 set_perm(0, 0, 0700, "/tmp/vorkKernel/unpackbootimg");
 set_perm(0, 0, 0700, "/tmp/vorkKernel/dump_image");
-set_perm(0, 0, 0700, "/tmp/vorkKernel/e2fsck");
-set_perm(0, 0, 0700, "/tmp/vorkKernel/tune2fs");
 set_perm(0, 0, 0700, "/tmp/vorkKernel/installkernel.sh");
 run_program("/tmp/vorkKernel/installkernel.sh");
 unmount("/system");
