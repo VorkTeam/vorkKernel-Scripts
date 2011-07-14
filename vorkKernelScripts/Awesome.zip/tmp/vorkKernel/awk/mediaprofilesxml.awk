@@ -13,7 +13,7 @@
 
 # Change the bitrate
 /bitRate/ && back==1 && video==1 && bitrate==1 && hd==1 { sub(/[0-9].+/, "17000000"); print; next; }
-/bitRate/ && back==1 && video==1 && bitrate==1 && high==1 { sub(/[0-9.+/, "12000000"); print; next; }
+/bitRate/ && back==1 && video==1 && bitrate==1 && high==1 { sub(/[0-9].+/, "12000000"); print; next; }
 /bitRate/ && back==1 && video==1 && bitrate==1 && low==1 { sub(/[0-9].+/, "384000"); print; next; }
 
 # keep rest of file as is:
