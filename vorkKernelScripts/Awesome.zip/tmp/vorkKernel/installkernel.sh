@@ -22,7 +22,7 @@ ext4=0
 noboot=0
 bit=0
 inter=0
-dvalue=220
+dvalue=240
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
