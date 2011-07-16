@@ -62,10 +62,6 @@ for pp in $args; do
             silent=1
             flags="$flags -silent"
         ;;
-        "boost")
-            boost=1
-            flags="$flags -boost"
-        ;;
         density[1-9][0-9][0-9])
 			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
 			if [ ! -n "$dvalue" ]; then
@@ -191,14 +187,6 @@ awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vo
 if [ "$ril" == "1" ]; then
     rm /system/lib/lge-ril.so
     cp $basedir/files/ril/$rildate/lge-ril.so /system/lib/lge-ril.so
-fi
-
-#boost
-if [ "$boost" == "1" ]; then
-    cp $basedir/files/HeadsetBooster.apk /system/app/HeadsetBooster.apk
-    $chmod 644 /system/app/HeadsetBooster.apk
-    cp $basedir/files/80boost /system/etc/init.d/80boost
-    $chmod 755 /system/etc/init.d/80boost
 fi
 
 # boot animation
