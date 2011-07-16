@@ -19,7 +19,6 @@ gzip="$BB gzip"
 warning=0
 ril=0
 ext4=0
-noboot=0
 bit=0
 inter=0
 dvalue=240
@@ -74,11 +73,6 @@ for pp in $args; do
             ext4=1
             flags="$flags -EXT4"
         ;;
-		"noboot")
-			ui_print "sad panda"
-			noboot=1
-			flags="$flags -noboot"
-		;;
         *)
             fatal "ERROR: Unknown argument -$pp"
         ;;
@@ -187,11 +181,6 @@ awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vo
 if [ "$ril" == "1" ]; then
     rm /system/lib/lge-ril.so
     cp $basedir/files/ril/$rildate/lge-ril.so /system/lib/lge-ril.so
-fi
-
-# boot animation
-if [ "$noboot" != "1" ]; then
-    cp $basedir/files/bootanimation.zip /system/media/bootanimation.zip
 fi
 
 #ext4
