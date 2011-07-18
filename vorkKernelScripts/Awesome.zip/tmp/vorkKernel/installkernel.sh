@@ -39,6 +39,7 @@ fi
 ui_print ""
 ui_print "Parsing parameters..."
 flags=
+unknown=
 for pp in $args; do
     case $pp in
 #		"bitrate")
@@ -74,10 +75,14 @@ for pp in $args; do
             flags="$flags -EXT4"
         ;;
         *)
-            fatal "ERROR: Unknown argument -$pp"
+            unknown="$unknown -$pp"
         ;;
     esac
 done
+
+if [ $unknown != "" ]; then
+        fatal "ERROR: Following flags are unknown $unknown"
+fi
 
 ui_print "Parsing complete"
 
