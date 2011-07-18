@@ -98,12 +98,9 @@ cd $basedir
 
 # Build ramdisk
 ui_print "Dumping boot image..."
-dump_image /dev/block/mmcblk0p5 $basedir/boot.old
+$BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
-	$BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
-	if [ ! -f $basedir/boot.old ]; then
-		fatal "ERROR: Dumping old boot image failed"
-	fi
+	fatal "ERROR: Dumping old boot image failed"
 fi
 
 ui_print "Unpacking boot image..."
