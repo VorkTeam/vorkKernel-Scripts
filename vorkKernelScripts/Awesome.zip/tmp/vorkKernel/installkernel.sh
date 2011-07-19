@@ -22,6 +22,8 @@ ext4=0
 bit=0
 inter=0
 dvalue=240
+uitweak=0
+ring=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -74,6 +76,14 @@ for pp in $args; do
             ext4=1
             flags="$flags -EXT4"
         ;;
+		"uitweak")
+			uitweak=1
+			flags="$flags -uitweak"
+		;;
+		"ring")
+			ring=1
+			flags="$flags -ring"
+		;;
         *)
             unknown="$unknown -$pp"
         ;;
@@ -174,7 +184,7 @@ cp /system/etc/media_profiles.xml .
 awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
 
 cp /system/build.prop .
-awk -v internal=$inter -v density=$dvalue -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
+awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
 
 cp /system/etc/vold.fstab .
 awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
