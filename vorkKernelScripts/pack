@@ -83,8 +83,9 @@ fi
 #fi
 
 if [ "$release" == "release" ]; then
-python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
-python /opt/vorkBot/vorkbot.py
+	python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
+	python /opt/vorkBot/vorkbot.py
+	echo $NOW > $BUILD_DIR/LG\ P990/version
 fi
 
 cd $OLDDIR
