@@ -136,7 +136,9 @@ cp init.rc ../init.rc.org
 cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 if [[ -s ../init.rc.mod ]]; then
-mv ../init.rc.mod init.rc
+  mv ../init.rc.mod init.rc
+else
+  ui_print "Applying init.rc tweaks failed! Continue without tweaks"
 fi
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
   if [[ -s ../init.p990.rc.mod ]]; then
@@ -145,13 +147,14 @@ else
   if [ "$ext4" == "1" ]; then
     extrdy=0
   fi
-  ui_print "Converting ramdisk failed. Script won't convert filesystem to ext4!"
+  ui_print "WARNING: Converting ramdisk failed. Script won't convert filesystem to ext4!"
+  warning=$((warning + 1))
 fi
 
 ui_print "Build new ramdisk..."
 $BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
 if [ "$?" -ne 0 -o ! -f $basedir/boot.img-ramdisk.gz ]; then
-	fatal "WARNING: Ramdisk repacking failed!"
+	fatal "ERROR: Ramdisk repacking failed!"
 fi
 
 cd ../
@@ -195,19 +198,28 @@ fi
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
 $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
 if [ -s $basedir/media_profiles.xml.mod ]; then
-cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
+  cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
+else
+  ui_print "WARNING: Tweaking media_profiles.xml failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 
 cp /system/build.prop $basedir/build.prop
 $awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
 if [ -s $basedir/build.prop.mod ]; then
-cp $basedir/build.prop.mod /system/build.prop
+  cp $basedir/build.prop.mod /system/build.prop
+else
+  ui_print "WARNING: Tweaking build.prop failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 
 cp /system/etc/vold.fstab $basedir/vold.fstab
 $awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
 if [ -s $basedir/vold.fstab.mod ]; then
-cp $basedir/vold.fstab.mod /system/etc/vold.fstab
+  cp $basedir/vold.fstab.mod /system/etc/vold.fstab
+else
+  ui_print "WARNING: Tweaking vold.fstab failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 
 # Ril installer
