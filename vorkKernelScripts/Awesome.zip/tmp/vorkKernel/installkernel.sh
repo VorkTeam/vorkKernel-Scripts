@@ -181,13 +181,13 @@ fi
 
 # Awk
 cp /system/etc/media_profiles.xml .
-awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
+$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
 
 cp /system/build.prop .
-awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
+$awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
 
 cp /system/etc/vold.fstab .
-awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
+$awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
 
 # Ril installer
 if [ "$ril" == "1" ]; then
