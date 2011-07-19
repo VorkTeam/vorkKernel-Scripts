@@ -192,22 +192,22 @@ if [ "$silent" == "1" ]; then
 fi
 
 # Awk
-cp /system/etc/media_profiles.xml .
-$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > media_profiles.xml.mod
-if [[ -s media_profiles.xml.mod ]]; then
-cp media_profiles.xml.mod /system/etc/media_profiles.xml
+cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
+$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
+if [ -s $basedir/media_profiles.xml.mod ]; then
+cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
 fi
 
-cp /system/build.prop .
-$awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk build.prop > build.prop.mod
-if [[ -s build.prop.mod ]]; then
-cp build.prop.mod /system/build.prop
+cp /system/build.prop $basedir/build.prop
+$awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+if [ -s $basedir/build.prop.mod ]; then
+cp $basedir/build.prop.mod /system/build.prop
 fi
 
-cp /system/etc/vold.fstab .
-$awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > vold.fstab.mod
-if [[ -s vold.fstab.mod ]]; then
-cp vold.fstab.mod /system/etc/vold.fstab
+cp /system/etc/vold.fstab $basedir/vold.fstab
+$awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
+if [ -s $basedir/vold.fstab.mod ]; then
+cp $basedir/vold.fstab.mod /system/etc/vold.fstab
 fi
 
 # Ril installer
