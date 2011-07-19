@@ -133,8 +133,14 @@ fi
 ui_print "Applying init.rc tweaks..."
 mv init.rc ../init.rc.org
 mv init.p990.rc ../init.p990.rc.org
-$awk -f $basedir/awk/initrc.awk ../init.rc.org > init.rc
-$awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > init.p990.rc
+$awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+if [[ -s ../init.rc.mod ]]; then
+mv ../init.rc.mod init.rc
+fi
+$awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
+if [[ -s ../init.p990.rc.mod ]]; then
+mv ../init.p990.rc.mod init.p990.rc
+fi
 
 ui_print "Build new ramdisk..."
 $BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
@@ -181,13 +187,22 @@ fi
 
 # Awk
 cp /system/etc/media_profiles.xml .
-$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > /system/etc/media_profiles.xml
+$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk media_profiles.xml > media_profiles.xml.mod
+if [[ -s media_profiles.xml.mod ]]; then
+cp media_profiles.xml.mod /system/etc/media_profiles.xml
+fi
 
 cp /system/build.prop .
-$awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk build.prop > /system/build.prop
+$awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk build.prop > build.prop.mod
+if [[ -s build.prop.mod ]]; then
+cp build.prop.mod /system/build.prop
+fi
 
 cp /system/etc/vold.fstab .
-$awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > /system/etc/vold.fstab
+$awk -v internal=$inter -f $basedir/awk/voldfstab.awk vold.fstab > vold.fstab.mod
+if [[ -s vold.fstab.mod ]]; then
+cp vold.fstab.mod /system/etc/vold.fstab
+fi
 
 # Ril installer
 if [ "$ril" == "1" ]; then
