@@ -6,6 +6,7 @@ ui_print() {
         echo ui_print 1>&$UPDATE_CMD_PIPE;
     fi
 }
+log () { echo "$@"; }
 fatal() { ui_print "$@"; exit 1; }
 
 basedir=`dirname $0`
@@ -30,14 +31,19 @@ updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); 
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
 args=`echo $updatename | $awk 'BEGIN {RS="-"}; NR>2 {print}'`
 
+log "Kernel script started. Installing $UPDATE_FILE in $basedir"
 ui_print ""
 ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
-ui_print ""
-ui_print "Checking ROM..."
-if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
-    fatal "Current ROM is not CyanogenMod! Aborting..."
-fi
+//ui_print ""
+//ui_print "Checking ROM..."
+//if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
+//    log "Installing on CyanogenMod"
+//elif [[ `cat /system/build.prop` != *Miui* ]];
+//    log "Installing on Miui"
+//else
+//    fatal "Current ROM is not CyanogenMod! Aborting..."
+//fi
 
 ui_print ""
 ui_print "Parsing parameters..."
@@ -109,6 +115,7 @@ cd $basedir
 
 # Build ramdisk
 ui_print "Dumping boot image..."
+log "dumping previous kernel image to $basedir/${boot}.img"
 $BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
 	fatal "ERROR: Dumping old boot image failed"
