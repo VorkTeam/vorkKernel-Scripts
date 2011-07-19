@@ -68,7 +68,7 @@ for pp in $args; do
         density[1-9][0-9][0-9])
 			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
 			if [ ! -n "$dvalue" ]; then
-				dvalue=220
+				dvalue=230
 			fi
             flags="$flags -density value:$dvalue"
         ;;
