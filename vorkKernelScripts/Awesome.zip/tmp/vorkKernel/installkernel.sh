@@ -24,6 +24,7 @@ inter=0
 dvalue=240
 uitweak=0
 ring=0
+extrdy=1
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -131,15 +132,20 @@ elif [ ! -f init.p990.rc ]; then
 fi
 
 ui_print "Applying init.rc tweaks..."
-mv init.rc ../init.rc.org
-mv init.p990.rc ../init.p990.rc.org
+cp init.rc ../init.rc.org
+cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 if [[ -s ../init.rc.mod ]]; then
 mv ../init.rc.mod init.rc
 fi
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
-if [[ -s ../init.p990.rc.mod ]]; then
-mv ../init.p990.rc.mod init.p990.rc
+  if [[ -s ../init.p990.rc.mod ]]; then
+  mv ../init.p990.rc.mod init.p990.rc
+else
+  if [ "$ext4" == "1" ]; then
+    extrdy=0
+  fi
+  ui_print "Converting ramdisk failed. Script won't convert filesystem to ext4!"
 fi
 
 ui_print "Build new ramdisk..."
@@ -212,6 +218,7 @@ fi
 
 #ext4
 if [ "$ext4" == "1" ]; then
+  if [ "$extrdy" == "1" ]; then
     umount /system
     umount /data
     
@@ -225,6 +232,7 @@ if [ "$ext4" == "1" ]; then
     e2fsck -p /dev/block/mmcblk0p1
     tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
     e2fsck -p /dev/block/mmcblk0p1
+  fi
 fi
 
 ui_print ""
