@@ -115,7 +115,7 @@ cd $basedir
 
 # Build ramdisk
 ui_print "Dumping boot image..."
-log "dumping previous kernel image to $basedir/${boot}.img"
+log "dumping previous kernel image to $basedir/boot.old"
 $BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
 	fatal "ERROR: Dumping old boot image failed"
@@ -142,21 +142,30 @@ ui_print "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
 cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+
+FSIZE=`stat ../init.rc.mod -c %s`
+log "init.rc.mod filesize: $FSIZE"
+
 if [[ -s ../init.rc.mod ]]; then
   mv ../init.rc.mod init.rc
 else
   ui_print "Applying init.rc tweaks failed! Continue without tweaks"
   warning=$((warning + 1))
 fi
+
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
-  if [[ -s ../init.p990.rc.mod ]]; then
+
+FSIZE=`stat ../init.p990.rc.mod -c %s`
+log "init.p990.rc.mod filesize: $FSIZE"
+
+if [[ -s ../init.p990.rc.mod ]]; then
   mv ../init.p990.rc.mod init.p990.rc
 else
   if [ "$ext4" == "1" ]; then
     extrdy=0
+    ui_print "WARNING: Converting ramdisk failed. Script won't convert filesystem to ext4!"
+    warning=$((warning + 1))
   fi
-  ui_print "WARNING: Converting ramdisk failed. Script won't convert filesystem to ext4!"
-  warning=$((warning + 1))
 fi
 
 ui_print "Build new ramdisk..."
@@ -205,6 +214,10 @@ fi
 # Awk
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
 $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
+
+FSIZE=`stat $basedir/media_profiles.xml.mod -c %s`
+log "media_profiles.xml.mod filesize: $FSIZE"
+
 if [ -s $basedir/media_profiles.xml.mod ]; then
   cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
 else
@@ -214,6 +227,10 @@ fi
 
 cp /system/build.prop $basedir/build.prop
 $awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+
+FSIZE=`stat $basedir/build.prop.mod -c %s`
+log "build.prop.mod filesize: $FSIZE"
+
 if [ -s $basedir/build.prop.mod ]; then
   cp $basedir/build.prop.mod /system/build.prop
 else
@@ -223,6 +240,10 @@ fi
 
 cp /system/etc/vold.fstab $basedir/vold.fstab
 $awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
+
+FSIZE=`stat $basedir/vold.fstab.mod -c %s`
+log "vold.fstab.mod filesize: $FSIZE"
+
 if [ -s $basedir/vold.fstab.mod ]; then
   cp $basedir/vold.fstab.mod /system/etc/vold.fstab
 else
