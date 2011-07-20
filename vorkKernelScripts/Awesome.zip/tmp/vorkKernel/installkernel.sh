@@ -91,6 +91,9 @@ for pp in $args; do
 			ring=1
 			flags="$flags -ring"
 		;;
+		"debug")
+			debug=1
+		;;
         *)
             unknown="$unknown -$pp"
         ;;
@@ -274,6 +277,12 @@ if [ "$ext4" == "1" ]; then
     tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
     e2fsck -p /dev/block/mmcblk0p1
   fi
+fi
+
+if [ "$debug" == "1" ]; then
+  rm -r /sdcard/vorkDebug
+  mkdir /sdcard/vorkDebug
+  cp -r $basedir/. /sdcard/vorkDebug/
 fi
 
 ui_print ""
