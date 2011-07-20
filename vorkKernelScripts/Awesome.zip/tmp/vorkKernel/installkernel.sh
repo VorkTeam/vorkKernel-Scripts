@@ -114,14 +114,13 @@ ui_print "Packing kernel..."
 cd $basedir
 
 # Build ramdisk
-ui_print "Dumping boot image..."
 log "dumping previous kernel image to $basedir/boot.old"
 $BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
 	fatal "ERROR: Dumping old boot image failed"
 fi
 
-ui_print "Unpacking boot image..."
+log "Unpacking boot image..."
 ramdisk="$basedir/boot.old-ramdisk.gz"
 $basedir/unpackbootimg -i $basedir/boot.old -o $basedir/ -p 0x800
 if [ "$?" -ne 0 -o ! -f $ramdisk ]; then
@@ -130,6 +129,7 @@ fi
 
 mkdir $basedir/ramdisk
 cd $basedir/ramdisk
+log "Extracting ramdisk"
 $gunzip -c $basedir/boot.old-ramdisk.gz | $cpio -i
 
 if [ ! -f init.rc ]; then
@@ -138,7 +138,7 @@ elif [ ! -f init.p990.rc ]; then
     fatal "ERROR: Invalid ramdisk!"
 fi
 
-ui_print "Applying init.rc tweaks..."
+log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
 cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
@@ -168,16 +168,16 @@ else
   fi
 fi
 
-ui_print "Build new ramdisk..."
+log "Build new ramdisk..."
 $BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
 if [ "$?" -ne 0 -o ! -f $basedir/boot.img-ramdisk.gz ]; then
 	fatal "ERROR: Ramdisk repacking failed!"
 fi
 
-cd ../
+cd $basedir
 
 # Build boot image
-ui_print "Building boot.img..."
+log "Building boot.img..."
 $basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline "mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990" -o $basedir/boot.img --base 0x10000000
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
