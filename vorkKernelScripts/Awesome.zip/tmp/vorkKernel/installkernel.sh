@@ -59,7 +59,7 @@ for pp in $args; do
 			inter=1
 			flags="$flags -internal"
 		;;
-        "405"|"502"|"606"|"622")
+        "ril405"|"ril502"|"ril606"|"ril622")
             if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
