@@ -83,6 +83,7 @@ fi
 #fi
 
 if [ "$release" == "release" ]; then
+        cp $VORKSCRIPT_DIR/flags $BUILD_DIR/flags.txt
 	python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
 	python /opt/vorkBot/vorkbot.py
 	echo $NOW > $BUILD_DIR/LG\ P990/version
