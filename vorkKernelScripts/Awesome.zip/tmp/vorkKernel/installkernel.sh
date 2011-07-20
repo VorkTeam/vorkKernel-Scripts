@@ -143,7 +143,6 @@ fi
 
 log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
-cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 
 FSIZE=`ls -l ../init.rc.mod | $awk '{ print $5 }'`
@@ -156,6 +155,8 @@ else
   warning=$((warning + 1))
 fi
 
+log "Applying init.p990.rc tweaks..."
+cp init.p990.rc ../init.p990.rc.org
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
 
 FSIZE=`ls -l ../init.p990.rc.mod | $awk '{ print $5 }'`
@@ -166,7 +167,7 @@ if [[ -s ../init.p990.rc.mod ]]; then
 else
   if [ "$ext4" == "1" ]; then
     extrdy=0
-    ui_print "WARNING: Converting ramdisk failed. Script won't convert filesystem to ext4!"
+    ui_print "WARNING: Tweaking init.p990.rc failed. Script won't convert filesystem to ext4!"
     warning=$((warning + 1))
   fi
 fi
@@ -221,7 +222,7 @@ $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profile
 FSIZE=`ls -l $basedir/media_profiles.xml.mod | $awk '{ print $5 }'`
 log "media_profiles.xml.mod filesize: $FSIZE"
 
-if [ -s $basedir/media_profiles.xml.mod ]; then
+if [[ -s $basedir/media_profiles.xml.mod ]]; then
   cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
 else
   ui_print "WARNING: Tweaking media_profiles.xml failed! Continue without tweaks"
@@ -234,7 +235,7 @@ $awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f 
 FSIZE=`ls -l $basedir/build.prop.mod | $awk '{ print $5 }'`
 log "build.prop.mod filesize: $FSIZE"
 
-if [ -s $basedir/build.prop.mod ]; then
+if [[ -s $basedir/build.prop.mod ]]; then
   cp $basedir/build.prop.mod /system/build.prop
 else
   ui_print "WARNING: Tweaking build.prop failed! Continue without tweaks"
@@ -247,7 +248,7 @@ $awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $bas
 FSIZE=`ls -l $basedir/vold.fstab.mod | $awk '{ print $5 }'`
 log "vold.fstab.mod filesize: $FSIZE"
 
-if [ -s $basedir/vold.fstab.mod ]; then
+if [[ -s $basedir/vold.fstab.mod ]]; then
   cp $basedir/vold.fstab.mod /system/etc/vold.fstab
 else
   ui_print "WARNING: Tweaking vold.fstab failed! Continue without tweaks"
