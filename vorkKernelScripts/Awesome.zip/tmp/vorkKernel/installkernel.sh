@@ -35,15 +35,15 @@ log "Kernel script started. Installing $UPDATE_FILE in $basedir"
 ui_print ""
 ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
-//ui_print ""
-//ui_print "Checking ROM..."
-//if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
-//    log "Installing on CyanogenMod"
-//elif [[ `cat /system/build.prop` != *Miui* ]];
-//    log "Installing on Miui"
-//else
-//    fatal "Current ROM is not CyanogenMod! Aborting..."
-//fi
+#ui_print ""
+#ui_print "Checking ROM..."
+#if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
+#    log "Installing on CyanogenMod"
+#elif [[ `cat /system/build.prop` != *Miui* ]];
+#    log "Installing on Miui"
+#else
+#    fatal "Current ROM is not CyanogenMod! Aborting..."
+#fi
 
 ui_print ""
 ui_print "Parsing parameters..."
