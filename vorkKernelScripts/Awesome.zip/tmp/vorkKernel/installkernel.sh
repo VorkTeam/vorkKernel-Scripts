@@ -146,6 +146,7 @@ if [[ -s ../init.rc.mod ]]; then
   mv ../init.rc.mod init.rc
 else
   ui_print "Applying init.rc tweaks failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
   if [[ -s ../init.p990.rc.mod ]]; then
