@@ -143,7 +143,7 @@ cp init.rc ../init.rc.org
 cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 
-FSIZE=`stat ../init.rc.mod -c %s`
+FSIZE=`ls -l ../init.rc.mod | $awk '{ print $5 }'`
 log "init.rc.mod filesize: $FSIZE"
 
 if [[ -s ../init.rc.mod ]]; then
@@ -155,7 +155,7 @@ fi
 
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
 
-FSIZE=`stat ../init.p990.rc.mod -c %s`
+FSIZE=`ls -l ../init.p990.rc.mod | $awk '{ print $5 }'`
 log "init.p990.rc.mod filesize: $FSIZE"
 
 if [[ -s ../init.p990.rc.mod ]]; then
@@ -215,7 +215,7 @@ fi
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
 $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
 
-FSIZE=`stat $basedir/media_profiles.xml.mod -c %s`
+FSIZE=`ls -l $basedir/media_profiles.xml.mod | $awk '{ print $5 }'`
 log "media_profiles.xml.mod filesize: $FSIZE"
 
 if [ -s $basedir/media_profiles.xml.mod ]; then
@@ -228,7 +228,7 @@ fi
 cp /system/build.prop $basedir/build.prop
 $awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
 
-FSIZE=`stat $basedir/build.prop.mod -c %s`
+FSIZE=`ls -l $basedir/build.prop.mod | $awk '{ print $5 }'`
 log "build.prop.mod filesize: $FSIZE"
 
 if [ -s $basedir/build.prop.mod ]; then
@@ -241,7 +241,7 @@ fi
 cp /system/etc/vold.fstab $basedir/vold.fstab
 $awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
 
-FSIZE=`stat $basedir/vold.fstab.mod -c %s`
+FSIZE=`ls -l $basedir/vold.fstab.mod | $awk '{ print $5 }'`
 log "vold.fstab.mod filesize: $FSIZE"
 
 if [ -s $basedir/vold.fstab.mod ]; then
