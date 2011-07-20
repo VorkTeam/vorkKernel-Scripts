@@ -6,6 +6,7 @@ ui_print() {
         echo ui_print 1>&$UPDATE_CMD_PIPE;
     fi
 }
+log () { echo "$@"; }
 fatal() { ui_print "$@"; exit 1; }
 
 basedir=`dirname $0`
@@ -30,14 +31,19 @@ updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); 
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
 args=`echo $updatename | $awk 'BEGIN {RS="-"}; NR>2 {print}'`
 
+log "Kernel script started. Installing $UPDATE_FILE in $basedir"
 ui_print ""
 ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
-ui_print ""
-ui_print "Checking ROM..."
-if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
-    fatal "Current ROM is not CyanogenMod! Aborting..."
-fi
+#ui_print ""
+#ui_print "Checking ROM..."
+#if [[ `cat /system/build.prop` != *CyanogenMod* ]]; then
+#    log "Installing on CyanogenMod"
+#elif [[ `cat /system/build.prop` != *Miui* ]];
+#    log "Installing on Miui"
+#else
+#    fatal "Current ROM is not CyanogenMod! Aborting..."
+#fi
 
 ui_print ""
 ui_print "Parsing parameters..."
@@ -68,7 +74,7 @@ for pp in $args; do
         density[1-9][0-9][0-9])
 			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
 			if [ ! -n "$dvalue" ]; then
-				dvalue=220
+				dvalue=230
 			fi
             flags="$flags -density value:$dvalue"
         ;;
@@ -84,6 +90,9 @@ for pp in $args; do
 		"ring")
 			ring=1
 			flags="$flags -ring"
+		;;
+		"debug")
+			debug=1
 		;;
         *)
             unknown="$unknown -$pp"
@@ -108,13 +117,13 @@ ui_print "Packing kernel..."
 cd $basedir
 
 # Build ramdisk
-ui_print "Dumping boot image..."
+log "dumping previous kernel image to $basedir/boot.old"
 $BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
 	fatal "ERROR: Dumping old boot image failed"
 fi
 
-ui_print "Unpacking boot image..."
+log "Unpacking boot image..."
 ramdisk="$basedir/boot.old-ramdisk.gz"
 $basedir/unpackbootimg -i $basedir/boot.old -o $basedir/ -p 0x800
 if [ "$?" -ne 0 -o ! -f $ramdisk ]; then
@@ -123,6 +132,7 @@ fi
 
 mkdir $basedir/ramdisk
 cd $basedir/ramdisk
+log "Extracting ramdisk"
 $gunzip -c $basedir/boot.old-ramdisk.gz | $cpio -i
 
 if [ ! -f init.rc ]; then
@@ -131,33 +141,46 @@ elif [ ! -f init.p990.rc ]; then
     fatal "ERROR: Invalid ramdisk!"
 fi
 
-ui_print "Applying init.rc tweaks..."
+log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
 cp init.p990.rc ../init.p990.rc.org
 $awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+
+FSIZE=`ls -l ../init.rc.mod | $awk '{ print $5 }'`
+log "init.rc.mod filesize: $FSIZE"
+
 if [[ -s ../init.rc.mod ]]; then
-mv ../init.rc.mod init.rc
+  mv ../init.rc.mod init.rc
+else
+  ui_print "Applying init.rc tweaks failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
+
 $awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
-  if [[ -s ../init.p990.rc.mod ]]; then
+
+FSIZE=`ls -l ../init.p990.rc.mod | $awk '{ print $5 }'`
+log "init.p990.rc.mod filesize: $FSIZE"
+
+if [[ -s ../init.p990.rc.mod ]]; then
   mv ../init.p990.rc.mod init.p990.rc
 else
   if [ "$ext4" == "1" ]; then
     extrdy=0
+    ui_print "WARNING: Converting ramdisk failed. Script won't convert filesystem to ext4!"
+    warning=$((warning + 1))
   fi
-  ui_print "Converting ramdisk failed. Script won't convert filesystem to ext4!"
 fi
 
-ui_print "Build new ramdisk..."
+log "Build new ramdisk..."
 $BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
 if [ "$?" -ne 0 -o ! -f $basedir/boot.img-ramdisk.gz ]; then
-	fatal "WARNING: Ramdisk repacking failed!"
+	fatal "ERROR: Ramdisk repacking failed!"
 fi
 
-cd ../
+cd $basedir
 
 # Build boot image
-ui_print "Building boot.img..."
+log "Building boot.img..."
 $basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline "mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990" -o $basedir/boot.img --base 0x10000000
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
@@ -194,20 +217,41 @@ fi
 # Awk
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
 $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
+
+FSIZE=`ls -l $basedir/media_profiles.xml.mod | $awk '{ print $5 }'`
+log "media_profiles.xml.mod filesize: $FSIZE"
+
 if [ -s $basedir/media_profiles.xml.mod ]; then
-cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
+  cp $basedir/media_profiles.xml.mod /system/etc/media_profiles.xml
+else
+  ui_print "WARNING: Tweaking media_profiles.xml failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 
 cp /system/build.prop $basedir/build.prop
 $awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+
+FSIZE=`ls -l $basedir/build.prop.mod | $awk '{ print $5 }'`
+log "build.prop.mod filesize: $FSIZE"
+
 if [ -s $basedir/build.prop.mod ]; then
-cp $basedir/build.prop.mod /system/build.prop
+  cp $basedir/build.prop.mod /system/build.prop
+else
+  ui_print "WARNING: Tweaking build.prop failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 
 cp /system/etc/vold.fstab $basedir/vold.fstab
 $awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
+
+FSIZE=`ls -l $basedir/vold.fstab.mod | $awk '{ print $5 }'`
+log "vold.fstab.mod filesize: $FSIZE"
+
 if [ -s $basedir/vold.fstab.mod ]; then
-cp $basedir/vold.fstab.mod /system/etc/vold.fstab
+  cp $basedir/vold.fstab.mod /system/etc/vold.fstab
+else
+  ui_print "WARNING: Tweaking vold.fstab failed! Continue without tweaks"
+  warning=$((warning + 1))
 fi
 
 # Ril installer
@@ -233,6 +277,12 @@ if [ "$ext4" == "1" ]; then
     tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
     e2fsck -p /dev/block/mmcblk0p1
   fi
+fi
+
+if [ "$debug" == "1" ]; then
+  rm -r /sdcard/vorkDebug
+  mkdir /sdcard/vorkDebug
+  cp -r $basedir/. /sdcard/vorkDebug/
 fi
 
 ui_print ""
