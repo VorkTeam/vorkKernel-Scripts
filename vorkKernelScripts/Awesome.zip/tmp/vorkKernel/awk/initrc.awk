@@ -3,9 +3,9 @@
 /sched_wakeup_granularity_ns/ { next; }
 
 # Tweak internal taskkiller
-/EMPTY_APP_ADJ/ { print; print "    setprop ro.CONTENT_PROVIDER_ADJ 14"; next; }
+/EMPTY_APP_ADJ/ { print; getline; if (!$0~/CONTENT_PROVIDER_ADJ/) {print "    setprop ro.CONTENT_PROVIDER_ADJ 14";} next; }
 /HIDDEN_APP_MEM/ { sub(/7168/, "10240"); print; next; }
-/EMPTY_APP_MEM/ { sub(/8192/, "15360"); print; print "    setprop ro.CONTENT_PROVIDER_MEM 12800"; next; }
+/EMPTY_APP_MEM/ { sub(/8192/, "15360"); print; getline; if (!$0~/CONTENT_PROVIDER_MEM/) {print "    setprop ro.CONTENT_PROVIDER_MEM 12800";} next; }
 /minfree/ { sub(/6144,7168,8192/, "10240,12800,15360"); print; next; }
 
 # Tweak some VM stuff to, hopefully, increase battery life
