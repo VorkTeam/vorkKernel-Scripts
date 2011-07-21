@@ -28,7 +28,7 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     cd $buildprefix/source/
     rm gcc-linaro-*.tar.bz2
     rm mpc-*.tar.gz
-    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclv.tar.bz2
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
 
     echo Extracting gcc-linaro and mpc...
