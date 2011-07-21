@@ -3,6 +3,6 @@ c/internal/Internal/Use internal sdcard as default sdcard
 l/ril/RIL/Select a RIL to flash. Defaults to none/None,405 RIL,502 RIL,606 RIL,622 RIL/0,405,502,606,622
 c/silent/Silent/Silences camera shutter sound
 e/density/LCD Density/Changing LCD Density allows for an "highres" effect/0 preserves original/0
-c/ext4/EXT4/Upgrade system and data partitions to EXT4. Increases I/O performance. Can brick your device!
+c/ext4/EXT4/Upgrade system and data partitions to EXT4. Increases IO performance. Can brick your device!
 c/uitweak/UI Tweak/Enables GPU rendering of GUI, and improves responsiveness
 c/ring/Call Tweak/Reduces the time between call is recieved, and activity is started
