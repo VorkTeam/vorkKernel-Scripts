@@ -2,7 +2,8 @@
 
 export buildprefix=$HOME/vorkChain
 export prefix=$HOME/vorkChain/toolchain
-gcclv=4.6-2011.07
+gcclink=4.6-2011.07
+gcclv=4.6-2011.07-0
 gcc=4.6
 binv=2.21.1
 mpcv=0.9
@@ -27,7 +28,7 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     cd $buildprefix/source/
     rm gcc-linaro-*.tar.bz2
     rm mpc-*.tar.gz
-    wget http://launchpad.net/gcc-linaro/$gcc/$gcclv/+download/gcc-linaro-$gcclv.tar.bz2
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclv.tar.bz2
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
 
     echo Extracting gcc-linaro and mpc...
