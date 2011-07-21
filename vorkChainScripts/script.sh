@@ -2,7 +2,8 @@
 
 export buildprefix=$HOME/vorkChain
 export prefix=$HOME/vorkChain/toolchain
-gcclv=4.6-2011.06-0
+gcclink=4.6-2011.07
+gcclv=4.6-2011.07-0
 gcc=4.6
 binv=2.21.1
 mpcv=0.9
@@ -27,11 +28,11 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     cd $buildprefix/source/
     rm gcc-linaro-*.tar.bz2
     rm mpc-*.tar.gz
-    wget http://launchpad.net/gcc-linaro/$gcc/$gcclv/+download/gcc-linaro-$gcclv.tar.bz2
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
 
     echo Extracting gcc-linaro and mpc...
-    tar -xvjf gcc-linaro-$gcclv.tar.bz2
+    tar -xvjf gcc-linaro-$gcclink.tar.bz2
     tar -xvzf mpc-$mpcv.tar.gz
     
     echo Moving mpc to gcc folder
@@ -52,8 +53,9 @@ fi
     
 if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
     echo Downloading newlib...
+    cd $buildprefix/source/
     rm newlib-*.tar.gz
-    wget ftp://sources.redhat.com/pub/newlib/newlib-$newlibv.tar.gz
+    wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz
     
     echo Extracting newlib...
     tar -xvzf newlib-$newlibv.tar.gz
