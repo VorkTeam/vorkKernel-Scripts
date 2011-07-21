@@ -32,7 +32,7 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
 
     echo Extracting gcc-linaro and mpc...
-    tar -xvjf gcc-linaro-$gcclv.tar.bz2
+    tar -xvjf gcc-linaro-$gcclink.tar.bz2
     tar -xvzf mpc-$mpcv.tar.gz
     
     echo Moving mpc to gcc folder
