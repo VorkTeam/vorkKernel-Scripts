@@ -53,8 +53,9 @@ fi
     
 if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
     echo Downloading newlib...
+    cd $buildprefix/source/
     rm newlib-*.tar.gz
-    wget ftp://sources.redhat.com/pub/newlib/newlib-$newlibv.tar.gz
+    wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz
     
     echo Extracting newlib...
     tar -xvzf newlib-$newlibv.tar.gz
