@@ -83,8 +83,7 @@ fi
 #fi
 
 if [ "$release" == "release" ]; then
-        #Stuff for update app
-        cp $VORKSCRIPT_DIR/flags $BUILD_DIR/UpdateApp/flags.txt
+    #Stuff for update app
 	echo $NOW > $BUILD_DIR/UpdateApp/version
 
 	python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
