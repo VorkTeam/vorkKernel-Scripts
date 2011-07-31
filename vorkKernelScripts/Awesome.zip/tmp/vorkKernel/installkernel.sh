@@ -23,7 +23,6 @@ ext4=0
 bit=0
 inter=0
 dvalue=0
-uitweak=0
 ring=0
 extrdy=1
 
@@ -85,10 +84,6 @@ for pp in $args; do
             ext4=1
             flags="$flags -EXT4"
         ;;
-		"uitweak")
-			uitweak=1
-			flags="$flags -uitweak"
-		;;
 		"ring")
 			ring=1
 			flags="$flags -ring"
@@ -234,7 +229,7 @@ else
 fi
 
 cp /system/build.prop $basedir/build.prop
-$awk -v internal=$inter -v density=$dvalue -v uitweak=$uitweak -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+$awk -v internal=$inter -v density=$dvalue -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
 
 FSIZE=`ls -l $basedir/build.prop.mod | $awk '{ print $5 }'`
 log ""
