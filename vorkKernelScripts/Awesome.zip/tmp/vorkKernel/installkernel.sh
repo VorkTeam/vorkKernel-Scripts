@@ -42,7 +42,7 @@ cymo=`cat /system/build.prop | $awk 'tolower($0) ~ /cyanogenmod/ { printf "1"; e
 miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { printf "1"; exit 0 }'`
 if [ "$cymo" == "1" ]; then
     log "Installing on CyanogenMod"
-elif [ "$miui" == "1" ];
+elif [ "$miui" == "1" ]; then
     log "Installing on Miui"
 else
     fatal "Current ROM is not compatible with vorkKernel! Aborting..."
