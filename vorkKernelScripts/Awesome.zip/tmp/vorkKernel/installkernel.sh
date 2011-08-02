@@ -38,16 +38,15 @@ ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
 ui_print ""
 ui_print "Checking ROM..."
-#$BB mount /system
-#cymo=`cat /system/build.prop | $awk 'tolower($0) ~ /cyanogenmod/ { print "1"; exit 0 }'`
-#miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { print "1"; exit 0 }'`
-#if [ "$cymo" == "1" ]; then
-#    log "Installing on CyanogenMod"
-#elif [ "$miui" == "1" ];
-#    log "Installing on Miui"
-#else
-#    fatal "Current ROM is not compatible with vorkKernel! Aborting..."
-#fi
+cymo=`cat /system/build.prop | $awk 'tolower($0) ~ /cyanogenmod/ { printf "1"; exit 0 }'`
+miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { printf "1"; exit 0 }'`
+if [ "$cymo" == "1" ]; then
+    log "Installing on CyanogenMod"
+elif [ "$miui" == "1" ];
+    log "Installing on Miui"
+else
+    fatal "Current ROM is not compatible with vorkKernel! Aborting..."
+fi
 
 ui_print ""
 ui_print "Parsing parameters..."
