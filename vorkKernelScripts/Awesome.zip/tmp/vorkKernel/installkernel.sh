@@ -266,6 +266,10 @@ if [ "$ril" == "1" ]; then
     cp $basedir/files/ril/$rildate/lge-ril.so /system/lib/lge-ril.so
 fi
 
+if [ "$debug" == "1" ]; then
+    cp $basedir/files/80log /system/etc/init.d/80log
+fi
+
 #ext4
 if [ "$ext4" == "1" ]; then
   if [ "$extrdy" == "1" ]; then

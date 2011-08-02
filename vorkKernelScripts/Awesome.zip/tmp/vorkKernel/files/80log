@@ -1,0 +1,12 @@
+#!/system/bin/sh
+
+exec &> /dev/null
+
+while [ `pidof com.android.systemui` == "" ]; do
+    sleep 10
+done
+
+sleep 100
+cat /proc/kmsg > /sdcard/vorkDebug/kmsg.txt
+cat /cache/recovery/last_log > /sdcard/vorkDebug/recovery.txt
+logcat -f /sdcard/vorkDebug/logcat.txt
