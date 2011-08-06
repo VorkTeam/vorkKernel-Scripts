@@ -21,10 +21,11 @@ warning=0
 ril=0
 ext4=0
 bit=0
-inter=0
 dvalue=0
 ring=0
 extrdy=1
+int2ext=0
+ext2int=0
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -58,10 +59,6 @@ for pp in $args; do
 			bit=1
 			flags="$flags -bitrate"
 		;;
-		"internal")
-			inter=1
-			flags="$flags -internal"
-		;;
         "ril405"|"ril502"|"ril606"|"ril622")
             if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
@@ -92,6 +89,14 @@ for pp in $args; do
 		;;
 		"debug")
 			debug=1
+		;;
+		"int2ext")
+			int2ext=1;
+			flags="$flags -int2ext"
+		;;
+		"ext2int")
+			ext2int=1;
+			flags="$flags -ext2int"
 		;;
         *)
             unknown="$unknown -$pp"
@@ -231,7 +236,7 @@ else
 fi
 
 cp /system/build.prop $basedir/build.prop
-$awk -v internal=$inter -v density=$dvalue -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+$awk -v ext2int=$ext2int -v int2ext=$int2ext -v density=$dvalue -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
 
 FSIZE=`ls -l $basedir/build.prop.mod | $awk '{ print $5 }'`
 log ""
@@ -246,7 +251,7 @@ else
 fi
 
 cp /system/etc/vold.fstab $basedir/vold.fstab
-$awk -v internal=$inter -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
+$awk -v ext2int=$ext2int -v int2ext=$int2ext -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
 
 FSIZE=`ls -l $basedir/vold.fstab.mod | $awk '{ print $5 }'`
 log ""
