@@ -3,7 +3,7 @@
 cd $VORKSCRIPT_DIR/$1.zip
 
 if [ "$1" == "Awesome" ]; then
-	cpp -D DEVICE_$device tmp/vorkKernel/installkernel.pre.sh > tmp/vorkKernel/installkernel.pre.sh
+	cpp -D DEVICE_$device tmp/vorkKernel/installkernel.pre.sh > tmp/vorkKernel/installkernel.sh
 fi
 
 echo Making update.zip ...
