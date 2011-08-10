@@ -40,6 +40,14 @@ case $BUILD in
 	   export release=test
 	   export device=LGP990
 	;;
+	3) signed_file=vorkKernel-"$NOW".zip
+	   export release=release
+	   export device=XOOM
+	;;
+	4) signed_file=vorkKernel-Xoom.zip
+	   export release=test
+	   export device=XOOM
+	;;
 esac
 
 export SOURCE_DIR=$HOME/vorkKernel-$DEVICE #LGP990

@@ -1,6 +1,6 @@
 #!/sbin/sh
 
-#if DEVICE_LGP990
+#ifdef DEVICE_LGP990
 
 #define BOOT_PARTITION 		/dev/block/mmcblk0p5
 #define SYSTEM_PARTITION	/dev/block/mmcblk0p1
@@ -15,9 +15,28 @@
 #define HAS_CM
 #define HAS_MIUI
 
+#define IS_PHONE
+
+#define EXT4_RDY
 #define USES_BITRATE
 
 #endif // DEVICE_LGP990
+
+#ifdef DEVICE_XOOM
+
+#define BOOT_PARTITION		/dev/block/mmcblk1p7
+#define SYSTEM_PARTITION	/dev/block/mmcblk1p8
+#define DATA_PARTITION		/dev/block/mmcblk1p10
+
+#define SECONDARY_INIT		init.stingray.rc
+
+#define BOOT_PAGESIZE           0x800
+#define BOOT_CMDLINE		"$(cat /tmp/boot.old-cmdline)\"
+#define BOOT_BASE		$(cat /tmp/boot.old-base)
+
+#define HAS_OTHER
+
+#endif
 
 ui_print() {
     echo ui_print "$@" 1>&$UPDATE_CMD_PIPE;
@@ -37,14 +56,26 @@ cpio="$BB cpio"
 find="$BB find"
 gzip="$BB gzip"
 warning=0
+#ifdef DEVICE_LGP990
 ril=0
+#endif
+#ifdef EXT4_RDY
 ext4=0
+#endif
+#ifdef USES_BITRATE
 bit=0
+#endif
 dvalue=0
+#ifdef IS_PHONE
 ring=0
+#endif
+#ifdef EXT4_RDY
 extrdy=1
+#endif
+#ifdef DEVICE_LGP990
 int2ext=0
 ext2int=0
+#endif
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -118,15 +149,19 @@ for pp in $args; do
 			fi
             flags="$flags -density value:$dvalue"
         ;;
+#ifdef EXT4_RDY
         "ext4")
             ui_print "EXT4 is not officially supported!"
             ext4=1
             flags="$flags -EXT4"
         ;;
+#endif
+#ifdef IS_PHONE
 		"ring")
 			ring=1
 			flags="$flags -ring"
 		;;
+#endif
 		"debug")
 			debug=1
 		;;
@@ -192,6 +227,7 @@ else
   warning=$((warning + 1))
 fi
 
+#ifdef EXT4_RDY
 log "Applying SECONDARY_INIT tweaks..."
 cp SECONDARY_INIT ../SECONDARY_INIT.org
 $awk -v ext4=$ext4 -f $basedir/awk/ext4.awk ../SECONDARY_INIT.org > ../SECONDARY_INIT.mod
@@ -208,6 +244,7 @@ else
     warning=$((warning + 1))
   fi
 fi
+#endif
 
 log "Build new ramdisk..."
 $BB find . | $BB cpio -o -H newc | $BB gzip > $basedir/boot.img-ramdisk.gz
@@ -226,8 +263,8 @@ fi
 
 ui_print ""
 ui_print "Flashing the kernel..."
-$BB dd if=/dev/zero of=/dev/block/mmcblk0p5
-$BB dd if=$basedir/boot.img of=/dev/block/mmcblk0p5
+$BB dd if=/dev/zero of=BOOT_PARTITION
+$BB dd if=$basedir/boot.img of=BOOT_PARTITION
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
@@ -318,6 +355,7 @@ if [ "$debug" == "1" ]; then
 	chmod 755 /system/etc/init.d/80log
 fi
 
+#ifdef EXT4_RDY
 #ext4
 if [ "$ext4" == "1" ]; then
   if [ "$extrdy" == "1" ]; then
@@ -336,6 +374,7 @@ if [ "$ext4" == "1" ]; then
     e2fsck -p SYSTEM_PARTITION
   fi
 fi
+#endif
 
 if [ "$debug" == "1" ]; then
   rm -r /sdcard/vorkDebug
