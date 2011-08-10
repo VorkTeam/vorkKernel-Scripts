@@ -31,7 +31,7 @@
 #define SECONDARY_INIT		init.stingray.rc
 
 #define BOOT_PAGESIZE           0x800
-#define BOOT_CMDLINE		"$(cat /tmp/boot.old-cmdline)\"
+#define BOOT_CMDLINE		"$(cat /tmp/boot.old-cmdline)"
 #define BOOT_BASE		$(cat /tmp/boot.old-base)
 
 #define HAS_OTHER
