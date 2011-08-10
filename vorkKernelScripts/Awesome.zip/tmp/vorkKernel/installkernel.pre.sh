@@ -1,5 +1,3 @@
-#!/sbin/sh
-
 #ifdef DEVICE_LGP990
 
 #define BOOT_PARTITION 		/dev/block/mmcblk0p5
@@ -187,7 +185,6 @@ ui_print "Packing kernel..."
 
 cd $basedir
 
-# Build ramdisk
 log "dumping previous kernel image to $basedir/boot.old"
 $BB dd if=BOOT_PARTITION of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
@@ -254,7 +251,6 @@ fi
 
 cd $basedir
 
-# Build boot image
 log "Building boot.img..."
 $basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline BOOT_CMDLINE -o $basedir/boot.img --base BOOT_BASE
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
@@ -283,14 +279,12 @@ if [ -n "$flags" ]; then
     ui_print "Installing additional mods..."
 fi
 
-# silent cam
 if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/camera_click.ogg /system/media/audio/ui/camera_click.ogg.bak
     mv /system/media/audio/ui/VideoRecord.ogg /system/media/audio/ui/VideoRecord.ogg.bak
 fi
 
 #ifdef USES_BITRATE
-# Bitrate
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
 $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
 
@@ -343,7 +337,6 @@ fi
 #endif // DEVICE_LGP990
 
 #ifdef DEVICE_LGP990
-# Ril installer
 if [ "$ril" == "1" ]; then
     rm /system/lib/lge-ril.so
     cp $basedir/files/ril/$rildate/lge-ril.so /system/lib/lge-ril.so
@@ -356,7 +349,6 @@ if [ "$debug" == "1" ]; then
 fi
 
 #ifdef EXT4_RDY
-#ext4
 if [ "$ext4" == "1" ]; then
   if [ "$extrdy" == "1" ]; then
     umount /system
