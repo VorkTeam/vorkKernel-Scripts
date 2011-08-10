@@ -7,3 +7,4 @@
 *ramdisk-boot
 ccache.txt
 *.pyc
+*installkernel.sh

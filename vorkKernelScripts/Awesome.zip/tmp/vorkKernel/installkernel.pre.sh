@@ -1,5 +1,24 @@
 #!/sbin/sh
 
+#if DEVICE_LGP990
+
+#define BOOT_PARTITION 		/dev/block/mmcblk0p5
+#define SYSTEM_PARTITION	/dev/block/mmcblk0p1
+#define DATA_PARTITION		/dev/block/mmcblk0p8
+
+#define SECONDARY_INIT		init.p990.rc
+
+#define BOOT_PAGESIZE 		0x800
+#define BOOT_CMDLINE 		"mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990"
+#define BOOT_BASE			0x10000000
+
+#define HAS_CM
+#define HAS_MIUI
+
+#define USES_BITRATE
+
+#endif // DEVICE_LGP990
+
 ui_print() {
     echo ui_print "$@" 1>&$UPDATE_CMD_PIPE;
     if [ -n "$@" ]; then
@@ -39,14 +58,23 @@ ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
 ui_print ""
 ui_print "Checking ROM..."
+
+#ifdef HAS_CM
 cymo=`cat /system/build.prop | $awk 'tolower($0) ~ /cyanogenmod/ { printf "1"; exit 0 }'`
+#endif // HAS_CM
+
+#ifdef HAS_MIUI
 miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { printf "1"; exit 0 }'`
+#endif // HAS_MIUI
+
 if [ "$cymo" == "1" ]; then
     log "Installing on CyanogenMod"
 elif [ "$miui" == "1" ]; then
     log "Installing on Miui"
 else
+	#ifndef HAS_OTHER
     fatal "Current ROM is not compatible with vorkKernel! Aborting..."
+	#endif // HAS_OTHER
 fi
 
 ui_print ""
@@ -55,10 +83,13 @@ flags=
 unknown=
 for pp in $args; do
     case $pp in
+#ifdef USES_BITRATE
 		"bitrate")
 			bit=1
 			flags="$flags -bitrate"
 		;;
+#endif // USES_BITRATE
+#ifdef DEVICE_LGP990
         "ril405"|"ril502"|"ril606"|"ril622"|"ril725")
             if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
@@ -67,6 +98,15 @@ for pp in $args; do
             ril=1
             flags="$flags -$pp"
         ;;
+		"int2ext")
+			int2ext=1;
+			flags="$flags -int2ext"
+		;;
+		"ext2int")
+			ext2int=1;
+			flags="$flags -ext2int"
+		;;
+#endif // DEVICE_LGP990
         "silent")
             silent=1
             flags="$flags -silent"
@@ -89,14 +129,6 @@ for pp in $args; do
 		;;
 		"debug")
 			debug=1
-		;;
-		"int2ext")
-			int2ext=1;
-			flags="$flags -int2ext"
-		;;
-		"ext2int")
-			ext2int=1;
-			flags="$flags -ext2int"
 		;;
         *)
             unknown="$unknown -$pp"
@@ -122,7 +154,7 @@ cd $basedir
 
 # Build ramdisk
 log "dumping previous kernel image to $basedir/boot.old"
-$BB dd if=/dev/block/mmcblk0p5 of=$basedir/boot.old
+$BB dd if=BOOT_PARTITION of=$basedir/boot.old
 if [ ! -f $basedir/boot.old ]; then
 	fatal "ERROR: Dumping old boot image failed"
 fi
@@ -130,7 +162,7 @@ fi
 log "Unpacking boot image..."
 log ""
 ramdisk="$basedir/boot.old-ramdisk.gz"
-$basedir/unpackbootimg -i $basedir/boot.old -o $basedir/ -p 0x800
+$basedir/unpackbootimg -i $basedir/boot.old -o $basedir/ -p BOOT_PAGESIZE
 if [ "$?" -ne 0 -o ! -f $ramdisk ]; then
     fatal "ERROR: Unpacking old boot image failed (ramdisk)"
 fi
@@ -142,7 +174,7 @@ $gunzip -c $basedir/boot.old-ramdisk.gz | $cpio -i
 
 if [ ! -f init.rc ]; then
     fatal "ERROR: Unpacking ramdisk failed!"
-elif [ ! -f init.p990.rc ]; then
+elif [ ! -f SECONDARY_INIT ]; then
     fatal "ERROR: Invalid ramdisk!"
 fi
 
@@ -160,19 +192,19 @@ else
   warning=$((warning + 1))
 fi
 
-log "Applying init.p990.rc tweaks..."
-cp init.p990.rc ../init.p990.rc.org
-$awk -v ext4=$ext4 -f $basedir/awk/initp990rc.awk ../init.p990.rc.org > ../init.p990.rc.mod
+log "Applying SECONDARY_INIT tweaks..."
+cp SECONDARY_INIT ../SECONDARY_INIT.org
+$awk -v ext4=$ext4 -f $basedir/awk/ext4.awk ../SECONDARY_INIT.org > ../SECONDARY_INIT.mod
 
-FSIZE=`ls -l ../init.p990.rc.mod | $awk '{ print $5 }'`
-log "init.p990.rc.mod filesize: $FSIZE"
+FSIZE=`ls -l ../SECONDARY_INIT.mod | $awk '{ print $5 }'`
+log "SECONDARY_INIT.mod filesize: $FSIZE"
 
-if [[ -s ../init.p990.rc.mod ]]; then
-  mv ../init.p990.rc.mod init.p990.rc
+if [[ -s ../SECONDARY_INIT.mod ]]; then
+  mv ../SECONDARY_INIT.mod SECONDARY_INIT
 else
   if [ "$ext4" == "1" ]; then
     extrdy=0
-    ui_print "WARNING: Tweaking init.p990.rc failed. Script won't convert filesystem to ext4!"
+    ui_print "WARNING: Tweaking SECONDARY_INIT failed. Script won't convert filesystem to ext4!"
     warning=$((warning + 1))
   fi
 fi
@@ -187,7 +219,7 @@ cd $basedir
 
 # Build boot image
 log "Building boot.img..."
-$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline "mem=383M@0M nvmem=128M@384M loglevel=0 muic_state=1 lpj=9994240 CRC=3010002a8e458d7 vmalloc=256M brdrev=1.0 video=tegrafb console=ttyS0,115200n8 usbcore.old_scheme_first=1 tegraboot=sdmmc tegrapart=recovery:35e00:2800:800,linux:34700:1000:800,mbr:400:200:800,system:600:2bc00:800,cache:2c200:8000:800,misc:34200:400:800,userdata:38700:c0000:800 androidboot.hardware=p990" -o $basedir/boot.img --base 0x10000000
+$basedir/mkbootimg --kernel $basedir/zImage --ramdisk $basedir/boot.img-ramdisk.gz --cmdline BOOT_CMDLINE -o $basedir/boot.img --base BOOT_BASE
 if [ "$?" -ne 0 -o ! -f boot.img ]; then
     fatal "ERROR: Packing kernel failed!"
 fi
@@ -220,7 +252,8 @@ if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/VideoRecord.ogg /system/media/audio/ui/VideoRecord.ogg.bak
 fi
 
-# Awk
+#ifdef USES_BITRATE
+# Bitrate
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
 $awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
 
@@ -234,9 +267,14 @@ else
   ui_print "WARNING: Tweaking media_profiles.xml failed! Continue without tweaks"
   warning=$((warning + 1))
 fi
+#endif // USES_BITRATE
 
 cp /system/build.prop $basedir/build.prop
+#ifdef DEVICE_LGP990
 $awk -v ext2int=$ext2int -v int2ext=$int2ext -v density=$dvalue -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+#else
+$awk -v density=$dvalue -v ring=$ring -f $basedir/awk/buildprop.awk $basedir/build.prop > $basedir/build.prop.mod
+#endif // DEVICE_LGP990
 
 FSIZE=`ls -l $basedir/build.prop.mod | $awk '{ print $5 }'`
 log ""
@@ -250,6 +288,7 @@ else
   warning=$((warning + 1))
 fi
 
+#ifdef DEVICE_LGP990
 cp /system/etc/vold.fstab $basedir/vold.fstab
 $awk -v ext2int=$ext2int -v int2ext=$int2ext -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
 
@@ -264,15 +303,19 @@ else
   ui_print "WARNING: Tweaking vold.fstab failed! Continue without tweaks"
   warning=$((warning + 1))
 fi
+#endif // DEVICE_LGP990
 
+#ifdef DEVICE_LGP990
 # Ril installer
 if [ "$ril" == "1" ]; then
     rm /system/lib/lge-ril.so
     cp $basedir/files/ril/$rildate/lge-ril.so /system/lib/lge-ril.so
 fi
+#endif // DEVICE_LGP990
 
 if [ "$debug" == "1" ]; then
     cp $basedir/files/80log /system/etc/init.d/80log
+	chmod 755 /system/etc/init.d/80log
 fi
 
 #ext4
@@ -283,14 +326,14 @@ if [ "$ext4" == "1" ]; then
     
     ui_print ""
     ui_print "Converting file-systems to EXT4..."
-    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
-    e2fsck -p /dev/block/mmcblk0p8
-    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p8
-    e2fsck -p /dev/block/mmcblk0p8
-    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
-    e2fsck -p /dev/block/mmcblk0p1
-    tune2fs -O extents,uninit_bg,dir_index /dev/block/mmcblk0p1
-    e2fsck -p /dev/block/mmcblk0p1
+    tune2fs -O extents,uninit_bg,dir_index DATA_PARTITION
+    e2fsck -p DATA_PARTITION
+    tune2fs -O extents,uninit_bg,dir_index DATA_PARTITION
+    e2fsck -p DATA_PARTITION
+    tune2fs -O extents,uninit_bg,dir_index SYSTEM_PARTITION
+    e2fsck -p SYSTEM_PARTITION
+    tune2fs -O extents,uninit_bg,dir_index SYSTEM_PARTITION
+    e2fsck -p SYSTEM_PARTITION
   fi
 fi
 
