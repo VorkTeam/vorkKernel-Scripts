@@ -1,7 +1,7 @@
 c/bitrate/Bitrate/Enables higher bitrates on recorded video
 c/ext2int/External to Internal/Move external SDCard to a sub-folder of the internal SDCard. Uses internal SDCard as default storage
 c/int2ext/Internal to External/Move internal SDCard to a sub-folder of the external SDCard. Uses external SDCard as default storage
-l/ril/RIL/Select a RIL to flash. Defaults to none/None,405 RIL,502 RIL,606 RIL,622 RIL/0,405,502,606,622
+l/ril/RIL/Select a RIL to flash. Defaults to none/None,405 RIL,502 RIL,606 RIL,622 RIL,725 RIL/0,405,502,606,622,725
 c/silent/Silent/Silences camera shutter sound
 e/density/LCD Density/Changing LCD Density allows for an "highres" effect/0 preserves original/0
 c/ext4/EXT4/Upgrade system and data partitions to EXT4. Increases IO performance. Can brick your device!

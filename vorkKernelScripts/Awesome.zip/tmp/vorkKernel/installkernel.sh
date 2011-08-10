@@ -59,7 +59,7 @@ for pp in $args; do
 			bit=1
 			flags="$flags -bitrate"
 		;;
-        "ril405"|"ril502"|"ril606"|"ril622")
+        "ril405"|"ril502"|"ril606"|"ril622"|"ril725")
             if [ "$ril" == "1" ]; then
                 fatal "ERROR: Only one RIL can be flashed!"
             fi
