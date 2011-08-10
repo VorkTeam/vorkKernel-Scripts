@@ -50,7 +50,7 @@ case $BUILD in
 	;;
 esac
 
-export SOURCE_DIR=$HOME/vorkKernel-$DEVICE #LGP990
+export SOURCE_DIR=$HOME/vorkKernel-$device
 
 clear
 
