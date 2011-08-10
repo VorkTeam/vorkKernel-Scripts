@@ -6,7 +6,6 @@ OLDDIR=$PWD
 export BUILD_DIR=$HOME/Dropbox/Public
 export SCRIPT_DIR=$HOME/vorkKernel-Scripts
 export VORKSCRIPT_DIR=$HOME/vorkKernel-Scripts/vorkKernelScripts
-export SOURCE_DIR=$HOME/vorkKernel-LGP990
 export TOOLCHAIN_DIR=$HOME/vorkChain
 
 # check if we want to use ccache
@@ -34,12 +33,16 @@ fi
 
 case $BUILD in
 	1) signed_file=vorkKernel-"$NOW".zip
-	   export release=release 
+	   export release=release
+	   export device=LGP990
 	;;
 	2) signed_file=vorkKernel-LGP990.zip
 	   export release=test
+	   export device=LGP990
 	;;
 esac
+
+export SOURCE_DIR=$HOME/vorkKernel-$DEVICE #LGP990
 
 clear
 
@@ -56,18 +59,18 @@ echo "Compiling modules"
 . $VORKSCRIPT_DIR/Scripts/zipper.sh Awesome
 
 if [ "$release" == "release" ]; then
-        if [ -d $BUILD_DIR/LG\ P990 ]; then
-          mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+        if [ -d $BUILD_DIR/$DEVICE ]; then
+          mv $signed_file $BUILD_DIR/$DEVICE/$signed_file
         else
-          mkdir $BUILD_DIR/LG\ P990
-          mv $signed_file $BUILD_DIR/LG\ P990/$signed_file
+          mkdir $BUILD_DIR/$DEVICE
+          mv $signed_file $BUILD_DIR/$DEVICE/$signed_file
         fi
 else
-        if [ -d $BUILD_DIR/LGTEST ]; then
-          mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+        if [ -d $BUILD_DIR/TEST ]; then
+          mv $signed_file $BUILD_DIR/TEST/$signed_file
         else
-          mkdir $BUILD_DIR/LGTEST
-          mv $signed_file $BUILD_DIR/LGTEST/$signed_file
+          mkdir $BUILD_DIR/TEST
+          mv $signed_file $BUILD_DIR/TEST/$signed_file
         fi
 fi
 
@@ -84,10 +87,10 @@ fi
 
 if [ "$release" == "release" ]; then
     #Stuff for update app
-	echo $NOW > $BUILD_DIR/UpdateApp/version
+	echo $NOW > $BUILD_DIR/UpdateApp/version_$DEVICE
 
 	python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
-	python /opt/vorkBot/vorkbot.py
+	python /opt/vorkBot/vorkbot.py $DEVICE
 fi
 
 cd $OLDDIR
