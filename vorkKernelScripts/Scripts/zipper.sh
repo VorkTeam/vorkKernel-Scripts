@@ -6,6 +6,9 @@ if [ "$1" == "Awesome" ]; then
 	cpp -D DEVICE_$device mdfiles/installkernel.pre.sh > mdfiles/installkernel.pre2.sh
 awk '/# / { next; } { print; }' mdfiles/installkernel.pre2.sh > mdfiles/installkernel.pre3.sh
 awk 'NR==1{ print "#!/sbin/sh" } { print; }' mdfiles/installkernel.pre3.sh > $1.zip/tmp/vorkKernel/installkernel.sh
+	if [ "$device" == "LGP990" ]; then
+		cp -r /mdfiles/ril $1.zip/tmp/vorkKernel/files
+	fi
 fi
 
 
