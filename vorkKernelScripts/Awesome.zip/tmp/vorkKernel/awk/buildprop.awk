@@ -6,7 +6,7 @@ int2ext == 1 && /additionalmounts/ && /emmc/ { sub(/emmc/, "sdcard/_InternalSD")
 /max_events_per_sec/ { event=1; }
 
 # LCD Density
-/lcd_density/ { if (event!=1) {print "windowsmgr.max_events_per_sec=60";} }
+END { if (event!=1) {print "windowsmgr.max_events_per_sec=60";} }
 /lcd_density/ && density != 0 { sub(/[1-9][0-9][0-9]/, density); print; next; }
 
 # Ring Tweak
