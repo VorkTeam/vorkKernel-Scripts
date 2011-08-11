@@ -9,5 +9,3 @@ ccache.txt
 *.pyc
 installkernel.sh
 vorkKernelScripts/Awesome.zip/tmp/vorkKernel/files/lib/modules
-installkernel.pre2.sh
-installkernel.pre3.sh
