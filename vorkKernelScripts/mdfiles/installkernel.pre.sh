@@ -86,6 +86,7 @@ ui_print ""
 ui_print "Installing $kernelver"
 ui_print "Developed by Benee and kiljacken"
 ui_print ""
+#ifndef HAS_OTHER
 ui_print "Checking ROM..."
 
 #ifdef HAS_CM
@@ -101,12 +102,11 @@ if [ "$cymo" == "1" ]; then
 elif [ "$miui" == "1" ]; then
     log "Installing on Miui"
 else
-	#ifndef HAS_OTHER
     fatal "Current ROM is not compatible with vorkKernel! Aborting..."
-	#endif // HAS_OTHER
 fi
 
 ui_print ""
+#endif //HAS_OTHER
 ui_print "Parsing parameters..."
 flags=
 unknown=
