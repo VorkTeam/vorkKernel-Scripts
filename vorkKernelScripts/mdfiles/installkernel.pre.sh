@@ -225,19 +225,19 @@ else
 fi
 
 #ifdef EXT4_RDY
-log "Applying SECONDARY_INIT tweaks..."
+log "Applying "SECONDARY_INIT" tweaks..."
 cp SECONDARY_INIT ../SECONDARY_INIT.org
 $awk -v ext4=$ext4 -f $basedir/awk/ext4.awk ../SECONDARY_INIT.org > ../SECONDARY_INIT.mod
 
 FSIZE=`ls -l ../SECONDARY_INIT.mod | $awk '{ print $5 }'`
-log "SECONDARY_INIT.mod filesize: $FSIZE"
+log SECONDARY_INIT".mod filesize: $FSIZE"
 
 if [[ -s ../SECONDARY_INIT.mod ]]; then
   mv ../SECONDARY_INIT.mod SECONDARY_INIT
 else
   if [ "$ext4" == "1" ]; then
     extrdy=0
-    ui_print "WARNING: Tweaking SECONDARY_INIT failed. Script won't convert filesystem to ext4!"
+    ui_print "WARNING: Tweaking "SECONDARY_INIT" failed. Script won't convert filesystem to ext4!"
     warning=$((warning + 1))
   fi
 fi
