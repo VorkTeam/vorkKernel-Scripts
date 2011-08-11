@@ -140,6 +140,7 @@ for pp in $args; do
             silent=1
             flags="$flags -silent"
         ;;
+#ifdef IS_PHONE
         density[1-9][0-9][0-9])
 			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
 			if [ ! -n "$dvalue" ]; then
@@ -147,6 +148,7 @@ for pp in $args; do
 			fi
             flags="$flags -density value:$dvalue"
         ;;
+#endif
 #ifdef EXT4_RDY
         "ext4")
             ui_print "EXT4 is not officially supported!"
