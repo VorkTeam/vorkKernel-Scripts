@@ -1,3 +1,6 @@
+#define SHELL_INTRO #!/sbin/sh
+SHELL_INTRO
+
 #ifdef DEVICE_LGP990
 
 #define BOOT_PARTITION 		/dev/block/mmcblk0p5
