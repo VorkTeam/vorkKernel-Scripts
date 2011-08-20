@@ -72,7 +72,6 @@ extrdy=1
 #endif
 #ifdef DEVICE_LGP990
 int2ext=0
-ext2int=0
 #endif
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
@@ -130,10 +129,6 @@ for pp in $args; do
 		"int2ext")
 			int2ext=1;
 			flags="$flags -int2ext"
-		;;
-		"ext2int")
-			ext2int=1;
-			flags="$flags -ext2int"
 		;;
 #endif // DEVICE_LGP990
         "silent")
@@ -323,7 +318,7 @@ fi
 
 #ifdef DEVICE_LGP990
 cp /system/etc/vold.fstab $basedir/vold.fstab
-$awk -v ext2int=$ext2int -v int2ext=$int2ext -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
+$awk -v int2ext=$int2ext -f $basedir/awk/voldfstab.awk $basedir/vold.fstab > $basedir/vold.fstab.mod
 
 FSIZE=`ls -l $basedir/vold.fstab.mod | $awk '{ print $5 }'`
 log ""
