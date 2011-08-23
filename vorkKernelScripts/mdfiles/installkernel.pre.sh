@@ -34,6 +34,8 @@
 
 #define HAS_OTHER
 
+#define USES_BITRATE
+
 #endif
 
 #ifdef DEVICE_LGP990
@@ -119,7 +121,7 @@ unknown=
 for pp in $args; do
     case $pp in
 #ifdef USES_BITRATE
-		"bitrate")
+		"camera")
 			bit=1
 			flags="$flags -bitrate"
 		;;
@@ -290,7 +292,7 @@ fi
 
 #ifdef USES_BITRATE
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
-$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
+$awk -v device=$device -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
 
 FSIZE=`ls -l $basedir/media_profiles.xml.mod | $awk '{ print $5 }'`
 log ""
