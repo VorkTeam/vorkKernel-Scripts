@@ -36,6 +36,13 @@
 
 #endif
 
+#ifdef DEVICE_LGP990
+device=LGP990
+#endif
+#ifdef DEVICE_XOOM
+device=XOOM
+#endif
+
 ui_print() {
     echo ui_print "$@" 1>&$UPDATE_CMD_PIPE;
     if [ -n "$@" ]; then
