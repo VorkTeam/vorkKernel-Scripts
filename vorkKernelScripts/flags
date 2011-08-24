@@ -1,5 +1,4 @@
 LGP990/c/bitrate/Bitrate/Enables higher bitrates on recorded video
-LGP990/c/int2ext/Internal to External/Move internal SDCard to a sub-folder of the external SDCard. Uses external SDCard as default storage
 LGP990/l/ril/RIL/Select a RIL to flash. Defaults to none/None,405 RIL,502 RIL,606 RIL,622 RIL,725 RIL/0,405,502,606,622,725
 LGP990,XOOM/c/silent/Silent/Silences camera shutter sound
 LGP990/e/density/LCD Density/Changing LCD Density allows for an "highres" effect/0 preserves original/0
