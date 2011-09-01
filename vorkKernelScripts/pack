@@ -67,11 +67,11 @@ echo "Compiling modules"
 . $VORKSCRIPT_DIR/Scripts/zipper.sh Awesome
 
 if [ "$release" == "release" ]; then
-        if [ -d $BUILD_DIR/$DEVICE ]; then
+        if [ -d $BUILD_DIR/$device ]; then
           mv $signed_file $BUILD_DIR/$DEVICE/$signed_file
         else
-          mkdir $BUILD_DIR/$DEVICE
-          mv $signed_file $BUILD_DIR/$DEVICE/$signed_file
+          mkdir $BUILD_DIR/$device
+          mv $signed_file $BUILD_DIR/$device/$signed_file
         fi
 else
         if [ -d $BUILD_DIR/TEST ]; then
@@ -95,10 +95,10 @@ fi
 
 if [ "$release" == "release" ]; then
     #Stuff for update app
-	echo $NOW > $BUILD_DIR/UpdateApp/version_$DEVICE
+	echo $NOW > $BUILD_DIR/UpdateApp/version_$device
 
 	python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
-	python /opt/vorkBot/vorkbot.py $DEVICE
+	python /opt/vorkBot/vorkbot.py $device
 fi
 
 cd $OLDDIR
