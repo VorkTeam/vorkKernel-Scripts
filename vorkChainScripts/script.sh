@@ -33,8 +33,8 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     cd $buildprefix/source/
     rm gcc-linaro-*.tar.bz2 &>/dev/null
     rm mpc-*.tar.gz&>/dev/null
-    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2
-    wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2 || return 1
+    wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz || return 1
 
     msg "Extracting gcc-linaro and mpc..."
     tar -xvjf gcc-linaro-$gcclink.tar.bz2
@@ -50,7 +50,7 @@ if [ ! -d $buildprefix/source/binutils-$binv ]; then
     msg "Downloading binutils..."
     cd $buildprefix/source/
     rm binutils-*.tar.gz &>/dev/null
-    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2
+    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2 || return 1
     
     msg "Extracting binutils..."
     tar -jxvf binutils-$binv$binvrev.tar.bz2
@@ -60,7 +60,7 @@ if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
     msg "Downloading newlib..."
     cd $buildprefix/source/
     rm newlib-*.tar.gz &>/dev/null
-    wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz
+    wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz || return 1
     
     msg "Extracting newlib..."
     tar -xvzf newlib-$newlibv.tar.gz
