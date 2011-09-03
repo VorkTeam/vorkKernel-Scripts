@@ -6,6 +6,7 @@ gcclink=4.6-2011.07
 gcclv=4.6-2011.07-0
 gcc=4.6
 binv=2.21.1
+binvrev=a
 mpcv=0.9
 newlibv=1.19.0
 vorkChain_revision=vorkChain_r4-LinaroBase
@@ -45,10 +46,10 @@ if [ ! -d $buildprefix/source/binutils-$binv ]; then
     echo Downloading binutils...
     cd $buildprefix/source/
     rm binutils-*.tar.gz &>/dev/null
-    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv.tar.gz
+    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2
     
-    echo Extracting binutils...
-    tar -xvzf binutils-$binv.tar.gz
+    echo "Extracting binutils..."
+    tar -jxvf binutils-$binv$binvrev.tar.bz2
 fi
     
 if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
