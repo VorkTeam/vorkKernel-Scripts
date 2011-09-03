@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. $HOME/vorkKernel-Scripts/vorkKernelScripts/Scripts/colorize.sh
+
 cd $VORKSCRIPT_DIR
 
 if [ "$1" == "Awesome" ]; then
@@ -14,10 +16,10 @@ fi
 cd $VORKSCRIPT_DIR/$1.zip
 
 
-echo Making update.zip ...
+msg "Making update.zip ..."
 zip -r -y -q update *
 echo
-echo update.zip created
+msg "update.zip created"
 
 mv update.zip ../$signed_file
 

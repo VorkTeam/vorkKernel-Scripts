@@ -1,8 +1,10 @@
 #!/bin/bash
 
+. $HOME/vorkKernel-Scripts/vorkKernelScripts/Scripts/colorize.sh
+
 cd $SOURCE_DIR
 
-echo "Building ..."
+msg "Building ..."
 make ARCH=arm CROSS_COMPILE="$ARM_EABI" vorkKernel_defconfig
 
 export localVersion=`cat .config | fgrep CONFIG_LOCALVERSION= | cut -f 2 -d = | sed s/\"//g`
@@ -14,7 +16,7 @@ export linuxVersion=$kernelVersion
 
 export VERSION=$linuxVersion$localVersion
 
-echo Building the kernel
+msg "Building the kernel"
 ARCH=arm CROSS_COMPILE="$ARM_EABI" make -j`grep 'processor' /proc/cpuinfo | wc -l`
 
 cd $VORKSCRIPT_DIR/
