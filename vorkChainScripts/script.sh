@@ -26,8 +26,8 @@ if [ ! -d temp/newlib ]; then mkdir -p temp/newlib; fi
 if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     echo Downloading gcc-linaro and mpc...
     cd $buildprefix/source/
-    rm gcc-linaro-*.tar.bz2
-    rm mpc-*.tar.gz
+    rm gcc-linaro-*.tar.bz2 &>/dev/null
+    rm mpc-*.tar.gz&>/dev/null
     wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz
 
@@ -44,7 +44,7 @@ fi
 if [ ! -d $buildprefix/source/binutils-$binv ]; then
     echo Downloading binutils...
     cd $buildprefix/source/
-    rm binutils-*.tar.gz
+    rm binutils-*.tar.gz &>/dev/null
     wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv.tar.gz
     
     echo Extracting binutils...
@@ -54,7 +54,7 @@ fi
 if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
     echo Downloading newlib...
     cd $buildprefix/source/
-    rm newlib-*.tar.gz
+    rm newlib-*.tar.gz &>/dev/null
     wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz
     
     echo Extracting newlib...
