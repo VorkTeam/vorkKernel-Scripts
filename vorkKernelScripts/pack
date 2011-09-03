@@ -1,6 +1,7 @@
 #!/bin/bash
 
 OLDDIR=$PWD
+. $HOME/vorkKernel-Scripts/vorkKernelScripts/Scripts/colorize.sh
 
 # only adjust these dirs
 export BUILD_DIR=$HOME/Dropbox/Public
@@ -24,8 +25,8 @@ NOW=$(date +"%Y%m%d")
 
 # If there is no parameter than the question is asked
 if [ ! -n "$1" ]; then
-	echo "Do you want to build a release or a test version?"
-	echo "1 for Release, 2 for Test"
+	msg "Do you want to build a release or a test version?"
+	msg "1 for Release, 2 for Test"
 	read BUILD
 else
 	BUILD=$1
@@ -56,7 +57,7 @@ clear
 
 . $VORKSCRIPT_DIR/Scripts/buildconfig.sh
 
-echo "Compiling modules"
+msg "Compiling modules"
 
 . $VORKSCRIPT_DIR/Scripts/modules.sh
 
@@ -95,7 +96,7 @@ fi
 
 if [ "$release" == "release" ]; then
     #Stuff for update app
-	echo $NOW > $BUILD_DIR/UpdateApp/version_$device
+	msg "$NOW > $BUILD_DIR/UpdateApp/version_$device"
 
 	python $VORKSCRIPT_DIR/Scripts/pyndexer/pyndexer.py
 	python /opt/vorkBot/vorkbot.py $device
