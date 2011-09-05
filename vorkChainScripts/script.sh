@@ -65,17 +65,17 @@ cd $buildprefix/temp/binutils
 echo Configuring binutils...
 $buildprefix/source/binutils-$binv/configure --target=arm-eabi --prefix=$prefix --disable-nls --disable-shared --disable-threads --with-gcc --with-gnu-as --with-gnu-ld --enable-interwork --enable-multilib
 echo Building binutils...
-make -j8
+make -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing binutils...
-make install -j8
+make install -j`grep "processor" /proc/cpuinfo | wc -l`
 
 cd $buildprefix/temp/gcc
 echo Configuring gcc...
 $buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
 echo Building bootstrap gcc...
-make all-gcc -j8
+make all-gcc -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing bootstrap gcc...
-make install-gcc -j8
+make install-gcc -j`grep "processor" /proc/cpuinfo | wc -l`
 
 PATH=$prefix/bin:$PATH
 export PATH
@@ -84,15 +84,15 @@ cd $buildprefix/temp/newlib
 echo Configuring newlib...
 $buildprefix/source/newlib-$newlibv/configure --target=arm-eabi --prefix=$prefix --enable-interwork --enable-multilib
 echo Building newlib...
-make -j8
+make -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing newlib...
-make install -j8
+make install -j`grep "processor" /proc/cpuinfo | wc -l`
 
 cd $buildprefix/temp/gcc
 echo Building gcc...
-make -j8
+make -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing gcc...
-make install -j8
+make install -j`grep "processor" /proc/cpuinfo | wc -l`
 
 strip $prefix/bin/*
 strip $prefix/arm-eabi/bin/*
