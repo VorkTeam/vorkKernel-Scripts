@@ -13,7 +13,7 @@ vorkChain_revision=vorkChain_r4-LinaroBase
 
 function die() {
     echo $@
-    return 1
+    exit 1
 }
 
 if [ -d $prefix/bin ]; then
