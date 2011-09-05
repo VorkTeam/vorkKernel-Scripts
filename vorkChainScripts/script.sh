@@ -11,6 +11,11 @@ mpcv=0.9
 newlibv=1.19.0
 vorkChain_revision=vorkChain_r4-LinaroBase
 
+function die() {
+    echo $@
+    return 1
+}
+
 if [ -d $prefix/bin ]; then
    read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
    if [ ! $CHOICE == "y" ]; then exit 0; fi
@@ -29,8 +34,8 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     cd $buildprefix/source/
     rm gcc-linaro-*.tar.bz2 &>/dev/null
     rm mpc-*.tar.gz&>/dev/null
-    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2 || return 1
-    wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz || return 1
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2 || die "Unable to download GCC!"
+    wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz || die "Unable to download MPC!"
 
     echo Extracting gcc-linaro and mpc...
     tar -xvjf gcc-linaro-$gcclink.tar.bz2
@@ -46,7 +51,7 @@ if [ ! -d $buildprefix/source/binutils-$binv ]; then
     echo Downloading binutils...
     cd $buildprefix/source/
     rm binutils-*.tar.gz &>/dev/null
-    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2 || return 1
+    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2 || die "Unable to download Binutils!"
     
     echo "Extracting binutils..."
     tar -jxvf binutils-$binv$binvrev.tar.bz2
@@ -56,7 +61,7 @@ if [ ! -d $buildprefix/source/newlib-$newlibv ]; then
     echo Downloading newlib...
     cd $buildprefix/source/
     rm newlib-*.tar.gz &>/dev/null
-    wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz || return 1
+    wget http://dl.dropbox.com/u/30546529/newlib-$newlibv.tar.gz || die "Unable to download Newlib!"
     
     echo Extracting newlib...
     tar -xvzf newlib-$newlibv.tar.gz
