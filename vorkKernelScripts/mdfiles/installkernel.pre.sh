@@ -17,6 +17,7 @@
 
 #define EXT4_RDY
 #define USES_BITRATE
+#define HAS_EPENIS_MODE
 
 #endif // DEVICE_LGP990
 
@@ -81,6 +82,9 @@ extrdy=1
 #endif
 #ifdef DEVICE_LGP990
 int2ext=0
+#endif
+#ifdef HAS_EPENIS_MODE
+epenis=0
 #endif
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
@@ -164,6 +168,12 @@ for pp in $args; do
 		"ring")
 			ring=1
 			flags="$flags -ring"
+		;;
+#endif
+#ifdef HAS_EPENIS_MODE
+		"epenis")
+			epenis=1
+			flags="$flags -epenis"
 		;;
 #endif
 		"debug")
@@ -353,6 +363,13 @@ if [ "$debug" == "1" ]; then
     cp $basedir/files/80log /system/etc/init.d/80log
 	chmod 755 /system/etc/init.d/80log
 fi
+
+#ifdef HAS_EPENIS_MODE
+if [ "$epenis" == "1" ]; then
+    cp $basedir/files/81freqchange /system/etc/init.d/81freqchange
+	chmod 755 /system/etc/init.d/81freqchange
+fi
+#endif
 
 #ifdef EXT4_RDY
 if [ "$ext4" == "1" ]; then

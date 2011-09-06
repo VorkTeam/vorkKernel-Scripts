@@ -70,5 +70,14 @@
 		"devices": [
 			"LGP990"
 		]
+	},
+	
+	"epenis": {
+		"name": "E-Penis Tweaks",
+		"description": "More OC of stuff to run your device faster. WILL drain more battery. AND MIGHT DAMAGE YOUR DEVICE",
+		"type": "checkbox",
+		"devices": [
+			"LGP990"
+		]
 	}
 }
