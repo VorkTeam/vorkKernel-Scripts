@@ -2,14 +2,14 @@
 
 export buildprefix=$HOME/vorkChain
 export prefix=$HOME/vorkChain/toolchain
-gcclink=4.6-2011.07
-gcclv=4.6-2011.07-0
+gcclink=4.6-2011.08
+gcclv=4.6-2011.08-0
 gcc=4.6
-binv=2.21.1
+binv=2.19.1
 binvrev=a
 mpcv=0.9
 newlibv=1.19.0
-vorkChain_revision=vorkChain_r4-LinaroBase
+vorkChain_revision=vorkChain_r5-LinaroBase
 
 function die() {
     echo $@
@@ -51,7 +51,7 @@ if [ ! -d $buildprefix/source/binutils-$binv ]; then
     echo Downloading binutils...
     cd $buildprefix/source/
     rm binutils-*.tar.gz &>/dev/null
-    wget ftp://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2 || die "Unable to download Binutils!"
+    wget http://ftp.gnu.org/gnu/binutils/binutils-$binv$binvrev.tar.bz2 || die "Unable to download Binutils!"
     
     echo "Extracting binutils..."
     tar -jxvf binutils-$binv$binvrev.tar.bz2
