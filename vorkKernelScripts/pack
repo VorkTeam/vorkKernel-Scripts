@@ -40,6 +40,11 @@ case $BUILD in
 	   export release=test
 	   export device=LGP990
 	;;
+	2penis)
+	   signed_file=vorkKernelEPPEN-LGP990.zip
+	   export release=test
+	   export device=LGP990
+	;;
 	3) signed_file=vorkKernel-"$NOW".zip
 	   export release=release
 	   export device=XOOM
@@ -54,7 +59,16 @@ export SOURCE_DIR=$HOME/vorkKernel-$device
 
 clear
 
-. $VORKSCRIPT_DIR/Scripts/buildconfig.sh
+if [ "$BUILD" == "2penis" ]; then
+	sed -i 's/\/\/define larger_epeen/#define larger_epeen/g' $SOURCE_DIR/include/linux/vorkKernel.h
+	. $VORKSCRIPT_DIR/Scripts/buildconfig.sh
+else
+	if [ "$device" == "LGP990" ]; then
+		sed -i 's/#define larger_epeen/\/\/define larger_epeen/g' $SOURCE_DIR/include/linux/vorkKernel.h
+		. $VORKSCRIPT_DIR/Scripts/buildconfig.sh
+
+	fi
+fi
 
 echo "Compiling modules"
 
