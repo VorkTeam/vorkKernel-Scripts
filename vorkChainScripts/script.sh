@@ -11,6 +11,19 @@ mpcv=0.9
 newlibv=1.19.0
 vorkChain_revision=vorkChain_r5-LinaroBase
 
+echo "You can build for following platforms: "
+echo "1. Tegra"
+echo "2. Qualcomm msm qsd6850"
+echo "Enter you choice"
+
+read platform
+
+if [ "$platform" == "1" ]; then
+	optimization="--with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp"
+else
+	optimization="--with-arch=armv7-a --with-tune=cortex-a8 --with-fpu=neon --with-float=softfp"
+fi
+
 function die() {
     echo $@
     exit 1
@@ -23,6 +36,12 @@ fi
 
 if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
 cd $buildprefix
+if [ "platform" == "2" ]; then 
+	mkdir msmqsd
+	cd msmqsd
+	export buildprefix=$HOME/vorkChain/msmqsd
+	export prefix=$HOME/vorkChain/msmqsd/toolchain
+fi
 
 if [ ! -d source ]; then mkdir source; fi
 if [ ! -d temp/binutils ]; then mkdir -p temp/binutils; fi
@@ -77,7 +96,7 @@ make install -j`grep "processor" /proc/cpuinfo | wc -l`
 
 cd $buildprefix/temp/gcc
 echo Configuring gcc...
-$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb --with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
+$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb $optimizations --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
 echo Building bootstrap gcc...
 make all-gcc -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing bootstrap gcc...
