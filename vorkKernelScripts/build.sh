@@ -67,7 +67,7 @@ fi
 
 echo "Setting up a $build_device $release build"
 $build_device
-if [ "`which ccache`" != "" ]; then # We have ccache
+if [ "`which ccache`" != "" && "$USE_CCACHE" == "1" ]; then # We have ccache
 	toolchain="ccache $toolchain"
 fi
 
