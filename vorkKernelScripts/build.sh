@@ -1,3 +1,4 @@
+#!/bin/bash
 # Static variables
 devices="LGP990 XOOM"
 script_dir="~/vorkKernel-Scripts/vorkKernelScripts"
@@ -7,7 +8,7 @@ cores="`grep processor /proc/cpuinfo | wc -l`"
 now="`date +"%Y%m%d"`"
 
 # Functions
-function die() { echo $@; exit 1; }
+function die () { echo $@; exit 1; }
 
 # Device specific functions
 function LGP990() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
