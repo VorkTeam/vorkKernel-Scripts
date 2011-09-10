@@ -1,6 +1,6 @@
 #!/bin/bash
 # Static variables
-devices="LGP990 XOOM"
+devices="LGP990 XOOM DESIRE"
 script_dir="~/vorkKernel-Scripts/vorkKernelScripts"
 storage_dir="~/Dropbox/Public"
 start_dir="`pwd`"
@@ -13,16 +13,57 @@ function die () { echo $@; exit 1; }
 # Device specific functions
 function LGP990() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
 function XOOM() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
+function DESIRE() { toolchain="~/vorkChain/msmqsd/toolchain/bin/arm-eabi-": }
 function LGP990_zip() {
 	case $1 in
-		"do")   cp -r $script_dir/mdfiles/ril $script_dir/Awesome.zip/tmp/vorkKernel/files;;
-		"clean")rm -r $script_dir/mdfiles/ril $script_dir/Awesome.zip/tmp/vorkKernel/files;;
+		"do")   
+			cp $script_dir/mdfiles/updater-binary $script_dir/Awesome.zip/META-INF/com/google/android/
+			cp $script_dir/mdfiles/unpackbootimg $script_dir/Awesome.zip/tmp/vorkKernel/
+			cp $script_dir/mdfiles/mkbootimg $script_dir/Awesome.zip/tmp/vorkKernel/
+			cp $script_dir/mdfiles/busybox $script_dir/Awesome.zip/tmp/vorkKernel/
+			cp -r $script_dir/mdfiles/ril $script_dir/Awesome.zip/tmp/vorkKernel/files
+		;;
+		"clean")
+			rm $script_dir/Awesome.zip/META-INF/com/google/android/updater-binary
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/busybox
+			rm -r $script_dir/mdfiles/ril $script_dir/Awesome.zip/tmp/vorkKernel/files
+		;;
 	esac
 }
 function XOOM_zip() {
 	case $1 in
-		"do")   ;;
-		"clean");;
+		"do")   
+			cp $script_dir/mdfiles/updater-binary $script_dir/Awesome.zip/META-INF/com/google/android/
+			cp $script_dir/mdfiles/unpackbootimg $script_dir/Awesome.zip/tmp/vorkKernel/
+			cp $script_dir/mdfiles/mkbootimg $script_dir/Awesome.zip/tmp/vorkKernel/
+			cp $script_dir/mdfiles/busybox $script_dir/Awesome.zip/tmp/vorkKernel/
+			cp $script_dir/mdfiles/media_profiles.xml $script_dir/Awesome.zip/tmp/vorkKernel/files/
+		;;
+		"clean")
+			rm $script_dir/Awesome.zip/META-INF/com/google/android/updater-binary
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/busybox
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/files/media_profiles.xml
+		;;
+	esac
+}
+function DESIRE_zip() {
+	case $1 in
+		"do")
+			cp $script_dir/mdfiles/updater-desire $script_dir/Awesome.zip/META-INF/com/google/android/updater-binary
+			cp $script_dir/mdfiles/unpackbootimg-desire $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
+			cp $script_dir/mdfiles/mkbootimg-desire $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
+			cp $script_dir/mdfiles/busybox-desire $script_dir/Awesome.zip/tmp/vorkKernel/busybox
+		;;
+		"clean")
+			rm $script_dir/Awesome.zip/META-INF/com/google/android/updater-binary
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/busybox
+		;;
 	esac
 }
 

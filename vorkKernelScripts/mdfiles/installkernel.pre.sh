@@ -37,13 +37,35 @@
 
 #define USES_BITRATE
 
-#endif
+#endif // DEVICE_XOOM
+
+#ifdef DEVICE_DESIRE
+
+#define BOOT_PARTITION		boot
+#define SYSTEM_PARTITION	system
+#define DATA_PARTITION		data
+
+#define SECONDARY_INIT		init.bravo.rc
+
+#define BOOT_PAGESIZE		0x800
+#define BOOT_CMDLINE 		"$(cat $basedir/boot.old-cmdline)"
+#define BOOT_BASE		$(cat $basedir/boot.old-base)
+
+#define HAS_SENSE
+
+#define USES_BITRATE
+#define IS_PHONE
+
+#endif // DEVICE_DESIRE
 
 #ifdef DEVICE_LGP990
 device=LGP990
 #endif
 #ifdef DEVICE_XOOM
 device=XOOM
+#endif
+#ifdef DEVICE_DESIRE
+device=DESIRE
 #endif
 
 ui_print() {
@@ -109,10 +131,16 @@ cymo=`cat /system/build.prop | $awk 'tolower($0) ~ /cyanogenmod/ { printf "1"; e
 miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { printf "1"; exit 0 }'`
 #endif // HAS_MIUI
 
+#ifdef HAS_SENSE
+sense=`cat /system/build.prop | $awk 'tolower($0) ~ /sense/ { printf "1"; exit 0 }'`
+#endif // HAS_SENSE
+
 if [ "$cymo" == "1" ]; then
     log "Installing on CyanogenMod"
 elif [ "$miui" == "1" ]; then
     log "Installing on Miui"
+if [ "$sense" == "1" ]; then
+    log "Installing on Sense"
 else
     fatal "Current ROM is not compatible with vorkKernel! Aborting..."
 fi
@@ -170,10 +198,9 @@ for pp in $args; do
 			flags="$flags -ring"
 		;;
 #endif
-#ifdef HAS_EPENIS_MODE
-		"epenis")
-			epenis=1
-			flags="$flags -epenis"
+#ifdef DEVICE_DESIRE
+		"avs")
+			avs=1
 		;;
 #endif
 		"debug")
@@ -228,7 +255,7 @@ fi
 
 log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
-$awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+$awk -v device=$device -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 
 FSIZE=`ls -l ../init.rc.mod | $awk '{ print $5 }'`
 log "init.rc.mod filesize: $FSIZE"
@@ -301,8 +328,11 @@ if [ "$silent" == "1" ]; then
 fi
 
 #ifdef USES_BITRATE
+#ifdef DEVICE_XOOM
+cp $basedir/files/media_profiles.xml /system/etc/media_profiles.xml
+#else
 cp /system/etc/media_profiles.xml $basedir/media_profiles.xml
-$awk -v device=$device -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
+$awk -v bitrate=$bit -f $basedir/awk/mediaprofilesxml.awk $basedir/media_profiles.xml > $basedir/media_profiles.xml.mod
 
 FSIZE=`ls -l $basedir/media_profiles.xml.mod | $awk '{ print $5 }'`
 log ""
@@ -314,6 +344,7 @@ else
   ui_print "WARNING: Tweaking media_profiles.xml failed! Continue without tweaks"
   warning=$((warning + 1))
 fi
+#endif //DEVICE_XOOM
 #endif // USES_BITRATE
 
 cp /system/build.prop $basedir/build.prop
@@ -363,13 +394,6 @@ if [ "$debug" == "1" ]; then
     cp $basedir/files/80log /system/etc/init.d/80log
 	chmod 755 /system/etc/init.d/80log
 fi
-
-#ifdef HAS_EPENIS_MODE
-if [ "$epenis" == "1" ]; then
-    cp $basedir/files/81freqchange /system/etc/init.d/81freqchange
-	chmod 755 /system/etc/init.d/81freqchange
-fi
-#endif
 
 #ifdef EXT4_RDY
 if [ "$ext4" == "1" ]; then
