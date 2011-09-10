@@ -13,7 +13,7 @@ function die () { echo $@; exit 1; }
 # Device specific functions
 function LGP990() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
 function XOOM() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
-function DESIRE() { toolchain="~/vorkChain/msmqsd/toolchain/bin/arm-eabi-": }
+function DESIRE() { toolchain="~/vorkChain/msmqsd/toolchain/bin/arm-eabi-"; }
 function LGP990_zip() {
 	case $1 in
 		"do")   
