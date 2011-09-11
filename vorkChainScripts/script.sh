@@ -21,17 +21,15 @@ function die() {
     exit 1
 }
 
-if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
-cd $buildprefix
-if [ "platform" == "2" ]; then 
-	export buildprefix=$HOME/vorkChain/msmqsd
-	export prefix=$HOME/vorkChain/msmqsd/toolchain
+if [ "$platform" == "2" ]; then 
+	buildprefix=$HOME/vorkChain/msmqsd
+	prefix=$HOME/vorkChain/msmqsd/toolchain
 	optimization="--with-arch=armv7-a --with-tune=cortex-a8 --with-fpu=neon --with-float=softfp"
 	if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
 	cd $buildprefix
 else
-	export buildprefix=$HOME/vorkChain
-	export prefix=$HOME/vorkChain/toolchain
+	buildprefix=$HOME/vorkChain
+	prefix=$HOME/vorkChain/toolchain
 	optimization="--with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp"
 	if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
 	cd $buildprefix
