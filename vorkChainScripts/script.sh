@@ -1,9 +1,9 @@
 #!/bin/bash
 
 gcclink=4.6-2011.08
-gcclv=4.6-2011.08-0
+gcclv=4.6-2011.08
 gcc=4.6
-binv=2.19.1
+binv=2.21.1
 binvrev=a
 mpcv=0.9
 newlibv=1.19.0
@@ -22,16 +22,16 @@ function die() {
 }
 
 if [ "$platform" == "2" ]; then 
-	buildprefix=$HOME/vorkChain/msmqsd
-	prefix=$HOME/vorkChain/msmqsd/toolchain
+	export buildprefix=$HOME/vorkChain/msmqsd
+	export prefix=$HOME/vorkChain/msmqsd/toolchain
 	optimization="--with-arch=armv7-a --with-tune=cortex-a8 --with-fpu=neon --with-float=softfp"
-	if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
+	if [ ! -d $buildprefix ]; then mkdir -p $buildprefix; fi
 	cd $buildprefix
 else
-	buildprefix=$HOME/vorkChain
-	prefix=$HOME/vorkChain/toolchain
+	export buildprefix=$HOME/vorkChain
+	export prefix=$HOME/vorkChain/toolchain
 	optimization="--with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp"
-	if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
+	if [ ! -d $buildprefix ]; then mkdir -p $buildprefix; fi
 	cd $buildprefix
 fi
 
