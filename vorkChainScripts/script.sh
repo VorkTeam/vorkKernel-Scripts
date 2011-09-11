@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export buildprefix=$HOME/vorkChain
-export prefix=$HOME/vorkChain/toolchain
 gcclink=4.6-2011.08
 gcclv=4.6-2011.08-0
 gcc=4.6
@@ -18,29 +16,30 @@ echo "Enter you choice"
 
 read platform
 
-if [ "$platform" == "1" ]; then
-	optimization="--with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp"
-else
-	optimization="--with-arch=armv7-a --with-tune=cortex-a8 --with-fpu=neon --with-float=softfp"
-fi
-
 function die() {
     echo $@
     exit 1
 }
 
-if [ -d $prefix/bin ]; then
-   read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
-   if [ ! $CHOICE == "y" ]; then exit 0; fi
-fi
-
 if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
 cd $buildprefix
 if [ "platform" == "2" ]; then 
-	mkdir msmqsd
-	cd msmqsd
 	export buildprefix=$HOME/vorkChain/msmqsd
 	export prefix=$HOME/vorkChain/msmqsd/toolchain
+	optimization="--with-arch=armv7-a --with-tune=cortex-a8 --with-fpu=neon --with-float=softfp"
+	if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
+	cd $buildprefix
+else
+	export buildprefix=$HOME/vorkChain
+	export prefix=$HOME/vorkChain/toolchain
+	optimization="--with-arch=armv7-a --with-tune=cortex-a9 --with-fpu=vfpv3-d16 --with-float=softfp"
+	if [ ! -d $buildprefix ]; then mkdir $buildprefix; fi
+	cd $buildprefix
+fi
+
+if [ -d $prefix/bin ]; then
+   read -p "Toolchain already compiled. Do you want to recompile? (y/n) " CHOICE
+   if [ ! $CHOICE == "y" ]; then exit 0; fi
 fi
 
 if [ ! -d source ]; then mkdir source; fi
