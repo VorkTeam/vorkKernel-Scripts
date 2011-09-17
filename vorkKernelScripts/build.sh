@@ -2,7 +2,7 @@
 # Static variables
 script_dir="~/vorkKernel-Scripts/vorkKernelScripts"
 storage_dir="~/Dropbox/Public"
-source_dir="~"
+source_dir="$HOME"
 start_dir="`pwd`"
 cores="`grep processor /proc/cpuinfo | wc -l`"
 now="`date +"%Y%m%d"`"
