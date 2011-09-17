@@ -172,6 +172,7 @@ cd -
 "$build_device"_zip clean
 
 if [ "$epeen" == "1" ]; then
+	"$build_device"_epeen do
 	echo "Setting up kernel..."
 	make -C $source_dir/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" vorkKernel_defconfig
 	if [ "$?" != "0" ]; then
@@ -201,6 +202,7 @@ if [ "$epeen" == "1" ]; then
 	zip -qrj $epeen_zip_location *
 	cd -
 	"$build_device"_zip clean
+	"$build_device"_epeen clean
 fi
 
 if [ "$release" == "release" ]; then # Stuff for update app
