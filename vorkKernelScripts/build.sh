@@ -1,8 +1,8 @@
 #!/bin/bash
 # Static variables
-devices="LGP990 XOOM DESIRE"
 script_dir="~/vorkKernel-Scripts/vorkKernelScripts"
 storage_dir="~/Dropbox/Public"
+source_dir="~"
 start_dir="`pwd`"
 cores="`grep processor /proc/cpuinfo | wc -l`"
 now="`date +"%Y%m%d"`"
@@ -10,10 +10,13 @@ now="`date +"%Y%m%d"`"
 # Functions
 function die () { echo $@; exit 1; }
 
+# Device variables
+devices="LGP990 XOOM DESIRE"
+
 # Device specific functions
-function LGP990() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
-function XOOM() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; }
-function DESIRE() { toolchain="~/vorkChain/msmqsd/toolchain/bin/arm-eabi-"; }
+function LGP990() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; epeen=1; }
+function XOOM() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; epeen=0; }
+function DESIRE() { toolchain="~/vorkChain/msmqsd/toolchain/bin/arm-eabi-"; epeen=0; }
 function LGP990_zip() {
 	case $1 in
 		"do")   
@@ -66,6 +69,16 @@ function DESIRE_zip() {
 		;;
 	esac
 }
+function LGP990_epeen() {
+	case $1 in
+		"do")   
+			sed -i 's/\/\/define larger_epeen/#define larger_epeen/g' $source_dir/vorkKernel-$build_device/include/linux/vorkKernel.h
+		;;
+		"clean")
+			sed -i 's/#define larger_epeen/\/\/define larger_epeen/g' $source_dir/vorkKernel-$build_device/include/linux/vorkKernel.h
+		;;
+	esac
+}
 
 # Cleanup
 release=
@@ -114,31 +127,37 @@ fi
 
 if [ "$release" == "release" ]; then
 	zip_location=$storage_dir/$build_device/vorkKernel-$now.zip
+	if [ "$epeen" == "1" ]; then
+		epeen_zip_location=$storage_dir/$build_device/vorkKernelEPEEN-$now.zip
+	fi
 elif [ "$release" == "test" ]; then
 	zip_location=$storage_dir/TEST/vorkKernel-$build_device.zip
+	if [ "$epeen" == "1" ]; then
+		epeen_zip_location=$storage_dir/TEST/vorkKernelEPEEN-$build_device.zip
+	fi
 fi
 
-if [ ! -d ~/vorkKernel-$build_device ]; then
+if [ ! -d $source_dir/vorkKernel-$build_device ]; then
 	die "Could not find kernel source for $build_device"
 fi
 
 echo "Setting up kernel..."
-make -C ~/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" vorkKernel_defconfig
+make -C $source_dir/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" vorkKernel_defconfig
 if [ "$?" != "0" ]; then
 	die "Error setting up kernel"
 fi
 
 echo "Building kernel..."
-make -C ~/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" -j$cores
+make -C $source_dir/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" -j$cores
 if [ "$?" != "0" ]; then
 	die "Error building kernel"
 fi
 
 echo "Grabbing zImage..."
-cp ~/vorkKernel-$build_device/arch/arm/boot/zImage $script_dir/Awesome.zip/tmp/vorkKernel/zImage
+cp $source_dir/vorkKernel-$build_device/arch/arm/boot/zImage $script_dir/Awesome.zip/tmp/vorkKernel/zImage
 
 echo "Grabbing kernel modules..."
-for module in `find ~/vorkKernel-$build_device -name *.ko`
+for module in `find $source_dir/vorkKernel-$build_device -name *.ko`
 do
     cp $module $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/
 done
@@ -151,6 +170,38 @@ cd $script_dir/Awesome.zip/
 zip -qrj $zip_location *
 cd -
 "$build_device"_zip clean
+
+if [ "$epeen" == "1" ]; then
+	echo "Setting up kernel..."
+	make -C $source_dir/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" vorkKernel_defconfig
+	if [ "$?" != "0" ]; then
+		die "Error setting up kernel"
+	fi
+
+	echo "Building kernel..."
+	make -C $source_dir/vorkKernel-$build_device ARCH=arm CROSS_COMPILE="$toolchain" -j$cores
+	if [ "$?" != "0" ]; then
+		die "Error building kernel"
+	fi
+
+	echo "Grabbing zImage..."
+	cp $source_dir/vorkKernel-$build_device/arch/arm/boot/zImage $script_dir/Awesome.zip/tmp/vorkKernel/zImage
+
+	echo "Grabbing kernel modules..."
+	for module in `find $source_dir/vorkKernel-$build_device -name *.ko`
+	do
+		cp $module $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/
+	done
+	
+	echo "Making update zip..."
+	echo "#!/sbin/sh" > $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
+	cpp -D DEVICE_$build_device $script_dir/mdfiles/installkernel.pre.sh | awk '/# / { next; } { print; }' >> $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
+	"$build_device"_zip do
+	cd $script_dir/Awesome.zip/
+	zip -qrj $epeen_zip_location *
+	cd -
+	"$build_device"_zip clean
+fi
 
 if [ "$release" == "release" ]; then # Stuff for update app
 	echo "Saving release information..."
