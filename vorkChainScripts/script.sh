@@ -54,12 +54,12 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz || die "Unable to download MPC!"
 
     echo Extracting gcc-linaro and mpc...
-    tar -xvjf gcc-linaro-$gcclink.tar.bz2
+    tar -xvjf gcc-linaro-$gcclv.tar.bz2
     tar -xvzf mpc-$mpcv.tar.gz
     
     echo Moving mpc to gcc folder
     mv mpc-$mpcv mpc
-    cd gcc-linaro-$gcclink
+    cd gcc-linaro-$gcclv
     mv ../mpc mpc
 fi
 
@@ -93,7 +93,7 @@ make install -j`grep "processor" /proc/cpuinfo | wc -l`
 
 cd $buildprefix/temp/gcc
 echo Configuring gcc...
-$buildprefix/source/gcc-linaro-$gcclink/configure --target=arm-eabi --with-mode=thumb $optimizations --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
+$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb $optimizations --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
 echo Building bootstrap gcc...
 make all-gcc -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing bootstrap gcc...
