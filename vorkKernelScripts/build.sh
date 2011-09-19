@@ -14,9 +14,9 @@ function die () { echo $@; exit 1; }
 devices="LGP990 XOOM DESIRE"
 
 # Device specific functions
-function LGP990() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; epeen=1; }
-function XOOM() { toolchain="~/vorkChain/toolchain/bin/arm-eabi-"; epeen=0; }
-function DESIRE() { toolchain="~/vorkChain/msmqsd/toolchain/bin/arm-eabi-"; epeen=0; }
+function LGP990() { toolchain="$HOME/vorkChain/toolchain/bin/arm-eabi-"; epeen=1; }
+function XOOM() { toolchain="$HOME/vorkChain/toolchain/bin/arm-eabi-"; epeen=0; }
+function DESIRE() { toolchain="$HOME/vorkChain/msmqsd/toolchain/bin/arm-eabi-"; epeen=0; }
 function LGP990_zip() {
 	case $1 in
 		"do")   
