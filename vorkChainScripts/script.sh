@@ -1,7 +1,7 @@
 #!/bin/bash
 
-gcclink=4.6-2011.08
-gcclv=4.6-2011.08
+gcclink=4.6-2011.09-1
+gcclv=4.6-2011.09-1
 gcc=4.6
 binv=2.21.1
 binvrev=a
