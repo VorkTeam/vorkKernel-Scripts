@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gcclink=4.6-2011.09-1
+gcclink=4.6-2011.09
 gcclv=4.6-2011.09-1
 gcc=4.6
 binv=2.21.1
@@ -50,7 +50,7 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     cd $buildprefix/source/
     rm gcc-linaro-*.tar.bz2 &>/dev/null
     rm mpc-*.tar.gz&>/dev/null
-    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclink.tar.bz2 || die "Unable to download GCC!"
+    wget http://launchpad.net/gcc-linaro/$gcc/$gcclink/+download/gcc-linaro-$gcclv.tar.bz2 || die "Unable to download GCC!"
     wget http://www.multiprecision.org/mpc/download/mpc-$mpcv.tar.gz || die "Unable to download MPC!"
 
     echo Extracting gcc-linaro and mpc...
@@ -59,7 +59,7 @@ if [ ! -d $buildprefix/source/gcc-linaro-$gcclv ]; then
     
     echo Moving mpc to gcc folder
     mv mpc-$mpcv mpc
-    cd gcc-linaro-$gcclv
+    cd gcc-linaro-$gcclink
     mv ../mpc mpc
 fi
 
@@ -93,7 +93,7 @@ make install -j`grep "processor" /proc/cpuinfo | wc -l`
 
 cd $buildprefix/temp/gcc
 echo Configuring gcc...
-$buildprefix/source/gcc-linaro-$gcclv/configure --target=arm-eabi --with-mode=thumb $optimizations --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
+$buildprefix/source/gcc-linaro-$gcclink/configure --target=arm-eabi --with-mode=thumb $optimizations --prefix=$prefix --with-pkgversion=$vorkChain_revision --with-gcc --with-gnu-ld --with-gnu-as --disable-nls --disable-shared --disable-threads --enable-languages=c,c++ --with-newlib --with-headers=$buildprefix/source/newlib-$newlibv/newlib/libc/include
 echo Building bootstrap gcc...
 make all-gcc -j`grep "processor" /proc/cpuinfo | wc -l`
 echo Installing bootstrap gcc...
