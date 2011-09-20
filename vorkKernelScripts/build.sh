@@ -1,6 +1,6 @@
 #!/bin/bash
 # Static variables
-storage_dir="~/Dropbox/Public"
+storage_dir="$HOME/Dropbox/Public"
 source_dir="$HOME"
 script_dir="$source_dir/vorkKernel-Scripts/vorkKernelScripts"
 start_dir="`pwd`"
@@ -167,7 +167,8 @@ echo "#!/sbin/sh" > $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
 cpp -D DEVICE_$build_device $script_dir/mdfiles/installkernel.pre.sh | awk '/# / { next; } { print; }' >> $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
 "$build_device"_zip do
 cd $script_dir/Awesome.zip/
-zip -qr $zip_location *
+zip -qyr update *
+mv update.zip $zip_location
 cd -
 "$build_device"_zip clean
 
@@ -199,7 +200,8 @@ if [ "$epeen" == "1" ]; then
 	cpp -D DEVICE_$build_device $script_dir/mdfiles/installkernel.pre.sh | awk '/# / { next; } { print; }' >> $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
 	"$build_device"_zip do
 	cd $script_dir/Awesome.zip/
-	zip -qr $epeen_zip_location *
+	zip -qyr update *
+	mv update.zip $epeen_zip_location
 	cd -
 	"$build_device"_zip clean
 	"$build_device"_epeen clean
