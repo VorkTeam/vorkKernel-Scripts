@@ -1,8 +1,8 @@
 #!/bin/bash
 # Static variables
-script_dir="~/vorkKernel-Scripts/vorkKernelScripts"
 storage_dir="~/Dropbox/Public"
 source_dir="$HOME"
+script_dir="$source_dir/vorkKernel-Scripts/vorkKernelScripts"
 start_dir="`pwd`"
 cores="`grep processor /proc/cpuinfo | wc -l`"
 now="`date +"%Y%m%d"`"
@@ -31,7 +31,7 @@ function LGP990_zip() {
 			rm $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
 			rm $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
 			rm $script_dir/Awesome.zip/tmp/vorkKernel/busybox
-			rm -r $script_dir/mdfiles/ril $script_dir/Awesome.zip/tmp/vorkKernel/files
+			rm -r $script_dir/Awesome.zip/tmp/vorkKernel/files/ril
 		;;
 	esac
 }
