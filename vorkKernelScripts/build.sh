@@ -167,7 +167,7 @@ echo "#!/sbin/sh" > $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
 cpp -D DEVICE_$build_device $script_dir/mdfiles/installkernel.pre.sh | awk '/# / { next; } { print; }' >> $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
 "$build_device"_zip do
 cd $script_dir/Awesome.zip/
-zip -qrj $zip_location *
+zip -qr $zip_location *
 cd -
 "$build_device"_zip clean
 
@@ -199,7 +199,7 @@ if [ "$epeen" == "1" ]; then
 	cpp -D DEVICE_$build_device $script_dir/mdfiles/installkernel.pre.sh | awk '/# / { next; } { print; }' >> $script_dir/Awesome.zip/tmp/vorkKernel/installkernel.sh
 	"$build_device"_zip do
 	cd $script_dir/Awesome.zip/
-	zip -qrj $epeen_zip_location *
+	zip -qr $epeen_zip_location *
 	cd -
 	"$build_device"_zip clean
 	"$build_device"_epeen clean
