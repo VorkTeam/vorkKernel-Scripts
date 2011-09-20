@@ -139,7 +139,7 @@ if [ "$cymo" == "1" ]; then
     log "Installing on CyanogenMod"
 elif [ "$miui" == "1" ]; then
     log "Installing on Miui"
-if [ "$sense" == "1" ]; then
+elif [ "$sense" == "1" ]; then
     log "Installing on Sense"
 else
     fatal "Current ROM is not compatible with vorkKernel! Aborting..."
