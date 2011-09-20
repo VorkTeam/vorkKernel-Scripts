@@ -1,6 +1,6 @@
 #!/bin/bash
 # Static variables
-storage_dir="~/Dropbox/Public"
+storage_dir="$HOME/Dropbox/Public"
 source_dir="$HOME"
 script_dir="$source_dir/vorkKernel-Scripts/vorkKernelScripts"
 start_dir="`pwd`"
