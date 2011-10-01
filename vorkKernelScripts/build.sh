@@ -121,7 +121,7 @@ fi
 
 echo "Setting up a $build_device $release build"
 $build_device
-if [ "`which ccache`" != "" -a "$USE_CCACHE" == "1" ]; then # We have ccache
+if [ "`which ccache`" != "" -a "$USE_CCACHE" == "1" ]; then # We have ccache and want to use it
 	toolchain="ccache $toolchain"
 fi
 
@@ -157,6 +157,11 @@ echo "Grabbing zImage..."
 cp $source_dir/vorkKernel-$build_device/arch/arm/boot/zImage $script_dir/Awesome.zip/tmp/vorkKernel/zImage
 
 echo "Grabbing kernel modules..."
+if [ ! -d $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/ ]; then
+    mkdir -p $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/
+fi
+rm $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/*
+
 for module in `find $source_dir/vorkKernel-$build_device -name *.ko`
 do
     cp $module $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/
@@ -189,6 +194,11 @@ if [ "$epeen" == "1" ]; then
 	cp $source_dir/vorkKernel-$build_device/arch/arm/boot/zImage $script_dir/Awesome.zip/tmp/vorkKernel/zImage
 
 	echo "Grabbing kernel modules..."
+    if [ ! -d $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/ ]; then
+        mkdir -p $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/
+    fi
+    rm $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/*
+
 	for module in `find $source_dir/vorkKernel-$build_device -name *.ko`
 	do
 		cp $module $script_dir/Awesome.zip/tmp/vorkKernel/files/lib/modules/
