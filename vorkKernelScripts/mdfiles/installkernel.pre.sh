@@ -253,7 +253,11 @@ ui_print "Packing kernel..."
 cd $basedir
 
 log "dumping previous kernel image to $basedir/boot.old"
+#ifdef DEVICE_DESIRE
+$BB dd if=BOOT_PARTITION of=$basedir/boot.old bs=4096
+#else
 $BB dd if=BOOT_PARTITION of=$basedir/boot.old
+#endif //DEVICE_DESIRE
 if [ ! -f $basedir/boot.old ]; then
 	fatal "ERROR: Dumping old boot image failed"
 fi
@@ -326,8 +330,13 @@ fi
 
 ui_print ""
 ui_print "Flashing the kernel..."
+#ifdef DEVICE_DESIRE
+$BB dd if=/dev/zero of=BOOT_PARTITION bs=4096
+$BB dd if=$basedir/boot.img of=BOOT_PARTITION bs=4096
+#else
 $BB dd if=/dev/zero of=BOOT_PARTITION
 $BB dd if=$basedir/boot.img of=BOOT_PARTITION
+#endif //DEVICE_DESIRE
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
