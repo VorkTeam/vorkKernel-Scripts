@@ -32,8 +32,7 @@
 #define BOOT_CMDLINE		"$(cat $basedir/boot.old-cmdline)"
 #define BOOT_BASE		$(cat $basedir/boot.old-base)
 
-#define HAS_CM
-#define HAS_MIUI
+#define HAS_OTHER
 
 #define USES_BITRATE
 
@@ -51,7 +50,8 @@
 #define BOOT_CMDLINE 		"$(cat $basedir/boot.old-cmdline)"
 #define BOOT_BASE		$(cat $basedir/boot.old-base)
 
-#define HAS_SENSE
+#define HAS_CM
+#define HAS_MIUI
 
 #define USES_BITRATE
 #define IS_PHONE
