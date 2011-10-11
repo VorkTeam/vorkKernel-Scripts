@@ -40,9 +40,9 @@
 
 #ifdef DEVICE_DESIRE
 
-#define BOOT_PARTITION		/boot
-#define SYSTEM_PARTITION	/system
-#define DATA_PARTITION		/data
+#define BOOT_PARTITION		/dev/mtd/mtd2
+#define SYSTEM_PARTITION	/dev/mtd/mtd3
+#define DATA_PARTITION		/dev/mtd/mtd5
 
 #define SECONDARY_INIT		init.bravo.rc
 
