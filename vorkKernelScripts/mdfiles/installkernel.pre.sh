@@ -32,7 +32,8 @@
 #define BOOT_CMDLINE		"$(cat $basedir/boot.old-cmdline)"
 #define BOOT_BASE		$(cat $basedir/boot.old-base)
 
-#define HAS_OTHER
+#define HAS_CM
+#define HAS_MIUI
 
 #define USES_BITRATE
 
@@ -127,9 +128,10 @@ cymo=`cat /system/build.prop | $awk 'tolower($0) ~ /cyanogenmod/ { printf "1"; e
 miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { printf "1"; exit 0 }'`
 #endif // HAS_MIUI
 
-#ifdef HAS_SENSE
+#ifdef DEVICE_DESIRE
+//Make sure we're not installing on a sense rom.
 sense=`cat /system/build.prop | $awk 'tolower($0) ~ /sense/ { printf "1"; exit 0 }'`
-#endif // HAS_SENSE
+#endif // DEVICE_DESIRE
 
 #ifdef DEVICE_LGP990
 epeen=`echo $kernelver | awk 'tolower($0) ~ /epeen/ { printf "1"; exit 0 }'`
@@ -157,8 +159,10 @@ if [ "$cymo" == "1" ]; then
     log "Installing on CyanogenMod"
 elif [ "$miui" == "1" ]; then
     log "Installing on Miui"
-elif [ "$sense" == "1" ]; then
-    log "Installing on Sense"
+#ifdef DEVICE_DESIRE
+elif [ "$sense" == "0" ]; then
+    log "No Sense rom detected. Continue with the installation..."
+#endif //DEVICE_DESIRE
 else
     fatal "Current ROM is not compatible with vorkKernel! Aborting..."
 fi
