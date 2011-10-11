@@ -17,7 +17,6 @@
 
 #define EXT4_RDY
 #define USES_BITRATE
-#define HAS_EPENIS_MODE
 
 #endif // DEVICE_LGP990
 
@@ -105,9 +104,6 @@ extrdy=1
 #ifdef DEVICE_LGP990
 int2ext=0
 #endif
-#ifdef HAS_EPENIS_MODE
-epenis=0
-#endif
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
 kernelver=`echo $updatename | $awk 'BEGIN {RS="-"; ORS="-"}; NR<=2 {print; ORS=""}'`
@@ -134,6 +130,28 @@ miui=`cat /system/build.prop | $awk 'tolower($0) ~ /miui/ { printf "1"; exit 0 }
 #ifdef HAS_SENSE
 sense=`cat /system/build.prop | $awk 'tolower($0) ~ /sense/ { printf "1"; exit 0 }'`
 #endif // HAS_SENSE
+
+#ifdef DEVICE_LGP990
+epeen=`echo $kernelver | awk 'tolower($0) ~ /epeen/ { printf "1"; exit 0 }'`
+
+if [ "$epeen" == "1" ]; then
+    ui_print ""
+    ui_print ""
+    ui_print ""
+    ui_print "  WARNING!"
+    ui_print "    You're installing E-Peen mode for LGP990."
+    ui_print "    The camera and bluetooth will get unstable."
+    ui_print "    After a few minutes the kernel stabilized and"
+    ui_print "    they're working again."
+    ui_print ""
+    ui_print "    Please DON'T report this problem!"
+    ui_print "    Thanks ;)"
+    ui_print ""
+    ui_print ""
+    ui_print ""
+    $BB sleep 5s
+fi
+#endif //DEVICE_LGP990
 
 if [ "$cymo" == "1" ]; then
     log "Installing on CyanogenMod"
