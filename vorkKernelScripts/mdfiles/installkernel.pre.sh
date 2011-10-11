@@ -40,9 +40,9 @@
 
 #ifdef DEVICE_DESIRE
 
-#define BOOT_PARTITION		boot
-#define SYSTEM_PARTITION	system
-#define DATA_PARTITION		data
+#define BOOT_PARTITION		/boot
+#define SYSTEM_PARTITION	/system
+#define DATA_PARTITION		/data
 
 #define SECONDARY_INIT		init.bravo.rc
 
@@ -223,6 +223,8 @@ for pp in $args; do
 #ifdef DEVICE_DESIRE
 		"avs")
 			avs=1
+			flags="$flags -avs"
+			ui_print "WARNING! Your device may become unstable"
 		;;
 #endif
 		"debug")
