@@ -330,13 +330,8 @@ fi
 
 ui_print ""
 ui_print "Flashing the kernel..."
-#ifdef DEVICE_DESIRE
-$BB dd if=/dev/zero of=BOOT_PARTITION bs=4096
-$BB dd if=$basedir/boot.img of=BOOT_PARTITION bs=4096
-#else
 $BB dd if=/dev/zero of=BOOT_PARTITION
 $BB dd if=$basedir/boot.img of=BOOT_PARTITION
-#endif //DEVICE_DESIRE
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
