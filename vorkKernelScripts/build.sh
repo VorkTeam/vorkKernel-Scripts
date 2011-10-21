@@ -57,6 +57,8 @@ function DESIRE_zip() {
 	case $1 in
 		"do")
 			cp $script_dir/mdfiles/updater-desire $script_dir/Awesome.zip/META-INF/com/google/android/update-binary
+			cp $script_dir/mdfiles/dump_image $script_dir/Awesome.zip/tmp/vorkKernel/dump_image
+			cp $script_dir/mdfiles/flash_image $script_dir/Awesome.zip/tmp/vorkKernel/flash_image
 			cp $script_dir/mdfiles/unpackbootimg-desire $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
 			cp $script_dir/mdfiles/mkbootimg-desire $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
 			cp $script_dir/mdfiles/busybox-desire $script_dir/Awesome.zip/tmp/vorkKernel/busybox
@@ -66,6 +68,8 @@ function DESIRE_zip() {
 			rm $script_dir/Awesome.zip/tmp/vorkKernel/unpackbootimg
 			rm $script_dir/Awesome.zip/tmp/vorkKernel/mkbootimg
 			rm $script_dir/Awesome.zip/tmp/vorkKernel/busybox
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/dump_image
+			rm $script_dir/Awesome.zip/tmp/vorkKernel/flash_image
 		;;
 	esac
 }

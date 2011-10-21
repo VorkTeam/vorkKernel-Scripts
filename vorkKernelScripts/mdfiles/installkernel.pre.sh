@@ -252,7 +252,7 @@ cd $basedir
 
 log "dumping previous kernel image to $basedir/boot.old"
 #ifdef DEVICE_DESIRE
-$BB dd if=BOOT_PARTITION of=$basedir/boot.old bs=4096
+$basedir/dump_image boot $basedir/boot.old
 #else
 $BB dd if=BOOT_PARTITION of=$basedir/boot.old
 #endif //DEVICE_DESIRE
@@ -329,15 +329,14 @@ fi
 ui_print ""
 ui_print "Flashing the kernel..."
 #ifdef DEVICE_DESIRE
-$BB dd if=/dev/zero of=BOOT_PARTITION bs=4096
-$BB dd if=$basedir/boot.img of=BOOT_PARTITION bs=4096
+$basedir/flash_image boot $basedir/boot.old
 #else
 $BB dd if=/dev/zero of=BOOT_PARTITION
 $BB dd if=$basedir/boot.img of=BOOT_PARTITION
-#endif //DEVICE_DESIRE
 if [ "$?" -ne 0 ]; then
     fatal "ERROR: Flashing kernel failed!"
 fi
+#endif //DEVICE_DESIRE
 
 ui_print ""
 ui_print "Installing kernel modules..."
