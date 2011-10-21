@@ -252,6 +252,7 @@ cd $basedir
 
 log "dumping previous kernel image to $basedir/boot.old"
 #ifdef DEVICE_DESIRE
+$chmod 777 $basedir/dump_image
 $basedir/dump_image boot $basedir/boot.old
 #else
 $BB dd if=BOOT_PARTITION of=$basedir/boot.old
@@ -329,6 +330,7 @@ fi
 ui_print ""
 ui_print "Flashing the kernel..."
 #ifdef DEVICE_DESIRE
+$chmod 777 $basedir/flash_image
 $basedir/flash_image boot $basedir/boot.old
 #else
 $BB dd if=/dev/zero of=BOOT_PARTITION
