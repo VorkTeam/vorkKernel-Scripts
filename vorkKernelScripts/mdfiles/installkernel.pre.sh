@@ -34,8 +34,6 @@
 
 #define HAS_OTHER
 
-#define USES_BITRATE
-
 #endif // DEVICE_XOOM
 
 #ifdef DEVICE_DESIRE
