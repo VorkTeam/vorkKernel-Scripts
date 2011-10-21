@@ -331,7 +331,7 @@ ui_print ""
 ui_print "Flashing the kernel..."
 #ifdef DEVICE_DESIRE
 $chmod 777 $basedir/flash_image
-$basedir/flash_image boot $basedir/boot.old
+$basedir/flash_image boot $basedir/boot.img
 #else
 $BB dd if=/dev/zero of=BOOT_PARTITION
 $BB dd if=$basedir/boot.img of=BOOT_PARTITION
