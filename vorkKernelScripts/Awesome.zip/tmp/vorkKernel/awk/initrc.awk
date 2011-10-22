@@ -5,7 +5,7 @@
 /scaling_max_freq/ { next; }
 /scaling_governor/ { next; }
 /sampling_rate/ { next; }
-device == DESIRE && /Power Management/ { print; getline; if (!$0~/avs/) {print "write /sys/module/avs/parameters/enable 1";} getline; if (!$0~/avs/) {print "write /sys/module/avs/parameters/debug 0";} next; }
+avs == 1 && /Power Management/ { print; getline; if (!$0~/avs/) {print "write /sys/module/avs/parameters/enable 1";} getline; if (!$0~/avs/) {print "write /sys/module/avs/parameters/debug 0";} next; }
 
 # Tweak some VM stuff to, hopefully, increase battery life
 /dirty_expire_centisecs/ { sub(/200/, "1000"); print; next; }

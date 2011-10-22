@@ -94,6 +94,7 @@ ext4=0
 bit=0
 #endif
 dvalue=0
+avs=0
 #ifdef IS_PHONE
 ring=0
 #endif
@@ -282,7 +283,7 @@ fi
 
 log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
-$awk -v device=$device -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+$awk -v avs=$avs -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 
 FSIZE=`ls -l ../init.rc.mod | $awk '{ print $5 }'`
 log "init.rc.mod filesize: $FSIZE"
