@@ -284,6 +284,11 @@ fi
 log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
 $awk -v avs=$avs -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+#ifdef DEVICE_DESIRE
+cp init.bravo.rc ../init.bravo.org
+$awk -v avs=$avs -f $basedir/awk/initbravo.awk ../init.bravo.org > ../init.bravo.mod
+#endif //DEVICE_DESIRE
+
 
 FSIZE=`ls -l ../init.rc.mod | $awk '{ print $5 }'`
 log "init.rc.mod filesize: $FSIZE"
@@ -294,6 +299,18 @@ else
   ui_print "Applying init.rc tweaks failed! Continue without tweaks"
   warning=$((warning + 1))
 fi
+
+#ifdef DEVICE_DESIRE
+FSIZE=`ls -l ../init.bravo.mod | $awk '{ print $5 }'`
+log "init.bravo.mod filesize: $FSIZE"
+
+if [[ -s ../init.bravo.mod ]]; then
+  mv ../init.bravo.mod init.bravo.rc
+else
+  ui_print "Applying init.bravo.rc tweaks failed! Continue without tweaks"
+  warning=$((warning + 1))
+fi
+#endif //DEVICE_DESIRE
 
 #ifdef EXT4_RDY
 log "Applying "SECONDARY_INIT" tweaks..."
