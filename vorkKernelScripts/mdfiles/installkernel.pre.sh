@@ -204,54 +204,43 @@ for pp in $args; do
         ;;
 #endif
 #ifdef IS_PHONE
-	"ring")
-		ring=1
-		flags="$flags -ring"
+	"ring"|"noring")
+		if [ "$pp" == "ring" ]; then
+			ring=1
+		else
+			ring=0
+		fi
+		flags="$flags -$pp"
 		if [ "$ringsettings" == "1" ]; then
-			fatal "ERROR: Only one option for ringtone can be selected!"
+		  fatal "ERROR: Only one option for ringtone can be selected!"
 		fi
 		ringsettings=1
 	;;
-	"noring")
-		ring=0
-		flags="$flags -noring"
-                if [ "$ringsettings" == "1" ]; then
-                        fatal "ERROR: Only one option for ringtone can be selected!"
-                fi
-	;;
 #endif
-        "sstate")
-        	screenstate=1
-                flags="$flags -sstate"
-		if [ "$sstatesettings" == "1" ]; than
-			fatal "ERROR: Only one option for screenstate can be selected!"
+        "sstate"|"nosstate")
+		if [ "$pp" == "sstate" ]; then
+        		screenstate=1
+		else
+			screenstate=0
+		fi
+                flags="$flags -$pp"
+		if [ "$sstatesettings" == "1" ]; then
+		  fatal "ERROR: Only one option for screenstate can be selected!"
 		fi
 		sstatesettings=1
         ;;
-        "script")
-                script=1
-                flags="$flags -script"
-                if [ "$scriptsettings" == "1" ]; than
+        "script"|"noscript")
+                if [ "$pp" == "script" ]; then
+			script=1
+		else
+			script=0
+		fi
+                flags="$flags -$pp"
+                if [ "$scriptsettings" == "1" ]; then
                         fatal "ERROR: Only one option for screenstate can be selected!"
                 fi
                 scriptsettings=1
         ;;
-	"noscript")
-		script=0
-		flags="$flags -noscript"
-                if [ "$scriptsettings" == "1" ]; than
-                        fatal "ERROR: Only one option for screenstate can be selected!"
-                fi
-                scriptsettings=1
-	;;
-	"nosstate")
-		screenstate=0
-		flags="$flags -nosstate"
-                if [ "$sstatesettings" == "1" ]; than
-                        fatal "ERROR: Only one option for screenstate can be selected!"
-                fi
-                sstatesettings=1
-	;;
 #ifdef DEVICE_DESIRE
 	"avs")
 		avs=1
