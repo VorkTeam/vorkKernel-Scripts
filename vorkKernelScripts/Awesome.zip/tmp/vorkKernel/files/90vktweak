@@ -1,0 +1,105 @@
+#!/system/bin/sh
+#
+# Tweaks adapted from Ch33kybutt's screen state scaling. But rewritten/slimmed down by Benee
+#  
+
+# load user settings;
+. /data/local/vktweak.conf;
+
+# check enabled/disabled status;
+if [ "$ACTIVE" -eq "0" ] 
+then
+	exit;
+fi;
+
+setprop wifi.supplicant_scan_interval 120;
+setprop windowsmgr.max_events_per_sec 60;
+if [ "$RING" -eq "1"]
+then
+	setprop ro.telephony.call.ring.delay 800;
+fi;
+setprop ro.sf.lcd_density $DENSITY;
+setprop ro.HOME_APP_ADJ 1
+echo 1 > /proc/sys/vm/oom_kill_allocating_task;
+
+AWAKE_MODE() # Screen-ON;
+{
+# CPU-Freq;
+echo $AWAKE_GOVERNOR > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
+echo $AWAKE_MAX_FREQ > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq;
+# VM parameters;
+echo 30 > /proc/sys/vm/swappiness;
+echo 3000 > /proc/sys/vm/dirty_expire_centisecs;
+echo 500 > /proc/sys/vm/dirty_writeback_centisecs;
+echo 10 > /proc/sys/vm/dirty_background_ratio;
+echo 40 > /proc/sys/vm/dirty_ratio;
+echo 100 > /proc/sys/vm/vfs_cache_pressure;
+echo 3072 > /proc/sys/vm/min_free_kbytes;
+# CPU scheduler;
+echo 1000000 > /proc/sys/kernel/sched_latency_ns;
+echo 25000 > /proc/sys/kernel/sched_wakeup_granularity_ns;
+echo 100000 > /proc/sys/kernel/sched_min_granularity_ns;
+echo -1 > /proc/sys/kernel/sched_rt_runtime_us; 
+echo 100000 > /proc/sys/kernel/sched_rt_period_us;
+echo 95000 > /proc/sys/kernel/sched_rt_runtime_us;
+}
+
+SLEEP_MODE() # Screen-OFF;
+{
+# CPU-Freq;
+echo $SLEEP_GOVERNOR > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor;
+echo $SLEEP_MAX_FREQ > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq;
+# VM parameters;
+echo 0 > /proc/sys/vm/swappiness;
+echo 0 > /proc/sys/vm/dirty_expire_centisecs;
+echo 0 > /proc/sys/vm/dirty_writeback_centisecs;
+echo 60 > /proc/sys/vm/dirty_background_ratio;
+echo 95 > /proc/sys/vm/dirty_ratio;
+echo 10 > /proc/sys/vm/vfs_cache_pressure;
+echo 1652 > /proc/sys/vm/min_free_kbytes;
+# CFS;
+echo 20000000 > /proc/sys/kernel/sched_latency_ns;
+echo 5000000 > /proc/sys/kernel/sched_wakeup_granularity_ns;
+echo 4000000 > /proc/sys/kernel/sched_min_granularity_ns;
+echo -1 > /proc/sys/kernel/sched_rt_runtime_us;
+echo 1000000 > /proc/sys/kernel/sched_rt_period_us;
+echo 950000 > /proc/sys/kernel/sched_rt_runtime_us;
+}
+
+MAX_PHONE() # remove lag when answering phone calls
+{
+pidphone=`pidof com.android.phone`;
+if [ $pidphone ]; # Wait for com.android.phone to start;
+then
+	echo -17 > /proc/$pidphone/oom_adj; # exclude com.android.phone from oom-killer;
+	renice -20 $pidphone; # set highest nice level for com.android.phone;
+	exit;
+else
+	sleep 5;
+	MAX_PHONE;
+fi;
+}
+
+if [ "$SCREENSTATE" -eq "1" ] 
+then
+# Background process to check screen state;
+(while [ 1 ]; 
+do
+	STATE=`cat /sys/power/wait_for_fb_wake`;
+ 	AWAKE_MODE;
+	sleep 3;
+
+	STATE=`cat /sys/power/wait_for_fb_sleep`;
+	SLEEP_MODE;
+	sleep 3;
+done &);
+else
+	AWAKE_MODE;
+fi;
+
+# Background process to optimize dialer process;
+(while [ 1 ];
+do
+	sleep 10;
+	MAX_PHONE;
+done &);
