@@ -216,8 +216,7 @@ for pp in $args; do
 		ring=0
 		flags="$flags -noring"
                 if [ "$ringsettings" == "1" ]; then
-                        fatal "ERROR: Only one option for ringtone can be select
-ed!"
+                        fatal "ERROR: Only one option for ringtone can be selected!"
                 fi
 	;;
 #endif
