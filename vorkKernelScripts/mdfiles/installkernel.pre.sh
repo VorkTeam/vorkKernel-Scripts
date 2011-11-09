@@ -91,7 +91,9 @@ ril=0
 bit=0
 #endif
 dvalue=0
-avs=0
+sstatesettings=0
+scriptsettings=0
+ringsettings=0
 #ifdef IS_PHONE
 ring=0
 #endif
@@ -172,56 +174,97 @@ unknown=
 for pp in $args; do
     case $pp in
 #ifdef USES_BITRATE
-		"camera")
-			bit=1
-			flags="$flags -bitrate"
-		;;
+	"camera")
+		bit=1
+		flags="$flags -bitrate"
+	;;
 #endif // USES_BITRATE
 #ifdef DEVICE_LGP990
-        "ril405"|"ril502"|"ril606"|"ril622"|"ril725")
-            if [ "$ril" == "1" ]; then
-                fatal "ERROR: Only one RIL can be flashed!"
-            fi
-            rildate="$pp"
-            ril=1
-            flags="$flags -$pp"
+	"ril405"|"ril502"|"ril606"|"ril622"|"ril725")
+        	if [ "$ril" == "1" ]; then
+               		fatal "ERROR: Only one RIL can be flashed!"
+        	fi
+           	rildate="$pp"
+            	ril=1
+            	flags="$flags -$pp"
         ;;
-		"int2ext")
-			int2ext=1;
-			flags="$flags -int2ext"
-		;;
+	"int2ext")
+		int2ext=1;
+		flags="$flags -int2ext"
+	;;
 #endif // DEVICE_LGP990
         "silent")
-            silent=1
-            flags="$flags -silent"
+            	silent=1
+            	flags="$flags -silent"
         ;;
 #ifdef IS_PHONE
         density[1-9][0-9][0-9])
-			dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
-			if [ ! -n "$dvalue" ]; then
-				dvalue=230
-			fi
-            flags="$flags -density value:$dvalue"
+		dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
+            	flags="$flags -density value:$dvalue"
         ;;
 #endif
 #ifdef IS_PHONE
-		"ring")
-			ring=1
-			flags="$flags -ring"
-		;;
+	"ring")
+		ring=1
+		flags="$flags -ring"
+		if [ "$ringsettings" == "1" ]; then
+			fatal "ERROR: Only one option for ringtone can be selected!"
+		fi
+		ringsettings=1
+	;;
+	"noring")
+		ring=0
+		flags="$flags -noring"
+                if [ "$ringsettings" == "1" ]; then
+                        fatal "ERROR: Only one option for ringtone can be select
+ed!"
+                fi
+	;;
 #endif
+        "sstate")
+        	screenstate=1
+                flags="$flags -sstate"
+		if [ "$sstatesettings" == "1" ]; than
+			fatal "ERROR: Only one option for screenstate can be selected!"
+		fi
+		sstatesettings=1
+        ;;
+        "script")
+                script=1
+                flags="$flags -script"
+                if [ "$scriptsettings" == "1" ]; than
+                        fatal "ERROR: Only one option for screenstate can be selected!"
+                fi
+                scriptsettings=1
+        ;;
+	"noscript")
+		script=0
+		flags="$flags -noscript"
+                if [ "$scriptsettings" == "1" ]; than
+                        fatal "ERROR: Only one option for screenstate can be selected!"
+                fi
+                scriptsettings=1
+	;;
+	"nosstate")
+		screenstate=0
+		flags="$flags -nosstate"
+                if [ "$sstatesettings" == "1" ]; than
+                        fatal "ERROR: Only one option for screenstate can be selected!"
+                fi
+                sstatesettings=1
+	;;
 #ifdef DEVICE_DESIRE
-		"avs")
-			avs=1
-			flags="$flags -avs"
-			ui_print "WARNING! Your device may become unstable"
-		;;
+	"avs")
+		avs=1
+		flags="$flags -avs"
+		ui_print "WARNING! Your device may become unstable"
+	;;
 #endif
-		"debug")
-			debug=1
-		;;
+	"debug")
+		debug=1
+	;;
         *)
-            unknown="$unknown -$pp"
+        	unknown="$unknown -$pp"
         ;;
     esac
 done
@@ -274,7 +317,7 @@ fi
 
 log "Applying init.rc tweaks..."
 cp init.rc ../init.rc.org
-$awk -v avs=$avs -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
+$awk -f $basedir/awk/initrc.awk ../init.rc.org > ../init.rc.mod
 #ifdef DEVICE_DESIRE
 cp init.bravo.rc ../init.bravo.org
 $awk -v avs=$avs -f $basedir/awk/initbravo.awk ../init.bravo.org > ../init.bravo.mod
@@ -362,6 +405,10 @@ ui_print ""
 if [ -n "$flags" ]; then
     ui_print "Installing additional mods..."
 fi
+
+$bb mount /data
+cp $basedir/files/90vktweak /system/etc/init.d/90vktweak
+cp $basedir/files/vktweak.conf /data/local/vktweak.conf
 
 if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/camera_click.ogg /system/media/audio/ui/camera_click.ogg.bak
