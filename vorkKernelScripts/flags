@@ -3,6 +3,5 @@ LGP990/c/int2ext/Internal to External/Move internal SDCard to a sub-folder of th
 LGP990/l/ril/RIL/Select a RIL to flash. Defaults to none/None,405 RIL,502 RIL,606 RIL,622 RIL,725 RIL/0,405,502,606,622,725
 LGP990,XOOM,DESIRE/c/silent/Silent/Silences camera shutter sound
 LGP990,DESIRE/e/density/LCD Density/Changing LCD Density allows for an "highres" effect/0 preserves original/0
-LGP990/c/ext4/EXT4/Upgrade system and data partitions to EXT4. Increases IO performance. Can brick your device!
 LGP990,DESIRE/c/ring/Call Tweak/Reduces the time between call is recieved, and activity is started
 DESIRE/c/avs/AVS/Enables AVS by default on bootup. AVS reduces battery drain, but your device may become unstable

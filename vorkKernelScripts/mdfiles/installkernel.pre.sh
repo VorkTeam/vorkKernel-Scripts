@@ -87,9 +87,6 @@ warning=0
 #ifdef DEVICE_LGP990
 ril=0
 #endif
-#ifdef EXT4_RDY
-ext4=0
-#endif
 #ifdef USES_BITRATE
 bit=0
 #endif
@@ -103,6 +100,7 @@ extrdy=1
 #endif
 #ifdef DEVICE_LGP990
 int2ext=0
+ext4=1
 #endif
 
 updatename=`echo $UPDATE_FILE | $awk '{ sub(/^.*\//,"",$0); sub(/.zip$/,"",$0); print }'`
@@ -204,13 +202,6 @@ for pp in $args; do
 				dvalue=230
 			fi
             flags="$flags -density value:$dvalue"
-        ;;
-#endif
-#ifdef EXT4_RDY
-        "ext4")
-            ui_print "EXT4 is not officially supported!"
-            ext4=1
-            flags="$flags -EXT4"
         ;;
 #endif
 #ifdef IS_PHONE
