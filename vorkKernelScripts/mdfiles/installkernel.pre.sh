@@ -90,10 +90,12 @@ ril=0
 #ifdef USES_BITRATE
 bit=0
 #endif
-dvalue=0
+density=0
+ringsettings=0
 sstatesettings=0
 scriptsettings=0
-ringsettings=0
+screenstate=0
+script=0
 #ifdef IS_PHONE
 ring=0
 #endif
@@ -198,17 +200,21 @@ for pp in $args; do
             	flags="$flags -silent"
         ;;
 #ifdef IS_PHONE
-        density[1-9][0-9][0-9])
-		dvalue=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
-            	flags="$flags -density value:$dvalue"
+        density[1-9][0-9][0-9]|nodensity)
+		if [ "$pp" != "nodensity" ]; then
+			density=`echo $pp | $awk '/^density[0-9]+$/ { sub("density",""); print; }'`
+		else
+			density=240
+		fi
+            	flags="$flags -$pp"
         ;;
 #endif
 #ifdef IS_PHONE
 	"ring"|"noring")
 		if [ "$pp" == "ring" ]; then
-			ring=1
+			ring=2
 		else
-			ring=0
+			ring=1
 		fi
 		flags="$flags -$pp"
 		if [ "$ringsettings" == "1" ]; then
@@ -219,9 +225,9 @@ for pp in $args; do
 #endif
         "sstate"|"nosstate")
 		if [ "$pp" == "sstate" ]; then
-        		screenstate=1
+        		screenstate=2
 		else
-			screenstate=0
+			screenstate=1
 		fi
                 flags="$flags -$pp"
 		if [ "$sstatesettings" == "1" ]; then
@@ -231,9 +237,9 @@ for pp in $args; do
         ;;
         "script"|"noscript")
                 if [ "$pp" == "script" ]; then
-			script=1
+			script=2
 		else
-			script=0
+			script=1
 		fi
                 flags="$flags -$pp"
                 if [ "$scriptsettings" == "1" ]; then
@@ -396,7 +402,14 @@ fi
 
 $bb mount /data
 cp $basedir/files/90vktweak /system/etc/init.d/90vktweak
+if [ ! -f /data/local/vktweak.conf ]
 cp $basedir/files/vktweak.conf /data/local/vktweak.conf
+else
+ui_print "Applying tweaks to vktweak.conf"
+cp /data/local/vktweak.conf $basedir/vktweak.conf
+$awk -v ring=$ring -v screenstate=$screenstate -v script=$script -v density=$density -f $basedir/awk/vorkconf.awk $basedir/vktweak.conf > $basedir/vktweak.conf.mod
+cp -f /$basedir/vktweak.conf.mod /data/local/vktweak.conf
+fi
 
 if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/camera_click.ogg /system/media/audio/ui/camera_click.ogg.bak
@@ -491,13 +504,16 @@ if [ "$ext4" == "1" ]; then
 fi
 #endif
 
+if [ -n "$flags" ]; then
+    ui_print ""
+fi
+
 if [ "$debug" == "1" ]; then
   rm -r /sdcard/vorkDebug
   mkdir /sdcard/vorkDebug
   cp -r $basedir/. /sdcard/vorkDebug/
 fi
 
-ui_print ""
 if [ $warning -gt 0 ]; then
     ui_print "$kernelver installed with $warning warnings."
 else
