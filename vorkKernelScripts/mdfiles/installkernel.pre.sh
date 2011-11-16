@@ -94,7 +94,11 @@ density=0
 ringsettings=0
 sstatesettings=0
 scriptsettings=0
+#ifdef DEVICE_LGP990
+screenstate=1
+#else
 screenstate=0
+#endif
 script=0
 #ifdef IS_PHONE
 ring=0
@@ -223,6 +227,7 @@ for pp in $args; do
 		ringsettings=1
 	;;
 #endif
+#ifndef DEVICE_LGP990
         "sstate"|"nosstate")
 		if [ "$pp" == "sstate" ]; then
         		screenstate=2
@@ -235,6 +240,7 @@ for pp in $args; do
 		fi
 		sstatesettings=1
         ;;
+#endif
         "script"|"noscript")
                 if [ "$pp" == "script" ]; then
 			script=2
