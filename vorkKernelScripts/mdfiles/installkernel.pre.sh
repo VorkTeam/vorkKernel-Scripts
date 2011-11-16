@@ -408,8 +408,9 @@ else
 ui_print "Applying tweaks to vktweak.conf"
 cp /data/local/vktweak.conf $basedir/vktweak.conf
 $awk -v ring=$ring -v screenstate=$screenstate -v script=$script -v density=$density -f $basedir/awk/vorkconf.awk $basedir/vktweak.conf > $basedir/vktweak.conf.mod
-cp -f /$basedir/vktweak.conf.mod /data/local/vktweak.conf
+cp -f $basedir/vktweak.conf.mod /data/local/vktweak.conf
 fi
+chmod 755 /system/etc/init.d/90vktweak
 
 if [ "$silent" == "1" ]; then
     mv /system/media/audio/ui/camera_click.ogg /system/media/audio/ui/camera_click.ogg.bak
