@@ -406,15 +406,15 @@ if [ -n "$flags" ]; then
     ui_print "Installing additional mods..."
 fi
 
-$bb mount /data
+$BB mount /data
 cp $basedir/files/90vktweak /system/etc/init.d/90vktweak
 if [ ! -f /data/local/vktweak.conf ]
-cp $basedir/files/vktweak.conf /data/local/vktweak.conf
+    cp $basedir/files/vktweak.conf /data/local/vktweak.conf
 else
-ui_print "Applying tweaks to vktweak.conf"
-cp /data/local/vktweak.conf $basedir/vktweak.conf
-$awk -v ring=$ring -v screenstate=$screenstate -v script=$script -v density=$density -f $basedir/awk/vorkconf.awk $basedir/vktweak.conf > $basedir/vktweak.conf.mod
-cp -f $basedir/vktweak.conf.mod /data/local/vktweak.conf
+    ui_print "Applying tweaks to vktweak.conf"
+    cp /data/local/vktweak.conf $basedir/vktweak.conf
+    $awk -v ring=$ring -v screenstate=$screenstate -v script=$script -v density=$density -f $basedir/awk/vorkconf.awk $basedir/vktweak.conf > $basedir/vktweak.conf.mod
+    cp -f $basedir/vktweak.conf.mod /data/local/vktweak.conf
 fi
 chmod 755 /system/etc/init.d/90vktweak
 
